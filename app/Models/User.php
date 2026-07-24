@@ -63,6 +63,7 @@ class User extends Authenticatable implements PasskeyUser
     {
         return $this->belongsToMany(Campaign::class, 'campaign_user', 'user_id', 'campaign_id');
     }
+
     public function owned_campaigns(): HasMany
     {
         return $this->hasMany(Campaign::class, 'owner_id', 'id');
@@ -73,9 +74,9 @@ class User extends Authenticatable implements PasskeyUser
         return $this->hasMany(Friend::class, 'user_id', 'id');
     }
 
-    public function inventories(): HasMany
+    public function friend_requests(): HasMany
     {
-        return $this->hasMany(Inventory::class, 'user_id', 'id');
+        return $this->hasMany(Friend::class, 'friend_id', 'id');
     }
 
     public function characters(): HasMany

@@ -23,6 +23,7 @@ class CampaignFactory extends Factory
             'description' => fake()->text(),
             'status' => fake()->randomElement(['active', 'inactive']),
             'owner_id' => User::factory(),
+            'next_session_date' => now()->addDays(fake()->numberBetween(1, 30)),
         ];
     }
 }

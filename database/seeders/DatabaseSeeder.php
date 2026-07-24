@@ -12,7 +12,6 @@ use App\Models\Scene;
 use App\Models\Shop;
 use App\Models\ShopStock;
 use App\Models\User;
-use Database\Factories\CharacterFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,8 +29,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'aditto@buildingstars.com',
             'role' => 'admin',
-            "password" => bcrypt("sCQxTwWHYhFwfK9"),
-            "email_verified_at" => now(),
+            'password' => bcrypt('sCQxTwWHYhFwfK9'),
+            'email_verified_at' => now(),
         ]);
 
         User::factory()
@@ -44,15 +43,15 @@ class DatabaseSeeder extends Seeder
                         'inventory_id' => $inventory->id,
                     ])->toArray());
                     $character->update(['inventory_id' => $inventory->id]);
-                    Journal::factory()->create(['character_id' => $character->id]);
                 });
+                Journal::factory()->create(['campaign_id' => $campaign->id]);
             }))
             ->create([
                 'name' => 'Test User',
                 'email' => 'alexdittocareer@gmail.com',
                 'role' => 'user',
-                "password" => bcrypt("sCQxTwWHYhFwfK9"),
-                "email_verified_at" => now(),
+                'password' => bcrypt('sCQxTwWHYhFwfK9'),
+                'email_verified_at' => now(),
             ])
             ->each(function ($user) {
                 Shop::factory(3)->create(['owner_id' => $user->id])->each(function ($shop) use ($user) {

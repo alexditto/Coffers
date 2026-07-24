@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('journals', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->longText('content');
-            $table->timestamps();
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->date('next_session_date')->nullable()->after('owner_id');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('journals');
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->dropColumn('next_session_date');
+        });
     }
 };

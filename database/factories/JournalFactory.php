@@ -19,7 +19,7 @@ class JournalFactory extends Factory
     public function definition(): array
     {
         return [
-            'character_id' => Character::factory(),
+            'campaign_id' => Character::factory(),
             'title' => fake()->sentence(),
             'content' => fake()->paragraph(),
         ];

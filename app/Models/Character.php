@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\CharacterFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,10 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Character extends Model
 {
-    /** @use HasFactory<\Database\Factories\CharacterFactory> */
+    /** @use HasFactory<CharacterFactory> */
     use HasFactory;
 
-    public function characterSheet(): HasOne
+    public function character_sheet(): HasOne
     {
         return $this->hasOne(CharacterSheet::class);
     }
