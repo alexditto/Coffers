@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="393854cb-255c-49ae-b097-b74661af6395"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("4d232310-6802-47b6-bf3d-bd1b060e16f9") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("35492de3-5606-4c07-9375-384cc03aebce") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("de3fd318-6478-4cda-82c0-b37a31847989") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("e14e5f89-5dd9-4eaf-958d-c4a85876fcde") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("4d232310-6802-47b6-bf3d-bd1b060e16f9") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("35492de3-5606-4c07-9375-384cc03aebce") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("de3fd318-6478-4cda-82c0-b37a31847989") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("e14e5f89-5dd9-4eaf-958d-c4a85876fcde") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("4d232310-6802-47b6-bf3d-bd1b060e16f9") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("35492de3-5606-4c07-9375-384cc03aebce") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("de3fd318-6478-4cda-82c0-b37a31847989") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("e14e5f89-5dd9-4eaf-958d-c4a85876fcde") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+  body { background:#e8e8e6; }
+</style>
+</helmet>
+
+<!-- ============ SECTION A : GLOBAL NAV ============ -->
+<div data-drags-parent="1" style="position:absolute;left:80px;top:34px;font:700 32px Caveat,cursive;color:#4a4a4a">A · Global Navigation &amp; Campaign Switcher</div>
+<div style="position:absolute;left:80px;top:74px;width:760px;font:600 13px system-ui;color:#8c8c8c">Persistent campaign selector at the top. Switching campaign re-scopes the entire app. Exploring three switch patterns.</div>
+
+<!-- A1 : resting state -->
+<div style="position:absolute;left:80px;top:120px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">A1 — Selector at rest (top of every screen)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:11px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa">
+      <div>
+        <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div>
+        <div style="display:flex;align-items:center;gap:7px;font:700 17px system-ui;color:#333;margin-top:2px">Port Namas <span style="font-size:11px;color:#9a9a9a">▼</span></div>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:repeating-linear-gradient(45deg,#e9e9e9,#e9e9e9 7px,#f4f4f4 7px,#f4f4f4 14px);border:1.5px solid #dcdcdc"></div>
+    </div>
+    <div style="padding:16px;height:430px;background:#fff">
+      <div style="font:700 19px system-ui;color:#3a3a3a;margin-bottom:12px">Today at the table</div>
+      <div style="height:84px;border:1.5px solid #e2e2e2;border-radius:14px;margin-bottom:12px;background:#f8f8f8"></div>
+      <div style="height:84px;border:1.5px solid #e2e2e2;border-radius:14px;margin-bottom:12px;background:#f8f8f8"></div>
+      <div style="height:120px;border:1.5px dashed #d9d9d9;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#a8a8a8;font:600 11px ui-monospace,monospace;letter-spacing:.5px">scoped content for « Port Namas »</div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px"></div><span style="font:700 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- A2 : dropdown expanded -->
+<div style="position:absolute;left:500px;top:120px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">A2 — Tap pill → quick dropdown</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:11px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa">
+      <div>
+        <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div>
+        <div style="display:flex;align-items:center;gap:7px;font:700 17px system-ui;color:#333;margin-top:2px">Port Namas <span style="font-size:11px;color:#9a9a9a;transform:rotate(180deg);display:inline-block">▼</span></div>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:repeating-linear-gradient(45deg,#e9e9e9,#e9e9e9 7px,#f4f4f4 7px,#f4f4f4 14px);border:1.5px solid #dcdcdc"></div>
+    </div>
+    <div style="position:relative;height:492px;background:#fff">
+      <div style="position:absolute;inset:0;background:rgba(40,40,40,.32)"></div>
+      <div style="position:absolute;left:12px;right:12px;top:8px;background:#fff;border:1.5px solid #d6d6d6;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.16);overflow:hidden">
+        <div style="padding:9px 14px;font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;border-bottom:1px solid #eee">SWITCH CAMPAIGN</div>
+        <div style="padding:13px 14px;display:flex;align-items:center;gap:11px;background:#f1f1f1;border-bottom:1px solid #eee">
+          <div style="width:30px;height:30px;border-radius:8px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 6px,#efefef 6px,#efefef 12px)"></div>
+          <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Port Namas</div><div style="font:600 11px system-ui;color:#9a9a9a">Player · Lvl 5</div></div>
+          <div style="width:18px;height:18px;border-radius:50%;border:2px solid #2f2f2f;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#2f2f2f">✓</div>
+        </div>
+        <div style="padding:13px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid #eee">
+          <div style="width:30px;height:30px;border-radius:8px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 6px,#efefef 6px,#efefef 12px)"></div>
+          <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Crimson Vale</div><div style="font:600 11px system-ui;color:#9a9a9a">DM</div></div>
+        </div>
+        <div style="padding:13px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid #eee">
+          <div style="width:30px;height:30px;border-radius:8px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 6px,#efefef 6px,#efefef 12px)"></div>
+          <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Waterdeep Nights</div><div style="font:600 11px system-ui;color:#9a9a9a">Player · Lvl 2</div></div>
+        </div>
+        <div style="padding:13px 14px;display:flex;align-items:center;gap:9px;color:#6a6a6a"><div style="width:30px;height:30px;border-radius:8px;border:1.5px dashed #c4c4c4;display:flex;align-items:center;justify-content:center;font:700 16px system-ui;color:#9a9a9a">+</div><span style="font:700 13px system-ui">New / Join campaign</span></div>
+      </div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff;opacity:.55">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px"></div><span style="font:700 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- A3 : full switch screen -->
+<div style="position:absolute;left:920px;top:120px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">A3 — Dedicated switch screen (alt)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:13px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;gap:12px">
+      <span style="font:700 20px system-ui;color:#9a9a9a">←</span>
+      <span style="font:700 18px system-ui;color:#333">Your Campaigns</span>
+    </div>
+    <div style="padding:16px;height:476px;background:#fafafa">
+      <div style="border:1.5px solid #cfcfcf;border-radius:16px;background:#fff;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:52px;height:52px;border-radius:12px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 7px,#f2f2f2 7px,#f2f2f2 14px)"></div>
+          <div style="flex:1"><div style="font:700 16px system-ui;color:#333">Port Namas</div><div style="font:600 11px system-ui;color:#9a9a9a">D&amp;D 5e · 4 players</div></div>
+          <div style="font:700 9px system-ui;letter-spacing:1px;color:#444;border:1.5px solid #444;border-radius:6px;padding:3px 7px">ACTIVE</div>
+        </div>
+        <div style="margin-top:11px;display:flex;justify-content:space-between;font:600 11px system-ui;color:#9a9a9a"><span>Role: Player</span><span>Last played 2d ago</span></div>
+      </div>
+      <div style="border:1.5px solid #e2e2e2;border-radius:16px;background:#fff;padding:14px;margin-bottom:14px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:52px;height:52px;border-radius:12px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 7px,#f2f2f2 7px,#f2f2f2 14px)"></div>
+          <div style="flex:1"><div style="font:700 16px system-ui;color:#333">Crimson Vale</div><div style="font:600 11px system-ui;color:#9a9a9a">D&amp;D 5e · 5 players</div></div>
+          <div style="font:700 9px system-ui;letter-spacing:1px;color:#7a7a7a;border:1.5px solid #c8c8c8;border-radius:6px;padding:3px 7px">DM</div>
+        </div>
+        <div style="margin-top:11px;display:flex;justify-content:space-between;font:600 11px system-ui;color:#9a9a9a"><span>Role: Dungeon Master</span><span>Last played 6d ago</span></div>
+      </div>
+      <div style="border:1.5px dashed #cfcfcf;border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:center;gap:9px;color:#7a7a7a"><span style="font:700 18px system-ui">+</span><span style="font:700 13px system-ui">New or join a campaign</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- post-it for section A -->
+<div style="position:absolute;left:1300px;top:150px;width:210px;background:#ececec;padding:13px 14px;font:600 15px/1.35 Caveat,cursive;color:#555;box-shadow:0 2px 6px rgba(0,0,0,.12);transform:rotate(-1.5deg);border-radius:2px">Recommend A2 (dropdown) as primary — one tap, never leaves the current screen. A3 is the deep-manage / onboarding view.</div>
+
+<!-- ============ SECTION B : PLAYER ============ -->
+<div data-drags-parent="1" style="position:absolute;left:80px;top:880px;font:700 32px Caveat,cursive;color:#4a4a4a">B · Player Experience</div>
+<div style="position:absolute;left:80px;top:920px;width:760px;font:600 13px system-ui;color:#8c8c8c">Bottom nav: Character · Shops · Inventory · Journal. Card-first, minimal text, progressive disclosure.</div>
+
+<!-- B1 : Character dashboard -->
+<div style="position:absolute;left:80px;top:966px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B1 — Character (dashboard, not a sheet)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div><div style="font:700 8px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div><div style="display:flex;align-items:center;gap:6px;font:700 15px system-ui;color:#333">Port Namas <span style="font-size:10px;color:#9a9a9a">▼</span></div></div></div>
+    <div style="padding:16px;height:472px;background:#fff;overflow:hidden">
+      <div style="display:flex;gap:13px;align-items:center;margin-bottom:14px">
+        <div style="width:72px;height:72px;border-radius:16px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 7px,#f2f2f2 7px,#f2f2f2 14px);display:flex;align-items:center;justify-content:center;color:#9a9a9a;font:600 8px ui-monospace,monospace;border:1.5px solid #dcdcdc">portrait</div>
+        <div><div style="font:700 19px system-ui;color:#333">Thornwick</div><div style="font:600 12px system-ui;color:#8c8c8c;margin-top:2px">Rogue · Level 5</div></div>
+      </div>
+      <div style="display:flex;gap:9px;margin-bottom:16px">
+        <div style="flex:1;border:1.5px solid #e2e2e2;border-radius:12px;padding:9px 0;text-align:center"><div style="font:700 8px system-ui;letter-spacing:1px;color:#aeaeae">HP</div><div style="font:700 16px system-ui;color:#333">38/42</div></div>
+        <div style="flex:1;border:1.5px solid #e2e2e2;border-radius:12px;padding:9px 0;text-align:center"><div style="font:700 8px system-ui;letter-spacing:1px;color:#aeaeae">AC</div><div style="font:700 16px system-ui;color:#333">16</div></div>
+        <div style="flex:1;border:1.5px solid #e2e2e2;border-radius:12px;padding:9px 0;text-align:center"><div style="font:700 8px system-ui;letter-spacing:1px;color:#aeaeae">GOLD</div><div style="font:700 16px system-ui;color:#333">240</div></div>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;margin-bottom:8px">EQUIPPED</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <div style="flex:1;height:46px;border:1.5px solid #e2e2e2;border-radius:10px;display:flex;align-items:center;gap:7px;padding:0 9px"><div style="width:22px;height:22px;border-radius:6px;background:#ededed"></div><span style="font:600 10px system-ui;color:#666">Shortsword</span></div>
+        <div style="flex:1;height:46px;border:1.5px solid #e2e2e2;border-radius:10px;display:flex;align-items:center;gap:7px;padding:0 9px"><div style="width:22px;height:22px;border-radius:6px;background:#ededed"></div><span style="font:600 10px system-ui;color:#666">Leather Armor</span></div>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;margin-bottom:8px">CONDITIONS</div>
+      <div style="display:flex;gap:7px;margin-bottom:16px">
+        <span style="font:600 11px system-ui;color:#555;border:1.5px solid #c8c8c8;border-radius:20px;padding:4px 11px">Poisoned</span>
+        <span style="font:600 11px system-ui;color:#555;border:1.5px solid #c8c8c8;border-radius:20px;padding:4px 11px">Inspired</span>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;margin-bottom:8px">QUICK ACTIONS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="height:42px;border:1.5px solid #2f2f2f;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 12px system-ui;color:#2f2f2f">Short Rest</div>
+        <div style="height:42px;border:1.5px solid #2f2f2f;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 12px system-ui;color:#2f2f2f">Long Rest</div>
+      </div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B2 : Shops v1 grouped -->
+<div style="position:absolute;left:500px;top:966px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B2 — Shops (v1: grouped sections)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div><div style="font:700 8px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div><div style="display:flex;align-items:center;gap:6px;font:700 15px system-ui;color:#333">Port Namas <span style="font-size:10px;color:#9a9a9a">▼</span></div></div></div>
+    <div style="padding:16px;height:472px;background:#fafafa;overflow:hidden">
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">OPEN · 2</div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;margin-bottom:9px;display:flex;gap:11px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#333">The Iron Anvil</div><div style="font:600 11px system-ui;color:#9a9a9a">Blacksmith</div></div>
+        <span style="font:700 9px system-ui;color:#333;border:1.5px solid #333;border-radius:6px;padding:3px 7px">OPEN</span>
+      </div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;margin-bottom:16px;display:flex;gap:11px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Moonleaf Apothecary</div><div style="font:600 11px system-ui;color:#9a9a9a">Alchemist</div></div>
+        <span style="font:700 9px system-ui;color:#333;border:1.5px solid #333;border-radius:6px;padding:3px 7px">OPEN</span>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">CLOSED · 1</div>
+      <div style="border:1.5px solid #e6e6e6;border-radius:14px;background:#f4f4f4;padding:12px;margin-bottom:16px;display:flex;gap:11px;align-items:center;opacity:.7">
+        <div style="width:42px;height:42px;border-radius:10px;background:#e2e2e2"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#777">Salty Mermaid Tavern</div><div style="font:600 11px system-ui;color:#a8a8a8">Tavern</div></div>
+        <span style="font:700 9px system-ui;color:#999;border:1.5px solid #c4c4c4;border-radius:6px;padding:3px 7px">CLOSED</span>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">FUTURE / UNKNOWN</div>
+      <div style="border:1.5px dashed #d2d2d2;border-radius:14px;background:#f4f4f4;padding:12px;display:flex;gap:11px;align-items:center">
+        <div style="width:42px;height:42px;border-radius:10px;background:#dadada"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#b0b0b0;letter-spacing:3px">??????</div><div style="font:600 11px system-ui;color:#bcbcbc">Not yet discovered</div></div>
+      </div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B3 : Shops v2 segmented -->
+<div style="position:absolute;left:920px;top:966px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B3 — Shops (v2: segmented filter)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div><div style="font:700 8px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div><div style="display:flex;align-items:center;gap:6px;font:700 15px system-ui;color:#333">Port Namas <span style="font-size:10px;color:#9a9a9a">▼</span></div></div></div>
+    <div style="padding:16px;height:472px;background:#fafafa;overflow:hidden">
+      <div style="font:700 20px system-ui;color:#333;margin-bottom:12px">Shops</div>
+      <div style="display:flex;background:#e8e8e8;border-radius:10px;padding:3px;margin-bottom:14px">
+        <div style="flex:1;text-align:center;font:700 11px system-ui;color:#333;background:#fff;border-radius:8px;padding:7px 0;box-shadow:0 1px 2px rgba(0,0,0,.1)">Open</div>
+        <div style="flex:1;text-align:center;font:600 11px system-ui;color:#9a9a9a;padding:7px 0">Closed</div>
+        <div style="flex:1;text-align:center;font:600 11px system-ui;color:#9a9a9a;padding:7px 0">Locked</div>
+      </div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#333">The Iron Anvil</div><div style="font:600 11px system-ui;color:#9a9a9a">Blacksmith</div></div>
+        <span style="font:700 17px system-ui;color:#c4c4c4">›</span>
+      </div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Moonleaf Apothecary</div><div style="font:600 11px system-ui;color:#9a9a9a">Alchemist</div></div>
+        <span style="font:700 17px system-ui;color:#c4c4c4">›</span>
+      </div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;display:flex;gap:11px;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+        <div style="flex:1"><div style="font:700 14px system-ui;color:#333">Wandering Peddler</div><div style="font:600 11px system-ui;color:#9a9a9a">General Goods</div></div>
+        <span style="font:700 17px system-ui;color:#c4c4c4">›</span>
+      </div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B4 : Shop detail storefront -->
+<div style="position:absolute;left:1340px;top:966px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B4 — Shop detail (storefront)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="height:88px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 8px,#ececec 8px,#ececec 16px);display:flex;align-items:flex-end;padding:10px 14px;position:relative">
+      <span style="position:absolute;top:10px;left:12px;font:700 18px system-ui;color:#888">←</span>
+      <div style="background:rgba(255,255,255,.85);border-radius:10px;padding:7px 11px"><div style="font:700 16px system-ui;color:#333">The Iron Anvil</div><div style="font:600 11px system-ui;color:#777">Blacksmith · <span style="color:#333">Open</span></div></div>
+    </div>
+    <div style="padding:13px 16px 0;display:flex;gap:8px;overflow:hidden">
+      <span style="font:700 11px system-ui;color:#fff;background:#3a3a3a;border-radius:20px;padding:6px 13px">Weapons</span>
+      <span style="font:600 11px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 13px">Armor</span>
+      <span style="font:600 11px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 13px">Equipment</span>
+    </div>
+    <div style="padding:14px 16px;height:354px;background:#fafafa;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;overflow:hidden">
+          <div style="height:72px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+          <div style="padding:9px"><div style="font:700 12px system-ui;color:#333">Longsword</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px"><span style="font:700 11px system-ui;color:#555">15 gp</span><div style="width:26px;height:26px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 14px system-ui;color:#333">+</div></div></div>
+        </div>
+        <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;overflow:hidden">
+          <div style="height:72px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+          <div style="padding:9px"><div style="font:700 12px system-ui;color:#333">Warhammer</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px"><span style="font:700 11px system-ui;color:#555">15 gp</span><div style="width:26px;height:26px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 14px system-ui;color:#333">+</div></div></div>
+        </div>
+        <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;overflow:hidden">
+          <div style="height:72px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+          <div style="padding:9px"><div style="font:700 12px system-ui;color:#333">Dagger</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px"><span style="font:700 11px system-ui;color:#555">2 gp</span><div style="width:26px;height:26px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 14px system-ui;color:#333">+</div></div></div>
+        </div>
+        <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;overflow:hidden">
+          <div style="height:72px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div>
+          <div style="padding:9px"><div style="font:700 12px system-ui;color:#333">Hand Crossbow</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px"><span style="font:700 11px system-ui;color:#555">75 gp</span><div style="width:26px;height:26px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 14px system-ui;color:#333">+</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="height:54px;border-top:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff"><span style="font:600 12px system-ui;color:#777">Cart · 2 items</span><div style="background:#2f2f2f;color:#fff;border-radius:10px;padding:8px 18px;font:700 12px system-ui">Checkout · 17 gp</div></div>
+  </div>
+</div>
+
+<!-- post-it shops -->
+<div style="position:absolute;left:1720px;top:1000px;width:200px;background:#ececec;padding:13px 14px;font:600 15px/1.35 Caveat,cursive;color:#555;box-shadow:0 2px 6px rgba(0,0,0,.12);transform:rotate(1.5deg);border-radius:2px">Shops v1 vs v2: grouped sections surface availability at a glance; segmented filter scales better with many shops. Detail = storefront grid + cart.</div>
+
+<!-- B5 : Inventory v1 category grid -->
+<div style="position:absolute;left:80px;top:1726px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B5 — Inventory (v1: category grids)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Inventory</div><div style="font:700 13px system-ui;color:#555;border:1.5px solid #d2d2d2;border-radius:8px;padding:4px 10px">240 gp</div></div>
+    <div style="padding:16px;height:472px;background:#fafafa;overflow:hidden">
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">CONSUMABLES</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:10px;position:relative"><div style="position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:50%;background:#2f2f2f;color:#fff;font:700 10px system-ui;display:flex;align-items:center;justify-content:center">3</div><div style="width:34px;height:34px;border-radius:9px;background:#ececec;margin-bottom:7px"></div><div style="font:700 12px system-ui;color:#333">Healing Potion</div></div>
+        <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:10px;position:relative"><div style="position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:50%;background:#2f2f2f;color:#fff;font:700 10px system-ui;display:flex;align-items:center;justify-content:center">1</div><div style="width:34px;height:34px;border-radius:9px;background:#ececec;margin-bottom:7px"></div><div style="font:700 12px system-ui;color:#333">Antitoxin</div></div>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">EQUIPMENT</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:10px;position:relative"><div style="position:absolute;top:7px;right:7px;font:700 8px system-ui;color:#333;border:1.5px solid #333;border-radius:5px;padding:2px 5px">EQUIP</div><div style="width:34px;height:34px;border-radius:9px;background:#ececec;margin-bottom:7px"></div><div style="font:700 12px system-ui;color:#333">Shortsword</div></div>
+        <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:10px;position:relative"><div style="position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:50%;background:#2f2f2f;color:#fff;font:700 10px system-ui;display:flex;align-items:center;justify-content:center">1</div><div style="width:34px;height:34px;border-radius:9px;background:#ececec;margin-bottom:7px"></div><div style="font:700 12px system-ui;color:#333">Thieves' Tools</div></div>
+      </div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B6 : Inventory v2 segmented list -->
+<div style="position:absolute;left:500px;top:1726px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B6 — Inventory (v2: filter + list)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Inventory</div><div style="font:700 13px system-ui;color:#555;border:1.5px solid #d2d2d2;border-radius:8px;padding:4px 10px">240 gp</div></div>
+    <div style="padding:13px 16px 0;display:flex;gap:7px;overflow:hidden">
+      <span style="font:700 10px system-ui;color:#fff;background:#3a3a3a;border-radius:20px;padding:6px 12px">All</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Consum.</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Equip.</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Quest</span>
+    </div>
+    <div style="padding:13px 16px;height:399px;background:#fafafa;overflow:hidden">
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:11px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Potion of Healing</div><div style="font:600 10px system-ui;color:#9a9a9a">Consumable</div></div><span style="font:700 13px system-ui;color:#555">×3</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:11px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Shortsword</div><div style="font:600 10px system-ui;color:#9a9a9a">Equipment</div></div><span style="font:700 8px system-ui;color:#333;border:1.5px solid #333;border-radius:5px;padding:2px 6px">EQUIPPED</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:11px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Silver Locket</div><div style="font:600 10px system-ui;color:#9a9a9a">Quest Item</div></div><span style="font:700 13px system-ui;color:#555">×1</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:11px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Gemstone (ruby)</div><div style="font:600 10px system-ui;color:#9a9a9a">Treasure</div></div><span style="font:700 13px system-ui;color:#555">×2</span></div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B7 : Item detail sheet -->
+<div style="position:absolute;left:920px;top:1726px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B7 — Item detail (progressive disclosure)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="position:relative;height:560px;background:#f4f4f4">
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,#e9e9e9,#e9e9e9 7px,#f4f4f4 7px,#f4f4f4 14px);opacity:.5"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.12);padding:16px 18px 20px">
+        <div style="width:40px;height:4px;border-radius:2px;background:#d9d9d9;margin:0 auto 16px"></div>
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+          <div style="width:64px;height:64px;border-radius:14px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 7px,#f2f2f2 7px,#f2f2f2 14px);border:1.5px solid #dcdcdc"></div>
+          <div><div style="font:700 19px system-ui;color:#333">Potion of Healing</div><div style="font:600 12px system-ui;color:#8c8c8c">Consumable · Common</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+          <span style="font:700 9px system-ui;letter-spacing:1px;color:#aeaeae">QTY</span>
+          <div style="display:flex;align-items:center;gap:14px;border:1.5px solid #d2d2d2;border-radius:10px;padding:5px 14px"><span style="font:700 18px system-ui;color:#555">−</span><span style="font:700 16px system-ui;color:#333">3</span><span style="font:700 18px system-ui;color:#555">+</span></div>
+        </div>
+        <div style="font:600 13px/1.5 system-ui;color:#777;margin-bottom:18px">Regain 2d4 + 2 hit points when consumed. A character can drink as an action.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="height:46px;background:#2f2f2f;color:#fff;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui">Use</div>
+          <div style="height:46px;border:1.5px solid #2f2f2f;color:#2f2f2f;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui">Give</div>
+          <div style="height:46px;border:1.5px solid #d2d2d2;color:#777;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui">Sell</div>
+          <div style="height:46px;border:1.5px solid #d2d2d2;color:#777;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui">Drop</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B8 : Journal -->
+<div style="position:absolute;left:1340px;top:1726px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B8 — Journal (silhouetted = undiscovered)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Journal</div></div>
+    <div style="padding:13px 16px 0;display:flex;gap:7px;overflow:hidden">
+      <span style="font:700 10px system-ui;color:#fff;background:#3a3a3a;border-radius:20px;padding:6px 12px">Quests</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">NPCs</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Places</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Lore</span>
+    </div>
+    <div style="padding:13px 16px;height:399px;background:#fafafa;overflow:hidden">
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font:700 14px system-ui;color:#333">The Missing Caravan</div><span style="font:700 8px system-ui;color:#333;border:1.5px solid #333;border-radius:5px;padding:2px 6px">ACTIVE</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin-top:4px">2 of 4 objectives complete</div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font:700 14px system-ui;color:#333">Debt to the Anvil</div><span style="font:700 8px system-ui;color:#999;border:1.5px solid #c4c4c4;border-radius:5px;padding:2px 6px">DONE</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin-top:4px">Reward collected</div></div>
+      <div style="border:1.5px dashed #d2d2d2;border-radius:12px;background:#efefef;padding:12px;margin-bottom:9px;display:flex;align-items:center;gap:11px"><div style="width:30px;height:30px;border-radius:50%;background:#d2d2d2"></div><div><div style="font:700 14px system-ui;color:#b0b0b0;letter-spacing:2px">???????????</div><div style="font:600 11px system-ui;color:#bcbcbc">Undiscovered quest</div></div></div>
+      <div style="border:1.5px dashed #d2d2d2;border-radius:12px;background:#efefef;padding:12px;display:flex;align-items:center;gap:11px"><div style="width:30px;height:30px;border-radius:50%;background:#d2d2d2"></div><div><div style="font:700 14px system-ui;color:#b0b0b0;letter-spacing:2px">????????</div><div style="font:600 11px system-ui;color:#bcbcbc">Undiscovered quest</div></div></div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Character</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Inventory</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- B9 : Journal entry detail -->
+<div style="position:absolute;left:1760px;top:1726px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">B9 — Quest detail</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:13px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;gap:12px"><span style="font:700 18px system-ui;color:#9a9a9a">←</span><span style="font:700 9px system-ui;letter-spacing:1px;color:#333;border:1.5px solid #333;border-radius:5px;padding:2px 7px">ACTIVE QUEST</span></div>
+    <div style="padding:16px;height:472px;background:#fff;overflow:hidden">
+      <div style="font:700 21px system-ui;color:#333;margin-bottom:12px">The Missing Caravan</div>
+      <div style="font:600 13px/1.5 system-ui;color:#777;margin-bottom:18px">A merchant caravan bound for Port Namas never arrived. The dockmaster offers 200 gp for answers.</div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;margin-bottom:9px">OBJECTIVES</div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#333">✓</div><span style="font:600 12px system-ui;color:#999;text-decoration:line-through">Speak to the dockmaster</span></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#333">✓</div><span style="font:600 12px system-ui;color:#999;text-decoration:line-through">Search the coastal road</span></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #c4c4c4"></div><span style="font:600 12px system-ui;color:#444">Find the caravan wreck</span></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:18px"><div style="width:18px;height:18px;border-radius:5px;border:1.5px solid #c4c4c4"></div><span style="font:600 12px system-ui;color:#444">Recover the manifest</span></div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#aeaeae;margin-bottom:9px">LINKED</div>
+      <div style="display:flex;gap:8px"><span style="font:600 11px system-ui;color:#555;border:1.5px solid #d2d2d2;border-radius:20px;padding:5px 11px">Dockmaster Hale</span><span style="font:600 11px system-ui;color:#555;border:1.5px solid #d2d2d2;border-radius:20px;padding:5px 11px">Coastal Road</span></div>
+    </div>
+    <div style="height:54px;border-top:1.5px solid #ededed;display:flex;align-items:center;padding:0 16px;background:#fff"><div style="flex:1;height:36px;border:1.5px solid #2f2f2f;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 12px system-ui;color:#2f2f2f">Add party note</div></div>
+  </div>
+</div>
+
+<!-- ============ SECTION C : DM ============ -->
+<div data-drags-parent="1" style="position:absolute;left:80px;top:2600px;font:700 32px Caveat,cursive;color:#4a4a4a">C · Dungeon Master Experience</div>
+<div style="position:absolute;left:80px;top:2640px;width:760px;font:600 13px system-ui;color:#8c8c8c">Same shell, different tools. Bottom nav: Characters · Shops · Scenes · Journal. The DM controls the world's economy &amp; what is revealed.</div>
+
+<!-- C1 : Characters (party situational awareness) -->
+<div style="position:absolute;left:80px;top:2686px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">C1 — Characters (party at a glance)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div><div style="font:700 8px system-ui;letter-spacing:1.5px;color:#aeaeae">CURRENT CAMPAIGN</div><div style="display:flex;align-items:center;gap:6px;font:700 15px system-ui;color:#333">Crimson Vale <span style="font-size:10px;color:#9a9a9a">▼</span></div></div><span style="font:700 9px system-ui;color:#444;border:1.5px solid #444;border-radius:6px;padding:3px 7px">DM</span></div>
+    <div style="padding:16px;height:472px;background:#fafafa;overflow:hidden">
+      <div style="font:700 16px system-ui;color:#333;margin-bottom:12px">The Party · 4</div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center"><div style="width:46px;height:46px;border-radius:11px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="display:flex;justify-content:space-between"><span style="font:700 14px system-ui;color:#333">Thornwick</span><span style="font:700 12px system-ui;color:#555">240 gp</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin:3px 0">Rogue · Lvl 5</div><div style="height:6px;border-radius:3px;background:#e2e2e2;overflow:hidden"><div style="width:90%;height:100%;background:#8a8a8a"></div></div></div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center"><div style="width:46px;height:46px;border-radius:11px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 14px system-ui;color:#333">Mirabel</span><span style="font:700 8px system-ui;color:#555;border:1.5px solid #b0b0b0;border-radius:5px;padding:2px 6px">POISONED</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin:3px 0">Cleric · Lvl 5</div><div style="height:6px;border-radius:3px;background:#e2e2e2;overflow:hidden"><div style="width:55%;height:100%;background:#8a8a8a"></div></div></div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center"><div style="width:46px;height:46px;border-radius:11px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 14px system-ui;color:#333">Grimm</span><span style="font:700 8px system-ui;color:#fff;background:#5a5a5a;border-radius:5px;padding:2px 6px">DOWN</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin:3px 0">Barbarian · Lvl 5</div><div style="height:6px;border-radius:3px;background:#e2e2e2;overflow:hidden"><div style="width:8%;height:100%;background:#8a8a8a"></div></div></div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;display:flex;gap:11px;align-items:center"><div style="width:46px;height:46px;border-radius:11px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 14px system-ui;color:#333">Elowen</span><span style="font:700 8px system-ui;color:#333;border:1.5px solid #c4c4c4;border-radius:5px;padding:2px 6px">HEALTHY</span></div><div style="font:600 11px system-ui;color:#9a9a9a;margin:3px 0">Wizard · Lvl 4</div><div style="height:6px;border-radius:3px;background:#e2e2e2;overflow:hidden"><div style="width:100%;height:100%;background:#8a8a8a"></div></div></div></div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Characters</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Scenes</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- C2 : Shops DM control -->
+<div style="position:absolute;left:500px;top:2686px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">C2 — Shops (DM controls economy)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Shops</div><div style="font:700 9px system-ui;color:#444;border:1.5px solid #444;border-radius:6px;padding:3px 7px">DM</div></div>
+    <div style="padding:13px 16px 0;display:flex;background:#e8e8e8;border-radius:10px;padding:3px;margin:13px 16px 0">
+      <div style="flex:1;text-align:center;font:700 11px system-ui;color:#333;background:#fff;border-radius:8px;padding:7px 0;box-shadow:0 1px 2px rgba(0,0,0,.1)">Open</div>
+      <div style="flex:1;text-align:center;font:600 11px system-ui;color:#9a9a9a;padding:7px 0">Closed</div>
+      <div style="flex:1;text-align:center;font:600 11px system-ui;color:#9a9a9a;padding:7px 0">Draft</div>
+    </div>
+    <div style="padding:14px 16px;height:380px;background:#fafafa;overflow:hidden">
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;margin-bottom:11px;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="display:flex;gap:11px;align-items:center;margin-bottom:11px"><div style="width:40px;height:40px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="font:700 14px system-ui;color:#333">The Iron Anvil</div><div style="font:600 11px system-ui;color:#9a9a9a">Blacksmith · 12 items</div></div><span style="font:700 9px system-ui;color:#333;border:1.5px solid #333;border-radius:6px;padding:3px 7px">OPEN</span></div>
+        <div style="display:flex;gap:7px"><div style="flex:1;height:32px;border:1.5px solid #333;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#333">Close</div><div style="flex:1;height:32px;border:1.5px solid #d2d2d2;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#777">Edit</div><div style="flex:1;height:32px;border:1.5px solid #d2d2d2;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#777">Duplicate</div></div>
+      </div>
+      <div style="border:1.5px solid #cfcfcf;border-radius:14px;background:#fff;padding:12px;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+        <div style="display:flex;gap:11px;align-items:center;margin-bottom:11px"><div style="width:40px;height:40px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="font:700 14px system-ui;color:#333">Moonleaf Apothecary</div><div style="font:600 11px system-ui;color:#9a9a9a">Alchemist · 8 items</div></div><span style="font:700 9px system-ui;color:#333;border:1.5px solid #333;border-radius:6px;padding:3px 7px">OPEN</span></div>
+        <div style="display:flex;gap:7px"><div style="flex:1;height:32px;border:1.5px solid #333;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#333">Close</div><div style="flex:1;height:32px;border:1.5px solid #d2d2d2;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#777">Edit</div><div style="flex:1;height:32px;border:1.5px solid #d2d2d2;border-radius:8px;display:flex;align-items:center;justify-content:center;font:700 10px system-ui;color:#777">Duplicate</div></div>
+      </div>
+    </div>
+    <div style="height:54px;border-top:1.5px solid #ededed;display:flex;align-items:center;padding:0 16px;background:#fff"><div style="flex:1;height:38px;background:#2f2f2f;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:7px;font:700 13px system-ui"><span style="font-size:16px">+</span> New shop</div></div>
+  </div>
+</div>
+
+<!-- C3 : Scenes list -->
+<div style="position:absolute;left:920px;top:2686px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">C3 — Scenes (active scene drives context)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Scenes</div><div style="font:700 9px system-ui;color:#444;border:1.5px solid #444;border-radius:6px;padding:3px 7px">DM</div></div>
+    <div style="padding:16px;height:472px;background:#fafafa;overflow:hidden">
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">ACTIVE SCENE</div>
+      <div style="border:2px solid #3a3a3a;border-radius:16px;background:#fff;overflow:hidden;margin-bottom:16px;box-shadow:0 3px 10px rgba(0,0,0,.08)">
+        <div style="height:80px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 8px,#ececec 8px,#ececec 16px);position:relative"><span style="position:absolute;top:8px;right:8px;font:700 8px system-ui;color:#fff;background:#3a3a3a;border-radius:5px;padding:3px 8px;letter-spacing:1px">● LIVE</span></div>
+        <div style="padding:12px"><div style="font:700 16px system-ui;color:#333">Port Namas — The Docks</div><div style="display:flex;gap:14px;margin-top:8px;font:600 11px system-ui;color:#9a9a9a"><span>3 shops</span><span>5 NPCs</span><span>2 maps</span></div></div>
+      </div>
+      <div style="font:700 9px system-ui;letter-spacing:1.5px;color:#888;margin-bottom:9px">OTHER SCENES</div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;margin-bottom:10px;display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="font:700 14px system-ui;color:#333">The Sunken Crypt</div><div style="font:600 11px system-ui;color:#9a9a9a">1 shop · 3 NPCs</div></div><div style="font:700 9px system-ui;color:#777;border:1.5px solid #c8c8c8;border-radius:7px;padding:5px 9px">Set active</div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:14px;background:#fff;padding:12px;display:flex;gap:11px;align-items:center"><div style="width:42px;height:42px;border-radius:10px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1"><div style="font:700 14px system-ui;color:#333">Highmoor Keep</div><div style="font:600 11px system-ui;color:#9a9a9a">2 shops · 6 NPCs</div></div><div style="font:700 9px system-ui;color:#777;border:1.5px solid #c8c8c8;border-radius:7px;padding:5px 9px">Set active</div></div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Characters</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Scenes</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- C4 : Scene detail container -->
+<div style="position:absolute;left:1340px;top:2686px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">C4 — Scene detail (container)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="height:96px;background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 8px,#ececec 8px,#ececec 16px);position:relative;display:flex;align-items:flex-end;padding:10px 14px"><span style="position:absolute;top:10px;left:12px;font:700 18px system-ui;color:#888">←</span><div style="background:rgba(255,255,255,.85);border-radius:10px;padding:7px 11px"><div style="font:700 16px system-ui;color:#333">Port Namas — Docks</div><div style="font:600 11px system-ui;color:#777">Scene</div></div></div>
+    <div style="padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1.5px solid #ededed"><span style="font:700 12px system-ui;color:#333">Active scene</span><div style="width:44px;height:25px;border-radius:13px;background:#3a3a3a;position:relative"><div style="position:absolute;top:2.5px;right:2.5px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+    <div style="padding:14px 16px;height:340px;background:#fafafa;overflow:hidden">
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center"><span style="font:700 13px system-ui;color:#333">Shops</span><span style="font:600 11px system-ui;color:#9a9a9a">3 · manage ›</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center"><span style="font:700 13px system-ui;color:#333">NPCs</span><span style="font:600 11px system-ui;color:#9a9a9a">5 · manage ›</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center"><span style="font:700 13px system-ui;color:#333">Journal entries</span><span style="font:600 11px system-ui;color:#9a9a9a">4 · manage ›</span></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:10px"><div style="font:700 13px system-ui;color:#333;margin-bottom:9px">Maps &amp; artwork</div><div style="display:flex;gap:8px"><div style="flex:1;height:50px;border-radius:8px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div><div style="flex:1;height:50px;border-radius:8px;background:repeating-linear-gradient(45deg,#e6e6e6,#e6e6e6 6px,#f2f2f2 6px,#f2f2f2 12px)"></div></div></div>
+      <div style="border:1.5px dashed #d2d2d2;border-radius:12px;background:#f4f4f4;padding:12px;font:600 12px system-ui;color:#9a9a9a">Encounter notes — DM only</div>
+    </div>
+    <div style="height:54px;border-top:1.5px solid #ededed;display:flex;align-items:center;padding:0 16px;background:#fff"><div style="flex:1;height:38px;border:1.5px solid #2f2f2f;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 12px system-ui;color:#2f2f2f">Edit scene</div></div>
+  </div>
+</div>
+
+<!-- C5 : Journal DM reveal -->
+<div style="position:absolute;left:1760px;top:2686px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">C5 — Journal (DM reveals to party)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="padding:9px 16px;border-bottom:1.5px solid #ededed;display:flex;align-items:center;justify-content:space-between;background:#fafafa"><div style="font:700 18px system-ui;color:#333">Journal</div><div style="font:700 9px system-ui;color:#444;border:1.5px solid #444;border-radius:6px;padding:3px 7px">DM</div></div>
+    <div style="padding:13px 16px 0;display:flex;gap:7px;overflow:hidden">
+      <span style="font:700 10px system-ui;color:#fff;background:#3a3a3a;border-radius:20px;padding:6px 12px">NPCs</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Quests</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Places</span>
+      <span style="font:600 10px system-ui;color:#777;border:1.5px solid #d2d2d2;border-radius:20px;padding:6px 12px">Lore</span>
+    </div>
+    <div style="padding:13px 16px;height:399px;background:#fafafa;overflow:hidden">
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:50%;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Dockmaster Hale</div><div style="font:600 10px system-ui;color:#9a9a9a">Revealed to party</div></div><div style="width:30px;height:30px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#333">👁</div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#fff;padding:12px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:50%;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Captain Vorne</div><div style="font:600 10px system-ui;color:#9a9a9a">Revealed to party</div></div><div style="width:30px;height:30px;border-radius:8px;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#333">👁</div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#f4f4f4;padding:12px;margin-bottom:9px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:50%;background:#d8d8d8"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#666">The Masked Broker</div><div style="font:600 10px system-ui;color:#aaa">Hidden — tap eye to reveal</div></div><div style="width:30px;height:30px;border-radius:8px;border:1.5px dashed #bbb;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#bbb">👁</div></div>
+      <div style="border:1.5px solid #d9d9d9;border-radius:12px;background:#f4f4f4;padding:12px;display:flex;gap:11px;align-items:center"><div style="width:38px;height:38px;border-radius:50%;background:#d8d8d8"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#666">Smuggler 'Rat'</div><div style="font:600 10px system-ui;color:#aaa">Hidden — tap eye to reveal</div></div><div style="width:30px;height:30px;border-radius:8px;border:1.5px dashed #bbb;display:flex;align-items:center;justify-content:center;font:700 11px system-ui;color:#bbb">👁</div></div>
+    </div>
+    <div style="height:62px;border-top:1.5px solid #ededed;display:flex;background:#fff">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Characters</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Shops</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#b3b3b3"><div style="width:22px;height:22px;border:2px solid #b3b3b3;border-radius:7px"></div><span style="font:600 10px system-ui">Scenes</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#2f2f2f"><div style="width:22px;height:22px;border:2px solid #2f2f2f;border-radius:7px;background:#ececec"></div><span style="font:700 10px system-ui">Journal</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- post-it DM -->
+<div style="position:absolute;left:2140px;top:2720px;width:200px;background:#ececec;padding:13px 14px;font:600 15px/1.35 Caveat,cursive;color:#555;box-shadow:0 2px 6px rgba(0,0,0,.12);transform:rotate(-1.5deg);border-radius:2px">Active Scene is the hub: setting it live auto-opens its shops to players and reveals its journal entries. One toggle changes the players' whole world.</div>
+
+<!-- ============ SECTION D : CHECKOUT (PLAYER) ============ -->
+<div data-drags-parent="1" style="position:absolute;left:80px;top:3380px;font:700 32px Caveat,cursive;color:#4a4a4a">D · Checkout Flow (Player)</div>
+<div style="position:absolute;left:80px;top:3420px;width:760px;font:600 13px system-ui;color:#8c8c8c">From shop cart to inventory in as few taps as possible. Gold is debited instantly; items land in Inventory. Edge states included.</div>
+
+<!-- D1 : Cart review sheet -->
+<div style="position:absolute;left:80px;top:3466px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">D1 — Cart review (slide-up)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="position:relative;height:560px;background:#f4f4f4">
+      <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,#e9e9e9,#e9e9e9 7px,#f4f4f4 7px,#f4f4f4 14px);opacity:.45"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;top:96px;background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.12);display:flex;flex-direction:column">
+        <div style="padding:14px 18px 0"><div style="width:40px;height:4px;border-radius:2px;background:#d9d9d9;margin:0 auto 14px"></div><div style="display:flex;align-items:center;justify-content:space-between"><div style="font:700 18px system-ui;color:#333">Cart</div><span style="font:600 12px system-ui;color:#9a9a9a">The Iron Anvil</span></div></div>
+        <div style="flex:1;padding:14px 18px;overflow:hidden">
+          <div style="display:flex;gap:11px;align-items:center;margin-bottom:13px"><div style="width:40px;height:40px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Longsword</div><div style="font:600 10px system-ui;color:#9a9a9a">15 gp each</div></div><div style="display:flex;align-items:center;gap:10px;border:1.5px solid #d2d2d2;border-radius:8px;padding:3px 9px"><span style="font:700 14px system-ui;color:#555">−</span><span style="font:700 12px system-ui;color:#333">1</span><span style="font:700 14px system-ui;color:#555">+</span></div></div>
+          <div style="display:flex;gap:11px;align-items:center;margin-bottom:13px"><div style="width:40px;height:40px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Dagger</div><div style="font:600 10px system-ui;color:#9a9a9a">2 gp each</div></div><div style="display:flex;align-items:center;gap:10px;border:1.5px solid #d2d2d2;border-radius:8px;padding:3px 9px"><span style="font:700 14px system-ui;color:#555">−</span><span style="font:700 12px system-ui;color:#333">1</span><span style="font:700 14px system-ui;color:#555">+</span></div></div>
+          <div style="border-top:1.5px dashed #e2e2e2;margin-top:4px;padding-top:13px">
+            <div style="display:flex;justify-content:space-between;font:600 12px system-ui;color:#9a9a9a;margin-bottom:6px"><span>Subtotal</span><span>17 gp</span></div>
+            <div style="display:flex;justify-content:space-between;font:700 15px system-ui;color:#333"><span>Total</span><span>17 gp</span></div>
+          </div>
+        </div>
+        <div style="padding:0 18px 18px"><div style="display:flex;justify-content:space-between;align-items:center;font:600 11px system-ui;color:#9a9a9a;margin-bottom:9px"><span>Your gold</span><span>240 gp → <span style="color:#333;font-weight:700">223 gp</span></span></div><div style="height:48px;background:#2f2f2f;color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font:700 14px system-ui">Buy · 17 gp</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- D2 : Confirm purchase -->
+<div style="position:absolute;left:500px;top:3466px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">D2 — Confirm purchase</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="position:relative;height:560px;background:#f4f4f4">
+      <div style="position:absolute;inset:0;background:rgba(40,40,40,.32)"></div>
+      <div style="position:absolute;left:18px;right:18px;top:120px;background:#fff;border-radius:20px;box-shadow:0 12px 30px rgba(0,0,0,.2);padding:22px 20px">
+        <div style="font:700 18px system-ui;color:#333;text-align:center;margin-bottom:4px">Confirm purchase</div>
+        <div style="font:600 12px system-ui;color:#9a9a9a;text-align:center;margin-bottom:18px">from The Iron Anvil</div>
+        <div style="display:flex;justify-content:space-between;font:600 13px system-ui;color:#555;margin-bottom:9px"><span>Longsword ×1</span><span>15 gp</span></div>
+        <div style="display:flex;justify-content:space-between;font:600 13px system-ui;color:#555;margin-bottom:13px"><span>Dagger ×1</span><span>2 gp</span></div>
+        <div style="border-top:1.5px solid #ededed;padding-top:13px;display:flex;justify-content:space-between;font:700 16px system-ui;color:#333;margin-bottom:18px"><span>Total</span><span>17 gp</span></div>
+        <div style="background:#f4f4f4;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div><div style="font:700 8px system-ui;letter-spacing:1px;color:#aeaeae">GOLD AFTER</div><div style="font:700 18px system-ui;color:#333">223 gp</div></div><div style="font:600 11px system-ui;color:#9a9a9a">was 240</div></div>
+        <div style="display:flex;gap:10px"><div style="flex:1;height:46px;border:1.5px solid #d2d2d2;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui;color:#777">Cancel</div><div style="flex:1.4;height:46px;background:#2f2f2f;color:#fff;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui">Confirm</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- D3 : Success receipt -->
+<div style="position:absolute;left:920px;top:3466px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">D3 — Success / receipt</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="height:534px;background:#fafafa;display:flex;flex-direction:column;align-items:center;padding:40px 24px 20px">
+      <div style="width:78px;height:78px;border-radius:50%;border:2.5px solid #2f2f2f;display:flex;align-items:center;justify-content:center;font:700 34px system-ui;color:#2f2f2f;margin-bottom:20px">✓</div>
+      <div style="font:700 21px system-ui;color:#333;margin-bottom:6px">Purchase complete</div>
+      <div style="font:600 12px system-ui;color:#9a9a9a;text-align:center;margin-bottom:24px">2 items added to your inventory</div>
+      <div style="width:100%;background:#fff;border:1.5px solid #e2e2e2;border-radius:14px;padding:14px;margin-bottom:14px">
+        <div style="display:flex;gap:11px;align-items:center;margin-bottom:11px"><div style="width:36px;height:36px;border-radius:9px;background:#ececec"></div><div style="flex:1;font:700 13px system-ui;color:#333">Longsword</div><span style="font:600 12px system-ui;color:#9a9a9a">×1</span></div>
+        <div style="display:flex;gap:11px;align-items:center"><div style="width:36px;height:36px;border-radius:9px;background:#ececec"></div><div style="flex:1;font:700 13px system-ui;color:#333">Dagger</div><span style="font:600 12px system-ui;color:#9a9a9a">×1</span></div>
+      </div>
+      <div style="width:100%;display:flex;justify-content:space-between;font:600 12px system-ui;color:#9a9a9a;margin-bottom:auto"><span>Paid</span><span style="color:#333;font-weight:700">17 gp · Balance 223 gp</span></div>
+      <div style="width:100%;display:flex;gap:10px;margin-top:18px"><div style="flex:1;height:46px;border:1.5px solid #2f2f2f;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui;color:#2f2f2f">View inventory</div><div style="flex:1;height:46px;border:1.5px solid #d2d2d2;border-radius:11px;display:flex;align-items:center;justify-content:center;font:700 13px system-ui;color:#777">Keep shopping</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- D4 : Insufficient gold edge state -->
+<div style="position:absolute;left:1340px;top:3466px;width:340px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:600 12px system-ui;color:#7a7a7a">D4 — Not enough gold (edge state)</div>
+  <div style="width:340px;border:2px solid #bdbdbd;border-radius:30px;background:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.07);font-family:system-ui,-apple-system,sans-serif">
+    <div style="height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:600 11px system-ui;color:#a8a8a8"><span>9:41</span><span style="letter-spacing:2px">••• ▮</span></div>
+    <div style="position:relative;height:560px;background:#f4f4f4">
+      <div style="position:absolute;inset:0;background:rgba(40,40,40,.32)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;top:96px;background:#fff;border-radius:22px 22px 0 0;box-shadow:0 -8px 24px rgba(0,0,0,.12);display:flex;flex-direction:column">
+        <div style="padding:14px 18px 0"><div style="width:40px;height:4px;border-radius:2px;background:#d9d9d9;margin:0 auto 14px"></div><div style="display:flex;align-items:center;justify-content:space-between"><div style="font:700 18px system-ui;color:#333">Cart</div><span style="font:600 12px system-ui;color:#9a9a9a">The Iron Anvil</span></div></div>
+        <div style="flex:1;padding:14px 18px;overflow:hidden">
+          <div style="display:flex;gap:11px;align-items:center;margin-bottom:13px"><div style="width:40px;height:40px;border-radius:9px;background:#ececec"></div><div style="flex:1"><div style="font:700 13px system-ui;color:#333">Plate Armor</div><div style="font:600 10px system-ui;color:#9a9a9a">1,500 gp each</div></div><div style="display:flex;align-items:center;gap:10px;border:1.5px solid #d2d2d2;border-radius:8px;padding:3px 9px"><span style="font:700 14px system-ui;color:#555">−</span><span style="font:700 12px system-ui;color:#333">1</span><span style="font:700 14px system-ui;color:#555">+</span></div></div>
+          <div style="border:1.5px solid #b0b0b0;background:#f0f0f0;border-radius:12px;padding:12px 13px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px"><div style="width:20px;height:20px;border-radius:50%;border:2px solid #555;display:flex;align-items:center;justify-content:center;font:700 12px system-ui;color:#555;flex-shrink:0">!</div><div style="font:600 12px/1.45 system-ui;color:#555">You're <strong>1,260 gp</strong> short. Sell items, split the cost with the party, or ask your DM.</div></div>
+          <div style="border-top:1.5px dashed #e2e2e2;padding-top:13px"><div style="display:flex;justify-content:space-between;font:700 15px system-ui;color:#333"><span>Total</span><span>1,500 gp</span></div></div>
+        </div>
+        <div style="padding:0 18px 18px"><div style="display:flex;justify-content:space-between;align-items:center;font:600 11px system-ui;color:#9a9a9a;margin-bottom:9px"><span>Your gold</span><span style="color:#333;font-weight:700">240 gp</span></div><div style="height:48px;background:#dcdcdc;color:#999;border-radius:12px;display:flex;align-items:center;justify-content:center;font:700 14px system-ui">Buy · 1,500 gp</div><div style="text-align:center;margin-top:11px;font:700 12px system-ui;color:#555;text-decoration:underline">Request from DM</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- post-it checkout -->
+<div style="position:absolute;left:1720px;top:3500px;width:200px;background:#ececec;padding:13px 14px;font:600 15px/1.35 Caveat,cursive;color:#555;box-shadow:0 2px 6px rgba(0,0,0,.12);transform:rotate(1.5deg);border-radius:2px">D1 (one-tap buy from sheet) is fastest at the table; D2 confirm is optional for big purchases. Always end on D3 so players see gold + new items update.</div>
+</x-dc>
+
+
+</body></html>
