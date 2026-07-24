@@ -78,9 +78,9 @@ class User extends Authenticatable implements PasskeyUser
         return $this->hasMany(Inventory::class, 'user_id', 'id');
     }
 
-    public function characters(): BelongsToMany
+    public function characters(): HasMany
     {
-        return $this->belongsToMany(Character::class, 'campaign_character', 'user_id', 'character_id');
+        return $this->hasMany(Character::class, 'user_id', 'id');
     }
 
     public function shops(): HasMany

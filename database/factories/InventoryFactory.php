@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Character;
 use App\Models\Inventory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,8 @@ class InventoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'character_id' => Character::factory(),
+            'gold' => fake()->numberBetween(1, 1000),
         ];
     }
 }

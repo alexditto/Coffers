@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('character_sheets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
-            $table->string('name');
             $table->string('description')->nullable();
             $table->string('class')->nullable();
             $table->string('race')->nullable();

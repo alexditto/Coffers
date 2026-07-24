@@ -18,7 +18,9 @@ class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->word(),
+            'description' => fake()->text(),
+            'default_price' => fake()->numberBetween(1, 1000),
         ];
     }
 }

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('shop_stock_id')->nullable();
             $table->timestamps();
         });
     }

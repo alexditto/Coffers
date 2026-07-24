@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('character_id')->constrained('characters')->onDelete('cascade');
             $table->integer('gold')->default(0);
             $table->timestamps();

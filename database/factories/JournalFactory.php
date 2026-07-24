@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Character;
 use App\Models\Journal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,9 @@ class JournalFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'character_id' => Character::factory(),
+            'title' => fake()->sentence(),
+            'content' => fake()->paragraph(),
         ];
     }
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('character_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->text('content');
+            $table->longText('content');
             $table->timestamps();
         });
     }

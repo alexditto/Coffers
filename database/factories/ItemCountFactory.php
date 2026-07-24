@@ -18,7 +18,9 @@ class ItemCountFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'inventory_id' => \App\Models\Inventory::factory(),
+            'item_id' => \App\Models\Item::factory(),
+            'count' => fake()->numberBetween(1, 100),
         ];
     }
 }

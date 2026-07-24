@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Campaign;
 use App\Models\Scene;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,9 @@ class SceneFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'campaign_id' => Campaign::factory(),
+            'name' => fake()->name(),
+            'content' => fake()->paragraph(),
         ];
     }
 }
