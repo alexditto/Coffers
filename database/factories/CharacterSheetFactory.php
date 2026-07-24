@@ -18,14 +18,18 @@ class CharacterSheetFactory extends Factory
      */
     public function definition(): array
     {
+        $totalHealth = fake()->numberBetween(11, 100);
+
         return [
             'character_id' => Character::factory(),
             'description' => fake()->text(),
-            'class' => fake()->randomElement(['fighter', 'mage', 'rouge', 'ranger', 'wizard', 'cleric']),
+            'class' => fake()->randomElement(['fighter', 'mage', 'rogue', 'ranger', 'wizard', 'cleric']),
             'race' => fake()->randomElement(['human', 'elf', 'dwarf', 'orc', 'halfling', 'gnome', 'dragonborn']),
+            'level' => fake()->numberBetween(1, 5),
             'alignment' => fake()->randomElement(['lawful good', 'neutral good', 'chaotic good', 'lawful neutral', 'true neutral', 'chaotic neutral', 'lawful evil', 'neutral evil', 'chaotic evil']),
             'background' => fake()->text(),
-            'health' => fake()->numberBetween(1, 100),
+            'health' => $totalHealth - fake()->numberBetween(0, 10),
+            'total_health' => $totalHealth,
             'status' => fake()->randomElement(['none', 'poisoned', 'blinded', 'deafened', 'paralyzed', 'stunned']),
         ];
     }

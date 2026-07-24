@@ -12,6 +12,18 @@ class CharacterSheet extends Model
     /** @use HasFactory<CharacterSheetFactory> */
     use HasFactory;
 
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'level' => 'integer',
+            'health' => 'integer',
+            'total_health' => 'integer',
+        ];
+    }
+
     public function character(): BelongsTo
     {
         return $this->belongsTo(Character::class);

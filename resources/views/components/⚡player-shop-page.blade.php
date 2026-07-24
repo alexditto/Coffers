@@ -40,20 +40,7 @@ new class extends Component {
 };
 ?>
 
-<flux:sidebar.group :heading="$this->selectedCampaign?->name" class="grid">
-    <flux:sidebar.item icon="users" :href="route('characters-page')" :current="request()->routeIs('characters-page')" wire:navigate>
-        {{ __('Characters') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="building-storefront" :href="route('shops')" :current="request()->routeIs('shops')" wire:navigate>
-        {{ __('Shops') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="film" :href="route('scenes')" :current="request()->routeIs('scenes')" wire:navigate>
-        {{ __('Scenes') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="book-open" :href="route('journal')" :current="request()->routeIs('journal')" wire:navigate>
-        {{ __('Journal') }}
-    </flux:sidebar.item>
-</flux:sidebar.group>
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+    <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Shops · {{ $this->selectedCampaign?->name }}</div>
+    <p class="mt-3 text-sm text-content-muted">Browse the shops available in this campaign. Coming soon.</p>
+</div>

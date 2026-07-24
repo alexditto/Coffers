@@ -21,6 +21,7 @@ class ShopFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
+            'status' => fake()->randomElement(['open', 'closed', 'draft']),
             'owner_id' => User::factory(),
         ];
     }

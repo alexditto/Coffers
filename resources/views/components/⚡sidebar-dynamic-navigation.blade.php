@@ -1,58 +1,57 @@
 <?php
 
 use App\Models\Campaign;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
     public ?int $selectedCampaignId = null;
-    public ?Campaign $selectedCampaign = null;
-    public string $campaignName = '';
 
     public function mount(): void
     {
         $this->selectedCampaignId = session('selected_campaign_id');
-        $this->selectedCampaign = $this->campaigns()->firstWhere('id', $this->selectedCampaignId);
-        $this->campaignName = $this->selectedCampaign?->name ?? '';
+    }
+
+    #[On('campaign-switched')]
+    public function onCampaignSwitched(int $campaignId): void
+    {
+        $this->selectedCampaignId = $campaignId;
+
+        unset($this->selectedCampaign);
     }
 
     /**
-     * @return Collection<int, Campaign>
+     * Only campaigns the user belongs to or owns are considered accessible.
      */
     #[Computed]
-    public function campaigns(): Collection
+    public function selectedCampaign(): ?Campaign
     {
+        if (! $this->selectedCampaignId) {
+            return null;
+        }
+
         $user = auth()->user();
 
-        return $user->campaigns
-            ->merge($user->owned_campaigns)
+        return $user->campaigns->merge($user->owned_campaigns)
             ->unique('id')
-            ->sortBy('name')
-            ->values();
+            ->firstWhere('id', $this->selectedCampaignId);
+    }
+
+    #[Computed]
+    public function isDungeonMaster(): bool
+    {
+        return (bool) $this->selectedCampaign && $this->selectedCampaign->owner_id === auth()->id();
     }
 };
 ?>
 
 <flux:sidebar.nav>
-    @if($selectedCampaign)
-        <flux:sidebar.group :heading="__($campaignName)" class="grid">
-            <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>
-                {{ __('Character') }}
-            </flux:sidebar.item>
-            <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>
-                {{ __('Shops') }}
-            </flux:sidebar.item>
-            <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>
-                {{ __('Inventory') }}
-            </flux:sidebar.item>
-            <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>
-                {{ __('Journal') }}
-            </flux:sidebar.item>
-        </flux:sidebar.group>
+    @if ($this->selectedCampaign)
+        @if ($this->isDungeonMaster)
+            <livewire:sidebar-d-m-navigation :key="'sidebar-nav-dm-'.$this->selectedCampaign->id" />
+        @else
+            <livewire:sidebar-player-navigation :key="'sidebar-nav-player-'.$this->selectedCampaign->id" />
+        @endif
     @endif
 </flux:sidebar.nav>

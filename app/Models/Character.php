@@ -18,6 +18,11 @@ class Character extends Model
         return $this->hasOne(CharacterSheet::class);
     }
 
+    public function inventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

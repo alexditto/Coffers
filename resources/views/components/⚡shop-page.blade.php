@@ -37,23 +37,23 @@ new class extends Component {
             ->unique('id')
             ->firstWhere('id', $this->selectedCampaignId);
     }
+
+    #[Computed]
+    public function isDungeonMaster(): bool
+    {
+        return (bool) $this->selectedCampaign && $this->selectedCampaign->owner_id === auth()->id();
+    }
 };
 ?>
 
-<flux:sidebar.group :heading="$this->selectedCampaign?->name" class="grid">
-    <flux:sidebar.item icon="users" :href="route('characters-page')" :current="request()->routeIs('characters-page')" wire:navigate>
-        {{ __('Characters') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="building-storefront" :href="route('shops')" :current="request()->routeIs('shops')" wire:navigate>
-        {{ __('Shops') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="film" :href="route('scenes')" :current="request()->routeIs('scenes')" wire:navigate>
-        {{ __('Scenes') }}
-    </flux:sidebar.item>
-
-    <flux:sidebar.item icon="book-open" :href="route('journal')" :current="request()->routeIs('journal')" wire:navigate>
-        {{ __('Journal') }}
-    </flux:sidebar.item>
-</flux:sidebar.group>
+<div>
+    @if (! $this->selectedCampaign)
+        <div class="rounded-2xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+            Select or create a campaign to see its shops.
+        </div>
+    @elseif ($this->isDungeonMaster)
+        <livewire:d-m-shop-page :key="'shop-page-dm-'.$this->selectedCampaign->id" />
+    @else
+        <livewire:player-shop-page :key="'shop-page-player-'.$this->selectedCampaign->id" />
+    @endif
+</div>
