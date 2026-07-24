@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Campaign;
 use App\Models\Character;
-use App\Models\CharacterSheet;
-use App\Models\Inventory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,9 +22,12 @@ class CharacterFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => fake()->name(),
-            'character_sheet_id' => CharacterSheet::factory(),
+            // Nullable by default: CharacterSheetFactory and InventoryFactory each default their
+            // own `character_id` to Character::factory(), so eagerly creating them here would
+            // recurse forever. Attach a sheet/inventory explicitly when a test needs one.
+            'character_sheet_id' => null,
             'campaign_id' => Campaign::factory(),
-            'inventory_id' => Inventory::factory(),
+            'inventory_id' => null,
         ];
     }
 }
