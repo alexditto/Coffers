@@ -43,7 +43,7 @@ test('shows dungeon master icons when the user owns the selected campaign', func
         ->assertDontSee('Inventory');
 });
 
-test('shows player icons when the user is a member but not the owner', function () {
+test('shows player icons without inventory, which now lives on the character page', function () {
     $owner = User::factory()->create();
     $member = User::factory()->create();
     $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
@@ -55,8 +55,8 @@ test('shows player icons when the user is a member but not the owner', function 
         ->test('mobile-bottom-navigation')
         ->assertSee('Character')
         ->assertSee('Shops')
-        ->assertSee('Inventory')
         ->assertSee('Journal')
+        ->assertDontSee('Inventory')
         ->assertDontSee('Scenes')
         ->assertDontSee('Characters');
 });
@@ -73,7 +73,7 @@ test('switches from player to dungeon master icons when the campaign-switched ev
 
     $component = Livewire::actingAs($user)
         ->test('mobile-bottom-navigation')
-        ->assertSee('Inventory')
+        ->assertSee('Character')
         ->assertDontSee('Scenes');
 
     // In production, campaign-selector-banner updates the session before dispatching

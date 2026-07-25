@@ -79,11 +79,6 @@ new class extends Component {
                 <span class="text-[10px] font-semibold">Shops</span>
             </a>
 
-            <a href="{{ route('inventory') }}" wire:navigate class="flex flex-1 flex-col items-center justify-center gap-1 py-2 {{ request()->routeIs('inventory') ? 'text-brand-600' : 'text-content-faint' }}">
-                <flux:icon.archive-box class="size-5" />
-                <span class="text-[10px] font-semibold">Inventory</span>
-            </a>
-
             <a href="{{ route('journal') }}" wire:navigate class="flex flex-1 flex-col items-center justify-center gap-1 py-2 {{ request()->routeIs('journal') ? 'text-brand-600' : 'text-content-faint' }}">
                 <flux:icon.book-open class="size-5" />
                 <span class="text-[10px] font-semibold">Journal</span>

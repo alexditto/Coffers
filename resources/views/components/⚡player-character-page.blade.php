@@ -320,6 +320,17 @@ new class extends Component {
             </div>
         </div>
 
+        <flux:button
+            :href="route('inventory')"
+            wire:navigate
+            variant="ghost"
+            size="sm"
+            class="mt-3 w-full"
+            icon:trailing="chevron-right"
+        >
+            View Inventory
+        </flux:button>
+
         <div class="mt-5">
             <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Conditions</div>
 

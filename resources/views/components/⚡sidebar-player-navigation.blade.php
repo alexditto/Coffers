@@ -49,10 +49,6 @@ new class extends Component {
         {{ __('Shops') }}
     </flux:sidebar.item>
 
-    <flux:sidebar.item icon="archive-box" :href="route('inventory')" :current="request()->routeIs('inventory')" wire:navigate>
-        {{ __('Inventory') }}
-    </flux:sidebar.item>
-
     <flux:sidebar.item icon="book-open" :href="route('journal')" :current="request()->routeIs('journal')" wire:navigate>
         {{ __('Journal') }}
     </flux:sidebar.item>

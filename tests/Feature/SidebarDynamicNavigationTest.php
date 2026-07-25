@@ -57,8 +57,8 @@ test('shows player navigation when the user is a member but not the owner', func
         ->assertSee('Port Namas')
         ->assertSee('Character')
         ->assertSee('Shops')
-        ->assertSee('Inventory')
         ->assertSee('Journal')
+        ->assertDontSee('Inventory')
         ->assertDontSee('Scenes')
         ->assertDontSee('Characters');
 });
@@ -76,7 +76,7 @@ test('switches from player to dungeon master navigation when the campaign-switch
     $component = Livewire::actingAs($user)
         ->test('sidebar-dynamic-navigation')
         ->assertSee('Port Namas')
-        ->assertSee('Inventory')
+        ->assertSee('Character')
         ->assertDontSee('Scenes');
 
     // In production, campaign-selector-banner updates the session before dispatching

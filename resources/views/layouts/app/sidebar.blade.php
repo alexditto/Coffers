@@ -40,14 +40,43 @@
         <!-- Mobile Top Bar -->
         <flux:header class="lg:hidden">
             <x-app-logo href="{{ route('dashboard') }}" wire:navigate />
+        </flux:header>
 
-            <flux:spacer />
+        <div class="pb-20 lg:pb-0 grow">
+            {{ $slot }}
+        </div>
 
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    :initials="auth()->user()->initials()"
-                    icon-trailing="chevron-down"
-                />
+        <!-- Mobile Bottom Navigation -->
+        <nav class="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-surface lg:hidden">
+            <flux:dropdown position="top" align="start" class="flex-1">
+                <button type="button" class="flex w-full flex-col items-center justify-center gap-1 py-2 text-content-faint">
+                    <flux:icon.squares-2x2 class="size-5" />
+                    <span class="text-[10px] font-semibold">More</span>
+                </button>
+
+                <flux:menu>
+                    <flux:menu.item icon="home" :href="route('dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </flux:menu.item>
+                    <flux:menu.item icon="user-group" :href="route('friends')" wire:navigate>
+                        {{ __('Friends') }}
+                    </flux:menu.item>
+                    <flux:menu.item icon="map" :href="route('campaign-builder')" wire:navigate>
+                        {{ __('Manage Campaigns') }}
+                    </flux:menu.item>
+                    <flux:menu.item icon="identification" :href="route('character-builder')" wire:navigate>
+                        {{ __('Manage Characters') }}
+                    </flux:menu.item>
+                </flux:menu>
+            </flux:dropdown>
+
+            <livewire:mobile-bottom-navigation />
+
+            <flux:dropdown position="top" align="end" class="flex-1">
+                <button type="button" class="flex w-full flex-col items-center justify-center gap-1 py-2 text-content-faint">
+                    <flux:avatar size="xs" circle :name="auth()->user()->name" :initials="auth()->user()->initials()" />
+                    <span class="text-[10px] font-semibold">Profile</span>
+                </button>
 
                 <flux:menu>
                     <flux:menu.radio.group>
@@ -90,37 +119,6 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
-        </flux:header>
-
-        <div class="pb-20 lg:pb-0 grow">
-            {{ $slot }}
-        </div>
-
-        <!-- Mobile Bottom Navigation -->
-        <nav class="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-surface lg:hidden">
-            <flux:dropdown position="top" align="start" class="flex-1">
-                <button type="button" class="flex w-full flex-col items-center justify-center gap-1 py-2 text-content-faint">
-                    <flux:icon.squares-2x2 class="size-5" />
-                    <span class="text-[10px] font-semibold">More</span>
-                </button>
-
-                <flux:menu>
-                    <flux:menu.item icon="home" :href="route('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </flux:menu.item>
-                    <flux:menu.item icon="user-group" :href="route('friends')" wire:navigate>
-                        {{ __('Friends') }}
-                    </flux:menu.item>
-                    <flux:menu.item icon="map" :href="route('campaign-builder')" wire:navigate>
-                        {{ __('Manage Campaigns') }}
-                    </flux:menu.item>
-                    <flux:menu.item icon="identification" :href="route('character-builder')" wire:navigate>
-                        {{ __('Manage Characters') }}
-                    </flux:menu.item>
-                </flux:menu>
-            </flux:dropdown>
-
-            <livewire:mobile-bottom-navigation />
         </nav>
 
         @persist('toast')
