@@ -22,6 +22,7 @@ class SceneFactory extends Factory
             'campaign_id' => Campaign::factory(),
             'name' => fake()->name(),
             'content' => fake()->paragraph(),
+            'status' => 'inactive',
         ];
     }
 }

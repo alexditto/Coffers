@@ -20,7 +20,10 @@
                         {{ __('Friends') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="home" :href="route('campaign-builder')" :current="request()->routeIs('campaign-builder')" wire:navigate>
-                        {{ __('Campaign Builder') }}
+                        {{ __('Manage Campaigns') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="home" :href="route('character-builder')" :current="request()->routeIs('character-builder')" wire:navigate>
+                        {{ __('Manage Characters') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>

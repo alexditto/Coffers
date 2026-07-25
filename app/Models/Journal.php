@@ -12,6 +12,16 @@ class Journal extends Model
     /** @use HasFactory<JournalFactory> */
     use HasFactory;
 
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'revealed' => 'boolean',
+        ];
+    }
+
     public function campaign(): BelongsTo
     {
         return $this->belongsTo(Campaign::class);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Campaign;
+use App\Models\Shop;
 use App\Models\User;
 use Livewire\Livewire;
 
@@ -32,7 +33,7 @@ test('shows the dungeon master shop page when the user owns the selected campaig
     Livewire::actingAs($owner)
         ->test('shop-page')
         ->assertSee('+ New shop')
-        ->assertDontSee('Browse the shops');
+        ->assertDontSee('No shops discovered');
 });
 
 test('shows the player shop page when the user is a member but not the owner', function () {
@@ -40,14 +41,15 @@ test('shows the player shop page when the user is a member but not the owner', f
     $member = User::factory()->create();
     $campaign = Campaign::factory()->create(['owner_id' => $owner->id, 'name' => 'Port Namas']);
     $member->campaigns()->attach($campaign->id);
+    $shop = Shop::factory()->create(['owner_id' => $owner->id, 'status' => 'open', 'name' => 'The Iron Anvil']);
+    $shop->campaigns()->attach($campaign->id);
 
     session(['selected_campaign_id' => $campaign->id]);
 
     Livewire::actingAs($member)
         ->test('shop-page')
-        ->assertSee('Port Namas')
-        ->assertSee('Browse the shops')
-        ->assertDontSee('Manage the shops');
+        ->assertSee('The Iron Anvil')
+        ->assertDontSee('+ New shop');
 });
 
 test('switches from player to dungeon master shop page when the campaign-switched event fires', function () {
@@ -62,7 +64,8 @@ test('switches from player to dungeon master shop page when the campaign-switche
 
     $component = Livewire::actingAs($user)
         ->test('shop-page')
-        ->assertSee('Browse the shops');
+        ->assertSee('No shops discovered')
+        ->assertDontSee('+ New shop');
 
     // In production, campaign-selector-banner updates the session before dispatching
     // this event; simulate that here since we're dispatching it directly in the test.
@@ -70,7 +73,7 @@ test('switches from player to dungeon master shop page when the campaign-switche
 
     $component->dispatch('campaign-switched', campaignId: $ownedCampaign->id)
         ->assertSee('+ New shop')
-        ->assertDontSee('Browse the shops');
+        ->assertDontSee('No shops discovered');
 });
 
 test('guests are redirected to the login page', function () {

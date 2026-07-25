@@ -21,6 +21,7 @@ class CharacterSheet extends Model
             'level' => 'integer',
             'health' => 'integer',
             'total_health' => 'integer',
+            'ac' => 'integer',
         ];
     }
 

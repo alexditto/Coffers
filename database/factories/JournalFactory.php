@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Character;
+use App\Models\Campaign;
 use App\Models\Journal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,9 +19,11 @@ class JournalFactory extends Factory
     public function definition(): array
     {
         return [
-            'campaign_id' => Character::factory(),
+            'campaign_id' => Campaign::factory(),
             'title' => fake()->sentence(),
+            'type' => fake()->randomElement(['npc', 'quest', 'place', 'lore']),
             'content' => fake()->paragraph(),
+            'revealed' => fake()->boolean(),
         ];
     }
 }

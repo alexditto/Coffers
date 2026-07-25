@@ -9,10 +9,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('/friends', 'friends')->name('friends');
     Route::view('/campaign-builder', 'campaign-builder')->name('campaign-builder');
+    Route::view('/character-builder', 'character-builder')->name('character-builder');
 
     Route::view('/character', 'character-page')->name('character-page');
     Route::view('/characters', 'characters-page')->name('characters-page');
     Route::view('/shops', 'shops')->name('shops');
+    Route::view('/shops/{shop}', 'shop-detail')->name('shop-detail');
     Route::view('/inventory', 'inventory')->name('inventory');
     Route::view('/scenes', 'scenes')->name('scenes');
     Route::view('/journal', 'journal')->name('journal');
