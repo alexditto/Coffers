@@ -10,7 +10,15 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
-    const TYPES = [
+    const FILTERS = [
+        'all' => 'All',
+        'npc' => 'NPCs',
+        'quest' => 'Quests',
+        'place' => 'Places',
+        'lore' => 'Lore',
+    ];
+
+    const ENTRY_TYPES = [
         'npc' => 'NPCs',
         'quest' => 'Quests',
         'place' => 'Places',
@@ -19,9 +27,15 @@ new class extends Component {
 
     public ?int $selectedCampaignId = null;
 
-    public string $typeFilter = 'npc';
+    public string $typeFilter = 'all';
+
+    public string $search = '';
+
+    public ?int $viewingEntryId = null;
 
     public ?int $editingEntryId = null;
+
+    public ?int $deletingEntryId = null;
 
     public string $entryTitle = '';
 
@@ -40,7 +54,8 @@ new class extends Component {
     public function onCampaignSwitched(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
-        $this->typeFilter = 'npc';
+        $this->typeFilter = 'all';
+        $this->search = '';
 
         unset($this->campaign, $this->entries);
     }
@@ -68,9 +83,32 @@ new class extends Component {
         return (bool) $this->campaign && $this->campaign->owner_id === auth()->id();
     }
 
-    public function typeOptions(): array
+    public function filterOptions(): array
     {
-        return self::TYPES;
+        return self::FILTERS;
+    }
+
+    public function entryTypeOptions(): array
+    {
+        return self::ENTRY_TYPES;
+    }
+
+    /**
+     * Whether the current user can reveal/hide, edit, or otherwise manage this entry -
+     * the DM can manage every entry, a player can only manage entries they authored.
+     */
+    public function canManage(Journal $entry): bool
+    {
+        return $this->isOwner || $entry->user_id === auth()->id();
+    }
+
+    /**
+     * Whether the current user is allowed to see this entry at all - the same rule
+     * used to filter the entries() list, re-checked here to guard direct calls.
+     */
+    public function canView(Journal $entry): bool
+    {
+        return $this->isOwner || $entry->revealed || $entry->user_id === auth()->id();
     }
 
     /**
@@ -83,12 +121,22 @@ new class extends Component {
             return collect();
         }
 
-        $query = $this->campaign->journals()->where('type', $this->typeFilter)->orderBy('title');
+        $query = $this->campaign->journals()
+            ->when($this->typeFilter !== 'all', fn ($query) => $query->where('type', $this->typeFilter))
+            ->when(
+                $this->search !== '',
+                fn ($query) => $query->where(
+                    fn ($query) => $query->where('title', 'like', '%'.$this->search.'%')
+                        ->orWhere('content', 'like', '%'.$this->search.'%')
+                )
+            )
+            ->orderBy('title');
 
-        // Players only ever receive entries the DM has revealed - hidden entries
-        // never reach the response, they aren't just visually hidden client-side.
+        // Players only ever receive entries that have been shared with the party, plus
+        // their own private entries - hidden entries never reach the response, they
+        // aren't just visually hidden client-side.
         if (! $this->isOwner) {
-            $query->where('revealed', true);
+            $query->where(fn ($query) => $query->where('revealed', true)->orWhere('user_id', auth()->id()));
         }
 
         return $query->get();
@@ -101,15 +149,50 @@ new class extends Component {
         unset($this->entries);
     }
 
-    public function toggleReveal(int $entryId): void
+    #[Computed]
+    public function viewingEntry(): ?Journal
     {
-        abort_unless($this->isOwner, 403);
+        if (! $this->viewingEntryId || ! $this->campaign) {
+            return null;
+        }
 
+        return $this->campaign->journals()->where('id', $this->viewingEntryId)->with('user')->first();
+    }
+
+    #[Computed]
+    public function deletingEntry(): ?Journal
+    {
+        if (! $this->deletingEntryId || ! $this->campaign) {
+            return null;
+        }
+
+        return $this->campaign->journals()->where('id', $this->deletingEntryId)->first();
+    }
+
+    public function viewEntry(int $entryId): void
+    {
         $entry = $this->campaign->journals()->where('id', $entryId)->first();
 
         if (! $entry) {
             return;
         }
+
+        abort_unless($this->canView($entry), 403);
+
+        $this->viewingEntryId = $entry->id;
+
+        Flux::modal('entry-details')->show();
+    }
+
+    public function toggleReveal(int $entryId): void
+    {
+        $entry = $this->campaign->journals()->where('id', $entryId)->first();
+
+        if (! $entry) {
+            return;
+        }
+
+        abort_unless($this->canManage($entry), 403);
 
         $entry->update(['revealed' => ! $entry->revealed]);
 
@@ -118,13 +201,13 @@ new class extends Component {
 
     public function editEntry(int $entryId): void
     {
-        abort_unless($this->isOwner, 403);
-
         $entry = $this->campaign->journals()->where('id', $entryId)->first();
 
         if (! $entry) {
             return;
         }
+
+        abort_unless($this->canManage($entry), 403);
 
         $this->editingEntryId = $entry->id;
         $this->entryTitle = $entry->title;
@@ -137,11 +220,11 @@ new class extends Component {
 
     public function newEntry(): void
     {
-        abort_unless($this->isOwner, 403);
+        abort_unless($this->campaign, 403);
 
         $this->editingEntryId = null;
         $this->entryTitle = '';
-        $this->entryType = $this->typeFilter;
+        $this->entryType = $this->typeFilter === 'all' ? 'lore' : $this->typeFilter;
         $this->entryContent = '';
         $this->entryImage = '';
 
@@ -150,18 +233,22 @@ new class extends Component {
 
     public function saveEntry(): void
     {
-        abort_unless($this->isOwner, 403);
+        abort_unless($this->campaign, 403);
+
+        if ($this->editingEntryId) {
+            $entry = $this->campaign->journals()->where('id', $this->editingEntryId)->firstOrFail();
+
+            abort_unless($this->canManage($entry), 403);
+        }
 
         $data = $this->validate([
             'entryTitle' => ['required', 'string', 'max:255'],
-            'entryType' => ['required', Rule::in(array_keys(self::TYPES))],
+            'entryType' => ['required', Rule::in(array_keys(self::ENTRY_TYPES))],
             'entryContent' => ['required', 'string', 'max:5000'],
             'entryImage' => ['nullable', 'string', 'max:2048'],
         ]);
 
         if ($this->editingEntryId) {
-            $entry = $this->campaign->journals()->where('id', $this->editingEntryId)->firstOrFail();
-
             $entry->update([
                 'title' => $data['entryTitle'],
                 'type' => $data['entryType'],
@@ -172,6 +259,7 @@ new class extends Component {
             Flux::toast('Entry updated.', variant: 'success');
         } else {
             $this->campaign->journals()->create([
+                'user_id' => auth()->id(),
                 'title' => $data['entryTitle'],
                 'type' => $data['entryType'],
                 'content' => $data['entryContent'],
@@ -179,7 +267,9 @@ new class extends Component {
                 'revealed' => false,
             ]);
 
-            $this->typeFilter = $data['entryType'];
+            if ($this->typeFilter !== 'all') {
+                $this->typeFilter = $data['entryType'];
+            }
 
             Flux::toast('Entry created.', variant: 'success');
         }
@@ -187,6 +277,48 @@ new class extends Component {
         unset($this->entries);
 
         Flux::modal('edit-entry')->close();
+    }
+
+    public function confirmDeleteEntry(): void
+    {
+        if (! $this->editingEntryId) {
+            return;
+        }
+
+        $entry = $this->campaign->journals()->where('id', $this->editingEntryId)->first();
+
+        if (! $entry) {
+            return;
+        }
+
+        abort_unless($this->canManage($entry), 403);
+
+        $this->deletingEntryId = $entry->id;
+
+        Flux::modal('edit-entry')->close();
+        Flux::modal('confirm-delete-entry')->show();
+    }
+
+    public function deleteEntry(): void
+    {
+        $entry = $this->deletingEntry;
+
+        if (! $entry) {
+            return;
+        }
+
+        abort_unless($this->canManage($entry), 403);
+
+        $name = $entry->title;
+        $entry->delete();
+
+        $this->deletingEntryId = null;
+
+        unset($this->entries);
+
+        Flux::modal('confirm-delete-entry')->close();
+
+        Flux::toast($name.' deleted.', variant: 'success');
     }
 };
 ?>
@@ -199,8 +331,10 @@ new class extends Component {
             Select or create a campaign to see its journal.
         </div>
     @else
-        <div class="mt-4 flex flex-wrap gap-2">
-            @foreach ($this->typeOptions() as $value => $label)
+        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Search entries..." clearable class="mt-4" />
+
+        <div class="mt-3 flex flex-wrap gap-2">
+            @foreach ($this->filterOptions() as $value => $label)
                 <button
                     type="button"
                     wire:click="setTypeFilter('{{ $value }}')"
@@ -217,33 +351,47 @@ new class extends Component {
 
         <div class="mt-4 flex flex-col gap-2">
             @forelse ($this->entries as $entry)
+                @php $canManage = $this->canManage($entry); @endphp
+
                 <div wire:key="entry-{{ $entry->id }}" @class([
                     'flex items-center gap-3 rounded-xl border border-line p-3',
-                    'bg-canvas' => $this->isOwner && ! $entry->revealed,
+                    'bg-canvas' => $canManage && ! $entry->revealed,
                 ])>
-                    @if ($entry->image)
-                        <img src="{{ $entry->image }}" alt="{{ $entry->title }}" class="size-10 shrink-0 rounded-full border border-line object-cover" />
-                    @else
-                        <flux:avatar size="sm" circle name="{{ $entry->title }}" color="auto" />
-                    @endif
-
-                    <div class="min-w-0 flex-1">
-                        <div class="truncate text-sm font-bold text-content">{{ $entry->title }}</div>
-
-                        @if ($this->isOwner)
-                            <div class="text-xs text-content-muted">{{ $entry->revealed ? 'Revealed to party' : 'Hidden — tap to reveal' }}</div>
-                        @elseif ($entry->content)
-                            <p class="mt-0.5 line-clamp-2 text-xs text-content-muted">{{ $entry->content }}</p>
+                    <button type="button" wire:click="viewEntry({{ $entry->id }})" class="flex min-w-0 flex-1 items-center gap-3 text-left">
+                        @if ($entry->image)
+                            <img src="{{ $entry->image }}" alt="{{ $entry->title }}" class="size-10 shrink-0 rounded-full border border-line object-cover" />
+                        @else
+                            <flux:avatar size="sm" circle name="{{ $entry->title }}" color="auto" />
                         @endif
-                    </div>
 
-                    @if ($this->isOwner)
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-sm font-bold text-content">{{ $entry->title }}</div>
+
+                            @if ($canManage)
+                                <div class="text-xs text-content-muted">
+                                    @if ($this->isOwner)
+                                        {{ $entry->revealed ? 'Revealed to party' : 'Hidden — tap to reveal' }}
+                                    @else
+                                        {{ $entry->revealed ? 'Shared with party' : 'Private — tap to share' }}
+                                    @endif
+                                </div>
+                            @elseif ($entry->content)
+                                <p class="mt-0.5 line-clamp-2 text-xs text-content-muted">{{ $entry->content }}</p>
+                            @endif
+                        </div>
+                    </button>
+
+                    @if ($canManage)
                         <flux:button
                             size="sm"
                             :variant="$entry->revealed ? 'primary' : 'ghost'"
                             wire:click="toggleReveal({{ $entry->id }})"
                         >
-                            {{ $entry->revealed ? 'Hide' : 'Reveal' }}
+                            @if ($this->isOwner)
+                                {{ $entry->revealed ? 'Hide' : 'Reveal' }}
+                            @else
+                                {{ $entry->revealed ? 'Private' : 'Share' }}
+                            @endif
                         </flux:button>
 
                         <flux:button size="sm" variant="ghost" wire:click="editEntry({{ $entry->id }})">Edit</flux:button>
@@ -251,46 +399,116 @@ new class extends Component {
                 </div>
             @empty
                 <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
-                    No entries yet.
+                    @if ($search !== '')
+                        No entries match "{{ $search }}".
+                    @else
+                        No entries yet.
+                    @endif
                 </div>
             @endforelse
         </div>
 
-        @if ($this->isOwner)
-            <flux:button variant="primary" class="mt-5 w-full" wire:click="newEntry">
-                + New entry
-            </flux:button>
+        <flux:button variant="primary" class="mt-5 w-full" wire:click="newEntry">
+            + New entry
+        </flux:button>
 
-            <flux:modal name="edit-entry" class="md:w-96">
-                <form wire:submit="saveEntry" class="space-y-6">
-                    <div>
-                        <flux:heading size="lg">{{ $editingEntryId ? 'Edit Entry' : 'New Entry' }}</flux:heading>
-                        <flux:text class="mt-2">New entries start hidden until you reveal them to the party.</flux:text>
+        <flux:modal name="edit-entry" class="md:w-96">
+            <form wire:submit="saveEntry" class="space-y-6">
+                <div>
+                    <flux:heading size="lg">{{ $editingEntryId ? 'Edit Entry' : 'New Entry' }}</flux:heading>
+                    <flux:text class="mt-2">New entries start private until you share them with the party.</flux:text>
+                </div>
+
+                <flux:input wire:model="entryTitle" label="Title" placeholder="e.g. Dockmaster Hale" />
+
+                <flux:select wire:model="entryType" label="Type">
+                    @foreach ($this->entryTypeOptions() as $value => $label)
+                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+
+                <flux:textarea wire:model="entryContent" label="Details" rows="4" />
+
+                <flux:input wire:model="entryImage" label="Image URL" placeholder="https://..." />
+
+                @if ($editingEntryId)
+                    <flux:button type="button" variant="danger" class="w-full" wire:click="confirmDeleteEntry">
+                        Delete entry
+                    </flux:button>
+                @endif
+
+                <div class="flex gap-2">
+                    <flux:spacer />
+
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+
+                    <flux:button type="submit" variant="primary">{{ $editingEntryId ? 'Save changes' : 'Create entry' }}</flux:button>
+                </div>
+            </form>
+        </flux:modal>
+
+        <flux:modal name="confirm-delete-entry" class="md:w-96">
+            <div class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Delete entry?</flux:heading>
+                    <flux:text class="mt-2">
+                        This will permanently delete {{ $this->deletingEntry?->title }}. This can't be undone.
+                    </flux:text>
+                </div>
+
+                <div class="flex gap-2">
+                    <flux:spacer />
+
+                    <flux:modal.close>
+                        <flux:button variant="ghost">Cancel</flux:button>
+                    </flux:modal.close>
+
+                    <flux:button variant="danger" wire:click="deleteEntry">Delete</flux:button>
+                </div>
+            </div>
+        </flux:modal>
+
+        <flux:modal name="entry-details" class="md:w-96">
+            @if ($this->viewingEntry)
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        @if ($this->viewingEntry->image)
+                            <img src="{{ $this->viewingEntry->image }}" alt="{{ $this->viewingEntry->title }}" class="size-12 shrink-0 rounded-full border border-line object-cover" />
+                        @else
+                            <flux:avatar size="lg" circle name="{{ $this->viewingEntry->title }}" color="auto" />
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <flux:heading size="lg">{{ $this->viewingEntry->title }}</flux:heading>
+                            <flux:text class="text-content-muted">{{ $this->entryTypeOptions()[$this->viewingEntry->type] ?? $this->viewingEntry->type }}</flux:text>
+                        </div>
                     </div>
 
-                    <flux:input wire:model="entryTitle" label="Title" placeholder="e.g. Dockmaster Hale" />
+                    <flux:text>{{ $this->viewingEntry->content }}</flux:text>
 
-                    <flux:select wire:model="entryType" label="Type">
-                        @foreach ($this->typeOptions() as $value => $label)
-                            <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-
-                    <flux:textarea wire:model="entryContent" label="Details" rows="4" />
-
-                    <flux:input wire:model="entryImage" label="Image URL" placeholder="https://..." />
+                    @if ($this->canManage($this->viewingEntry))
+                        <flux:text class="text-content-muted">
+                            @if ($this->isOwner)
+                                {{ $this->viewingEntry->revealed ? 'Revealed to party' : 'Hidden — tap to reveal' }}
+                            @else
+                                {{ $this->viewingEntry->revealed ? 'Shared with party' : 'Private — tap to share' }}
+                            @endif
+                        </flux:text>
+                    @elseif ($this->viewingEntry->user)
+                        <flux:text class="text-content-muted">Written by {{ $this->viewingEntry->user->name }}</flux:text>
+                    @endif
 
                     <div class="flex gap-2">
                         <flux:spacer />
 
                         <flux:modal.close>
-                            <flux:button variant="ghost">Cancel</flux:button>
+                            <flux:button variant="ghost">Close</flux:button>
                         </flux:modal.close>
-
-                        <flux:button type="submit" variant="primary">{{ $editingEntryId ? 'Save changes' : 'Create entry' }}</flux:button>
                     </div>
-                </form>
-            </flux:modal>
-        @endif
+                </div>
+            @endif
+        </flux:modal>
     @endif
 </div>

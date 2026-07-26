@@ -10,6 +10,8 @@ use Livewire\Component;
 new class extends Component {
     public string $friendEmail = '';
 
+    public ?int $removingFriendId = null;
+
     /**
      * @return Collection<int, User>
      */
@@ -43,6 +45,16 @@ new class extends Component {
     public function sentRequests(): Collection
     {
         return auth()->user()->friends()->with('friend')->where('status', 'pending')->latest()->get();
+    }
+
+    #[Computed]
+    public function removingFriend(): ?User
+    {
+        if (! $this->removingFriendId) {
+            return null;
+        }
+
+        return $this->friends->firstWhere('id', $this->removingFriendId);
     }
 
     public function sendRequest(): void
@@ -116,6 +128,50 @@ new class extends Component {
 
         unset($this->pendingRequests);
     }
+
+    public function cancelRequest(int $friendId): void
+    {
+        auth()->user()->friends()
+            ->where('id', $friendId)
+            ->where('status', 'pending')
+            ->delete();
+
+        unset($this->sentRequests);
+    }
+
+    public function confirmRemoveFriend(int $friendUserId): void
+    {
+        if (! $this->friends->contains('id', $friendUserId)) {
+            return;
+        }
+
+        $this->removingFriendId = $friendUserId;
+
+        Flux::modal('confirm-remove-friend')->show();
+    }
+
+    public function removeFriend(): void
+    {
+        $friend = $this->removingFriend;
+
+        if (! $friend) {
+            return;
+        }
+
+        Friend::query()
+            ->where(fn ($query) => $query->where('user_id', auth()->id())->where('friend_id', $friend->id))
+            ->orWhere(fn ($query) => $query->where('user_id', $friend->id)->where('friend_id', auth()->id()))
+            ->where('status', 'approved')
+            ->delete();
+
+        $this->removingFriendId = null;
+
+        unset($this->friends);
+
+        Flux::modal('confirm-remove-friend')->close();
+
+        Flux::toast($friend->name.' removed from your friends.', variant: 'success');
+    }
 };
 ?>
 
@@ -176,7 +232,10 @@ new class extends Component {
                             <div class="truncate text-xs text-content-muted">{{ $sent->friend->email }}</div>
                         </div>
 
-                        <flux:badge size="sm">Pending</flux:badge>
+                        <div class="flex shrink-0 items-center gap-2">
+                            <flux:badge size="sm">Pending</flux:badge>
+                            <flux:button size="sm" variant="ghost" wire:click="cancelRequest({{ $sent->id }})">Cancel</flux:button>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -200,9 +259,32 @@ new class extends Component {
                             <div class="truncate text-sm font-bold text-content">{{ $friend->name }}</div>
                             <div class="truncate text-xs text-content-muted">{{ $friend->email }}</div>
                         </div>
+
+                        <flux:button size="sm" variant="ghost" wire:click="confirmRemoveFriend({{ $friend->id }})">Remove</flux:button>
                     </div>
                 @endforeach
             </div>
         @endif
     </div>
+
+    <flux:modal name="confirm-remove-friend" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Remove friend?</flux:heading>
+                <flux:text class="mt-2">
+                    This will remove {{ $this->removingFriend?->name }} from your friends list. You can send a new request later if you change your mind.
+                </flux:text>
+            </div>
+
+            <div class="flex gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                <flux:button variant="danger" wire:click="removeFriend">Remove</flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </div>

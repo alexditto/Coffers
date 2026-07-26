@@ -2,13 +2,12 @@
 
 use Livewire\Component;
 
-new class extends Component
-{
+new class extends Component {
     public function mount(): void
     {
         $campaignId = request()->integer('campaign');
 
-        if (! $campaignId) {
+        if (!$campaignId) {
             return;
         }
 
@@ -24,9 +23,11 @@ new class extends Component
 ?>
 
 <div class="mx-auto flex w-full max-w-2xl flex-col gap-6">
-    <livewire:campaign-selector-banner />
+    <div class="hidden lg:block">
+        <livewire:campaign-selector-banner/>
+    </div>
 
-    <livewire:campaign-details />
+    <livewire:campaign-details/>
 
-    <livewire:campaign-characters />
+    <livewire:campaign-characters/>
 </div>

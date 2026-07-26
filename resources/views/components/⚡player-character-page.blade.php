@@ -63,6 +63,9 @@ new class extends Component {
     public function onCampaignSwitched(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
+        if(session('selected_campaign_role') !== 'player'){
+            redirect('/characters');
+        }
 
         unset($this->campaign, $this->character, $this->partyMembers);
     }

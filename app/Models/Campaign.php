@@ -39,6 +39,11 @@ class Campaign extends Model
         return $this->belongsToMany(Shop::class, 'campaign_shop');
     }
 
+    public function players(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'campaign_user');
+    }
+
     public function journals(): HasMany
     {
         return $this->hasMany(Journal::class);
@@ -47,5 +52,15 @@ class Campaign extends Model
     public function scenes(): HasMany
     {
         return $this->hasMany(Scene::class);
+    }
+
+    public function userIsDm()
+    {
+        return $this->owner_id === auth()->user()->id;
+    }
+
+    public function userIsPlayer()
+    {
+        return $this->characters()->where('user_id', auth()->user()->id)->exists();
     }
 }

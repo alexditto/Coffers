@@ -43,6 +43,10 @@ new class extends Component {
     {
         $this->selectedCampaignId = $campaignId;
 
+        if(session('selected_campaign_role') !== 'dm'){
+            redirect('/character');
+        }
+
         unset($this->campaign, $this->characters);
     }
 

@@ -15,6 +15,13 @@ new class extends Component {
 
     public function mount(): void
     {
+        if(!session('selected_campaign_id')) {
+            session(['selected_campaign_id' => $this->campaigns->first()?->id]);
+            $campaign = $this->campaigns->first();
+            $campaignId = $campaign?->id;
+            session(['selected_campaign_role' => $campaign?->userIsDm() ? 'dm' : 'player']);
+            $this->dispatch('campaign-switched', campaignId: $campaignId);
+        }
         $sessionCampaignId = session('selected_campaign_id');
 
         $this->selectedCampaignId = $this->campaigns->firstWhere('id', $sessionCampaignId)?->id
@@ -46,7 +53,9 @@ new class extends Component {
     {
         $this->selectedCampaignId = $campaignId;
 
+        $campaign = $this->campaigns->firstWhere('id', $campaignId);
         session(['selected_campaign_id' => $campaignId]);
+        session(['selected_campaign_role' => $campaign?->userIsDm() ? 'dm' : 'player']);
 
         $this->dispatch('campaign-switched', campaignId: $campaignId);
     }
@@ -86,7 +95,7 @@ new class extends Component {
         </flux:modal.trigger>
     @else
         <flux:dropdown position="bottom" align="start" class="block w-full">
-            <button type="button" class="flex w-full items-center justify-between gap-3 rounded-2xl border border-line bg-surface-subtle px-4 py-3 text-left shadow-sm transition hover:border-brand-300">
+            <button type="button" class="flex w-full items-center justify-between gap-3 rounded-2xl lg:border lg:border-line lg:bg-surface-subtle px-4 py-3 text-left lg:shadow-sm transition hover:border-brand-300">
                 <div class="min-w-0">
                     <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Current Campaign</div>
                     <div class="mt-0.5 flex items-center gap-1.5">

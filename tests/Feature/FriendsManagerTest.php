@@ -124,3 +124,85 @@ test('cannot approve or reject a friend request that does not belong to them', f
 
     expect($friendRequest->fresh()->status)->toBe('pending');
 });
+
+test('can cancel a sent friend request', function () {
+    $user = User::factory()->create();
+    $target = User::factory()->create();
+
+    $friendRequest = Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $target->id, 'status' => 'pending']);
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('cancelRequest', $friendRequest->id);
+
+    expect(Friend::find($friendRequest->id))->toBeNull();
+});
+
+test('cannot cancel a sent friend request that does not belong to them', function () {
+    $user = User::factory()->create();
+    $requester = User::factory()->create();
+    $target = User::factory()->create();
+
+    $friendRequest = Friend::factory()->create(['user_id' => $requester->id, 'friend_id' => $target->id, 'status' => 'pending']);
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('cancelRequest', $friendRequest->id);
+
+    expect(Friend::find($friendRequest->id))->not->toBeNull();
+});
+
+test('cannot cancel an already approved friendship via cancelRequest', function () {
+    $user = User::factory()->create();
+    $target = User::factory()->create();
+
+    $friendship = Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $target->id, 'status' => 'approved']);
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('cancelRequest', $friendship->id);
+
+    expect(Friend::find($friendship->id))->not->toBeNull();
+});
+
+test('can remove an approved friend they initiated', function () {
+    $user = User::factory()->create();
+    $friendUser = User::factory()->create();
+
+    $friendship = Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $friendUser->id, 'status' => 'approved']);
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('confirmRemoveFriend', $friendUser->id)
+        ->assertSee('Remove friend?')
+        ->assertSee($friendUser->name)
+        ->call('removeFriend');
+
+    expect(Friend::find($friendship->id))->toBeNull();
+});
+
+test('can remove an approved friend who initiated the friendship', function () {
+    $user = User::factory()->create();
+    $friendUser = User::factory()->create();
+
+    $friendship = Friend::factory()->create(['user_id' => $friendUser->id, 'friend_id' => $user->id, 'status' => 'approved']);
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('confirmRemoveFriend', $friendUser->id)
+        ->call('removeFriend');
+
+    expect(Friend::find($friendship->id))->toBeNull();
+});
+
+test('cannot remove a user who is not actually a friend', function () {
+    $user = User::factory()->create();
+    $stranger = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('friends-manager')
+        ->call('confirmRemoveFriend', $stranger->id)
+        ->call('removeFriend');
+
+    expect(Friend::count())->toBe(0);
+});

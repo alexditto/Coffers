@@ -40,9 +40,10 @@
         <!-- Mobile Top Bar -->
         <flux:header class="lg:hidden">
             <x-app-logo href="{{ route('dashboard') }}" wire:navigate />
+            <livewire:campaign-selector-banner/>
         </flux:header>
 
-        <div class="pb-20 lg:pb-0 grow">
+        <div class="pb-15 lg:pb-0 grow">
             {{ $slot }}
         </div>
 
@@ -128,5 +129,6 @@
         @endpersist
 
         @fluxScripts
+        @vite('resources/js/app.js')
     </body>
 </html>

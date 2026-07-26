@@ -16,7 +16,11 @@ new class extends Component {
 
     public string $search = '';
 
+    public ?int $viewingItemCountId = null;
+
     public ?int $removingItemCountId = null;
+
+    public int $removeQuantity = 1;
 
     public ?int $givingItemCountId = null;
 
@@ -31,6 +35,9 @@ new class extends Component {
     public function onCampaignSwitched(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
+        if(session('selected_campaign_role') !== 'player'){
+            redirect('/dashboard');
+        }
 
         unset($this->campaign, $this->character, $this->itemCounts, $this->partyMembers);
     }
@@ -115,6 +122,19 @@ new class extends Component {
     }
 
     #[Computed]
+    public function viewingItem(): ?ItemCount
+    {
+        if (! $this->viewingItemCountId || ! $this->character?->inventory) {
+            return null;
+        }
+
+        return $this->character->inventory->item_counts()
+            ->where('id', $this->viewingItemCountId)
+            ->with('item')
+            ->first();
+    }
+
+    #[Computed]
     public function removingItem(): ?ItemCount
     {
         if (! $this->removingItemCountId || ! $this->character?->inventory) {
@@ -140,6 +160,23 @@ new class extends Component {
             ->first();
     }
 
+    public function viewItem(int $itemCountId): void
+    {
+        if (! $this->character?->inventory) {
+            return;
+        }
+
+        $itemCount = $this->character->inventory->item_counts()->where('id', $itemCountId)->first();
+
+        if (! $itemCount) {
+            return;
+        }
+
+        $this->viewingItemCountId = $itemCount->id;
+
+        Flux::modal('item-details')->show();
+    }
+
     public function confirmRemove(int $itemCountId): void
     {
         if (! $this->character?->inventory) {
@@ -153,7 +190,9 @@ new class extends Component {
         }
 
         $this->removingItemCountId = $itemCount->id;
+        $this->removeQuantity = $itemCount->count;
 
+        Flux::modal('item-details')->close();
         Flux::modal('confirm-remove')->show();
     }
 
@@ -165,16 +204,27 @@ new class extends Component {
             return;
         }
 
+        $data = $this->validate([
+            'removeQuantity' => ['required', 'integer', 'min:1', 'max:'.$itemCount->count],
+        ]);
+
+        $quantity = (int) $data['removeQuantity'];
         $name = $itemCount->item->name;
-        $itemCount->delete();
+
+        if ($quantity >= $itemCount->count) {
+            $itemCount->delete();
+        } else {
+            $itemCount->decrement('count', $quantity);
+        }
 
         $this->removingItemCountId = null;
+        $this->reset('removeQuantity');
 
         unset($this->itemCounts);
 
         Flux::modal('confirm-remove')->close();
 
-        Flux::toast($name.' removed from your inventory.', variant: 'success');
+        Flux::toast('Removed '.$quantity.' × '.$name.' from your inventory.', variant: 'success');
     }
 
     public function openGive(int $itemCountId): void
@@ -192,6 +242,7 @@ new class extends Component {
         $this->givingItemCountId = $itemCount->id;
         $this->giveToCharacterId = '';
 
+        Flux::modal('item-details')->close();
         Flux::modal('give-item')->show();
     }
 
@@ -266,7 +317,12 @@ new class extends Component {
 
         <div class="mt-4 flex flex-col gap-2">
             @forelse ($this->itemCounts as $itemCount)
-                <div wire:key="item-{{ $itemCount->id }}" class="flex items-center gap-3 rounded-xl border border-line bg-surface p-3">
+                <button
+                    type="button"
+                    wire:key="item-{{ $itemCount->id }}"
+                    wire:click="viewItem({{ $itemCount->id }})"
+                    class="flex w-full items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left transition hover:border-brand-300"
+                >
                     @if ($itemCount->item->image)
                         <img src="{{ $itemCount->item->image }}" alt="{{ $itemCount->item->name }}" class="size-10 shrink-0 rounded-lg border border-line object-cover" />
                     @else
@@ -282,15 +338,7 @@ new class extends Component {
                     </div>
 
                     <span class="shrink-0 text-sm font-bold text-content-muted">×{{ $itemCount->count }}</span>
-
-                    <div class="flex shrink-0 gap-1">
-                        @if ($this->partyMembers->isNotEmpty())
-                            <flux:button size="sm" variant="ghost" wire:click="openGive({{ $itemCount->id }})">Give</flux:button>
-                        @endif
-
-                        <flux:button size="sm" variant="ghost" wire:click="confirmRemove({{ $itemCount->id }})">Remove</flux:button>
-                    </div>
-                </div>
+                </button>
             @empty
                 <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
                     @if ($search !== '')
@@ -302,14 +350,61 @@ new class extends Component {
             @endforelse
         </div>
 
+        <flux:modal name="item-details" class="md:w-96">
+            @if ($this->viewingItem)
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        @if ($this->viewingItem->item->image)
+                            <img src="{{ $this->viewingItem->item->image }}" alt="{{ $this->viewingItem->item->name }}" class="size-12 shrink-0 rounded-lg border border-line object-cover" />
+                        @else
+                            <flux:avatar size="lg" name="{{ $this->viewingItem->item->name }}" color="auto" />
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <flux:heading size="lg">{{ $this->viewingItem->item->name }}</flux:heading>
+                            <flux:text class="text-content-muted">×{{ $this->viewingItem->count }} owned</flux:text>
+                        </div>
+                    </div>
+
+                    @if ($this->viewingItem->item->description)
+                        <flux:text>{{ $this->viewingItem->item->description }}</flux:text>
+                    @endif
+
+                    @if ($this->viewingItem->item->default_price)
+                        <flux:text class="text-gold-600">Worth {{ $this->viewingItem->item->default_price }} gp</flux:text>
+                    @endif
+
+                    <div class="flex gap-2">
+                        <flux:spacer />
+
+                        <flux:modal.close>
+                            <flux:button variant="ghost">Close</flux:button>
+                        </flux:modal.close>
+
+                        @if ($this->partyMembers->isNotEmpty())
+                            <flux:button variant="ghost" wire:click="openGive({{ $this->viewingItem->id }})">Give</flux:button>
+                        @endif
+
+                        <flux:button variant="danger" wire:click="confirmRemove({{ $this->viewingItem->id }})">Remove</flux:button>
+                    </div>
+                </div>
+            @endif
+        </flux:modal>
+
         <flux:modal name="confirm-remove" class="md:w-96">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Remove item?</flux:heading>
                     <flux:text class="mt-2">
-                        This will remove {{ $this->removingItem?->item->name }} from your inventory. This can't be undone.
+                        Choose how many of {{ $this->removingItem?->item->name }} to remove from your inventory. This can't be undone.
                     </flux:text>
                 </div>
+
+                <flux:field>
+                    <flux:label>Quantity</flux:label>
+                    <flux:input type="number" wire:model="removeQuantity" min="1" :max="$this->removingItem?->count" />
+                    <flux:error name="removeQuantity" />
+                </flux:field>
 
                 <div class="flex gap-2">
                     <flux:spacer />

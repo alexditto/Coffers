@@ -140,6 +140,94 @@ test('the owner can remove an item after confirming', function () {
     expect(ItemCount::find($itemCount->id))->toBeNull();
 });
 
+test('clicking an item opens a details modal with the give and remove actions', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $sword = Item::factory()->create(['name' => 'Longsword', 'description' => 'A trusty blade']);
+    $itemCount = ItemCount::factory()->create(['inventory_id' => $inventory->id, 'item_id' => $sword->id, 'count' => 4]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($user)
+        ->test('inventory-page')
+        ->assertDontSeeHtml('wire:click="confirmRemove')
+        ->assertDontSeeHtml('wire:click="openGive')
+        ->call('viewItem', $itemCount->id)
+        ->assertSee('Longsword')
+        ->assertSee('trusty blade')
+        ->assertSee('4 owned')
+        ->assertSeeHtml('wire:click="confirmRemove');
+});
+
+test('the owner can remove a partial quantity of an item', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $sword = Item::factory()->create(['name' => 'Longsword']);
+    $itemCount = ItemCount::factory()->create(['inventory_id' => $inventory->id, 'item_id' => $sword->id, 'count' => 5]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($user)
+        ->test('inventory-page')
+        ->call('confirmRemove', $itemCount->id)
+        ->set('removeQuantity', 2)
+        ->call('removeItem')
+        ->assertHasNoErrors();
+
+    expect(ItemCount::find($itemCount->id)->count)->toBe(3);
+});
+
+test('removing the full owned quantity deletes the item entirely', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $sword = Item::factory()->create(['name' => 'Longsword']);
+    $itemCount = ItemCount::factory()->create(['inventory_id' => $inventory->id, 'item_id' => $sword->id, 'count' => 3]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($user)
+        ->test('inventory-page')
+        ->call('confirmRemove', $itemCount->id)
+        ->set('removeQuantity', 3)
+        ->call('removeItem');
+
+    expect(ItemCount::find($itemCount->id))->toBeNull();
+});
+
+test('cannot remove more of an item than is owned', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $sword = Item::factory()->create(['name' => 'Longsword']);
+    $itemCount = ItemCount::factory()->create(['inventory_id' => $inventory->id, 'item_id' => $sword->id, 'count' => 2]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($user)
+        ->test('inventory-page')
+        ->call('confirmRemove', $itemCount->id)
+        ->set('removeQuantity', 5)
+        ->call('removeItem')
+        ->assertHasErrors(['removeQuantity']);
+
+    expect(ItemCount::find($itemCount->id)->count)->toBe(2);
+});
+
 test('cannot remove another characters item by guessing its id', function () {
     $user = User::factory()->create();
     $campaign = Campaign::factory()->create();

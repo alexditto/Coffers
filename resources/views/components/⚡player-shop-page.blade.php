@@ -18,6 +18,9 @@ new class extends Component {
     public function onCampaignSwitched(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
+        if(session('selected_campaign_role') !== 'player'){
+            redirect('/dashboard');
+        }
 
         unset($this->campaign, $this->shops);
     }

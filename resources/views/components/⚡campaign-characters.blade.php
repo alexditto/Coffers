@@ -24,6 +24,10 @@ new class extends Component {
         $this->campaignId = $campaignId;
         $this->selectedCharacterId = '';
 
+        if(session('selected_campaign_role') !== 'dm'){
+            redirect('/dashboard');
+        }
+
         unset($this->campaign, $this->characters, $this->availableFriendCharacters);
     }
 
@@ -174,7 +178,8 @@ new class extends Component {
         <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Add a character</div>
 
         @if ($this->availableFriendCharacters->isEmpty())
-            <p class="mt-2 text-sm text-content-muted">None of your friends have an unassigned character to add right now.</p>
+            <p class="mt-2 text-sm text-content-muted">None of your friends have created a character to add right now.</p>
+            <p class="mt-2 text-sm text-content-muted text-center">Typical PCs, am I right?</p>
         @else
             <form wire:submit="addCharacter" class="mt-3 flex items-start gap-2">
                 <div class="flex-1">

@@ -20,7 +20,7 @@ new class extends Component {
 
     public ?int $selectedCampaignId = null;
 
-    public string $statusFilter = 'open';
+    public string $statusFilter = 'all';
 
     public ?int $editingShopId = null;
 
@@ -49,7 +49,11 @@ new class extends Component {
     public function onCampaignSwitched(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
-        $this->statusFilter = 'open';
+        $this->statusFilter = 'all';
+
+        if(session('selected_campaign_role') !== 'player'){
+            redirect('/dashboard');
+        }
 
         unset($this->campaign, $this->shops);
     }
