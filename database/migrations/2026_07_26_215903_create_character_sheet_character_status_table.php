@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('character_sheets', function (Blueprint $table) {
-            $table->integer('level')->default(1)->after('race');
+        Schema::create('character_sheet_character_status', function (Blueprint $table) {
+            $table->foreignId('character_sheet_id')->constrained()->onDelete('cascade');
+            $table->foreignId('character_status_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -21,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('character_sheets', function (Blueprint $table) {
-            $table->dropColumn('level');
-        });
+        Schema::dropIfExists('character_sheet_character_status');
     }
 };

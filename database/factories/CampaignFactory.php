@@ -19,7 +19,7 @@ class CampaignFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->randomElement(['Campaign 1', 'Campaign 2', 'Campaign 3']),
             'description' => fake()->text(),
             'status' => fake()->randomElement(['active', 'inactive']),
             'owner_id' => User::factory(),

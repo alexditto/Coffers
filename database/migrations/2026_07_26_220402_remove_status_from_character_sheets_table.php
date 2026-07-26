@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('character_sheets', function (Blueprint $table) {
-            $table->integer('level')->default(1)->after('race');
+            $table->dropColumn('status');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('character_sheets', function (Blueprint $table) {
-            $table->dropColumn('level');
+            $table->string('status')->nullable();
         });
     }
 };

@@ -193,7 +193,6 @@ new class extends Component {
 
         $attributes['character_id'] = $character->id;
         $attributes['health'] = $data['characterTotalHealth'];
-        $attributes['status'] = 'none';
 
         $sheet = CharacterSheet::create($attributes);
 
@@ -229,7 +228,6 @@ new class extends Component {
                 'total_health' => $source->total_health,
                 'health' => $source->total_health,
                 'ac' => $source->ac,
-                'status' => 'none',
             ]);
 
             $copy->update(['character_sheet_id' => $sheet->id]);

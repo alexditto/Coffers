@@ -66,7 +66,7 @@ new class extends Component {
     #[Computed]
     public function campaign(): ?Campaign
     {
-        if (! $this->selectedCampaignId) {
+        if (!$this->selectedCampaignId) {
             return null;
         }
 
@@ -80,7 +80,7 @@ new class extends Component {
     #[Computed]
     public function isOwner(): bool
     {
-        return (bool) $this->campaign && $this->campaign->owner_id === auth()->id();
+        return (bool)$this->campaign && $this->campaign->owner_id === auth()->id();
     }
 
     public function filterOptions(): array
@@ -117,17 +117,17 @@ new class extends Component {
     #[Computed]
     public function entries(): Collection
     {
-        if (! $this->campaign) {
+        if (!$this->campaign) {
             return collect();
         }
 
         $query = $this->campaign->journals()
-            ->when($this->typeFilter !== 'all', fn ($query) => $query->where('type', $this->typeFilter))
+            ->when($this->typeFilter !== 'all', fn($query) => $query->where('type', $this->typeFilter))
             ->when(
                 $this->search !== '',
-                fn ($query) => $query->where(
-                    fn ($query) => $query->where('title', 'like', '%'.$this->search.'%')
-                        ->orWhere('content', 'like', '%'.$this->search.'%')
+                fn($query) => $query->where(
+                    fn($query) => $query->where('title', 'like', '%' . $this->search . '%')
+                        ->orWhere('content', 'like', '%' . $this->search . '%')
                 )
             )
             ->orderBy('title');
@@ -135,8 +135,8 @@ new class extends Component {
         // Players only ever receive entries that have been shared with the party, plus
         // their own private entries - hidden entries never reach the response, they
         // aren't just visually hidden client-side.
-        if (! $this->isOwner) {
-            $query->where(fn ($query) => $query->where('revealed', true)->orWhere('user_id', auth()->id()));
+        if (!$this->isOwner) {
+            $query->where(fn($query) => $query->where('revealed', true)->orWhere('user_id', auth()->id()));
         }
 
         return $query->get();
@@ -152,7 +152,7 @@ new class extends Component {
     #[Computed]
     public function viewingEntry(): ?Journal
     {
-        if (! $this->viewingEntryId || ! $this->campaign) {
+        if (!$this->viewingEntryId || !$this->campaign) {
             return null;
         }
 
@@ -162,7 +162,7 @@ new class extends Component {
     #[Computed]
     public function deletingEntry(): ?Journal
     {
-        if (! $this->deletingEntryId || ! $this->campaign) {
+        if (!$this->deletingEntryId || !$this->campaign) {
             return null;
         }
 
@@ -173,7 +173,7 @@ new class extends Component {
     {
         $entry = $this->campaign->journals()->where('id', $entryId)->first();
 
-        if (! $entry) {
+        if (!$entry) {
             return;
         }
 
@@ -188,13 +188,13 @@ new class extends Component {
     {
         $entry = $this->campaign->journals()->where('id', $entryId)->first();
 
-        if (! $entry) {
+        if (!$entry) {
             return;
         }
 
         abort_unless($this->canManage($entry), 403);
 
-        $entry->update(['revealed' => ! $entry->revealed]);
+        $entry->update(['revealed' => !$entry->revealed]);
 
         unset($this->entries);
     }
@@ -203,7 +203,7 @@ new class extends Component {
     {
         $entry = $this->campaign->journals()->where('id', $entryId)->first();
 
-        if (! $entry) {
+        if (!$entry) {
             return;
         }
 
@@ -281,13 +281,13 @@ new class extends Component {
 
     public function confirmDeleteEntry(): void
     {
-        if (! $this->editingEntryId) {
+        if (!$this->editingEntryId) {
             return;
         }
 
         $entry = $this->campaign->journals()->where('id', $this->editingEntryId)->first();
 
-        if (! $entry) {
+        if (!$entry) {
             return;
         }
 
@@ -303,7 +303,7 @@ new class extends Component {
     {
         $entry = $this->deletingEntry;
 
-        if (! $entry) {
+        if (!$entry) {
             return;
         }
 
@@ -318,7 +318,7 @@ new class extends Component {
 
         Flux::modal('confirm-delete-entry')->close();
 
-        Flux::toast($name.' deleted.', variant: 'success');
+        Flux::toast($name . ' deleted.', variant: 'success');
     }
 };
 ?>
@@ -331,7 +331,8 @@ new class extends Component {
             Select or create a campaign to see its journal.
         </div>
     @else
-        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Search entries..." clearable class="mt-4" />
+        <flux:input wire:model.live="search" icon="magnifying-glass" placeholder="Search entries..." clearable
+                    class="mt-4"/>
 
         <div class="mt-3 flex flex-wrap gap-2">
             @foreach ($this->filterOptions() as $value => $label)
@@ -357,11 +358,13 @@ new class extends Component {
                     'flex items-center gap-3 rounded-xl border border-line p-3',
                     'bg-canvas' => $canManage && ! $entry->revealed,
                 ])>
-                    <button type="button" wire:click="viewEntry({{ $entry->id }})" class="flex min-w-0 flex-1 items-center gap-3 text-left">
+                    <button type="button" wire:click="viewEntry({{ $entry->id }})"
+                            class="flex min-w-0 flex-1 items-center gap-3 text-left cursor-pointer">
                         @if ($entry->image)
-                            <img src="{{ $entry->image }}" alt="{{ $entry->title }}" class="size-10 shrink-0 rounded-full border border-line object-cover" />
+                            <img src="{{ $entry->image }}" alt="{{ $entry->title }}"
+                                 class="size-10 shrink-0 rounded-full border border-line object-cover"/>
                         @else
-                            <flux:avatar size="sm" circle name="{{ $entry->title }}" color="auto" />
+                            <flux:avatar size="sm" circle name="{{ $entry->title }}" color="auto"/>
                         @endif
 
                         <div class="min-w-0 flex-1">
@@ -370,9 +373,9 @@ new class extends Component {
                             @if ($canManage)
                                 <div class="text-xs text-content-muted">
                                     @if ($this->isOwner)
-                                        {{ $entry->revealed ? 'Revealed to party' : 'Hidden — tap to reveal' }}
+                                        {{ $entry->revealed ? 'Revealed to party' : 'Hidden — tap to view' }}
                                     @else
-                                        {{ $entry->revealed ? 'Shared with party' : 'Private — tap to share' }}
+                                        {{ $entry->revealed ? 'Shared with party' : 'Private — tap to view' }}
                                     @endif
                                 </div>
                             @elseif ($entry->content)
@@ -394,7 +397,8 @@ new class extends Component {
                             @endif
                         </flux:button>
 
-                        <flux:button size="sm" variant="ghost" wire:click="editEntry({{ $entry->id }})">Edit</flux:button>
+                        <flux:button size="sm" variant="ghost" wire:click="editEntry({{ $entry->id }})">Edit
+                        </flux:button>
                     @endif
                 </div>
             @empty
@@ -419,7 +423,7 @@ new class extends Component {
                     <flux:text class="mt-2">New entries start private until you share them with the party.</flux:text>
                 </div>
 
-                <flux:input wire:model="entryTitle" label="Title" placeholder="e.g. Dockmaster Hale" />
+                <flux:input wire:model="entryTitle" label="Title" placeholder="e.g. Dockmaster Hale"/>
 
                 <flux:select wire:model="entryType" label="Type">
                     @foreach ($this->entryTypeOptions() as $value => $label)
@@ -427,9 +431,9 @@ new class extends Component {
                     @endforeach
                 </flux:select>
 
-                <flux:textarea wire:model="entryContent" label="Details" rows="4" />
+                <flux:textarea wire:model="entryContent" label="Details" rows="4"/>
 
-                <flux:input wire:model="entryImage" label="Image URL" placeholder="https://..." />
+                <flux:input wire:model="entryImage" label="Image URL" placeholder="https://..."/>
 
                 @if ($editingEntryId)
                     <flux:button type="button" variant="danger" class="w-full" wire:click="confirmDeleteEntry">
@@ -438,13 +442,14 @@ new class extends Component {
                 @endif
 
                 <div class="flex gap-2">
-                    <flux:spacer />
+                    <flux:spacer/>
 
                     <flux:modal.close>
                         <flux:button variant="ghost">Cancel</flux:button>
                     </flux:modal.close>
 
-                    <flux:button type="submit" variant="primary">{{ $editingEntryId ? 'Save changes' : 'Create entry' }}</flux:button>
+                    <flux:button type="submit"
+                                 variant="primary">{{ $editingEntryId ? 'Save changes' : 'Create entry' }}</flux:button>
                 </div>
             </form>
         </flux:modal>
@@ -459,7 +464,7 @@ new class extends Component {
                 </div>
 
                 <div class="flex gap-2">
-                    <flux:spacer />
+                    <flux:spacer/>
 
                     <flux:modal.close>
                         <flux:button variant="ghost">Cancel</flux:button>
@@ -475,33 +480,26 @@ new class extends Component {
                 <div class="space-y-6">
                     <div class="flex items-center gap-3">
                         @if ($this->viewingEntry->image)
-                            <img src="{{ $this->viewingEntry->image }}" alt="{{ $this->viewingEntry->title }}" class="size-12 shrink-0 rounded-full border border-line object-cover" />
+                            <img src="{{ $this->viewingEntry->image }}" alt="{{ $this->viewingEntry->title }}"
+                                 class="size-12 shrink-0 rounded-full border border-line object-cover"/>
                         @else
-                            <flux:avatar size="lg" circle name="{{ $this->viewingEntry->title }}" color="auto" />
+                            <flux:avatar size="lg" circle name="{{ $this->viewingEntry->title }}" color="auto"/>
                         @endif
 
                         <div class="min-w-0 flex-1">
                             <flux:heading size="lg">{{ $this->viewingEntry->title }}</flux:heading>
-                            <flux:text class="text-content-muted">{{ $this->entryTypeOptions()[$this->viewingEntry->type] ?? $this->viewingEntry->type }}</flux:text>
+                            <flux:text
+                                class="text-content-muted">{{ $this->entryTypeOptions()[$this->viewingEntry->type] ?? $this->viewingEntry->type }}</flux:text>
                         </div>
                     </div>
 
                     <flux:text>{{ $this->viewingEntry->content }}</flux:text>
 
-                    @if ($this->canManage($this->viewingEntry))
-                        <flux:text class="text-content-muted">
-                            @if ($this->isOwner)
-                                {{ $this->viewingEntry->revealed ? 'Revealed to party' : 'Hidden — tap to reveal' }}
-                            @else
-                                {{ $this->viewingEntry->revealed ? 'Shared with party' : 'Private — tap to share' }}
-                            @endif
-                        </flux:text>
-                    @elseif ($this->viewingEntry->user)
-                        <flux:text class="text-content-muted">Written by {{ $this->viewingEntry->user->name }}</flux:text>
-                    @endif
+
+                    <flux:text class="text-content-muted">Written by {{ $this->viewingEntry->user->name }}</flux:text>
 
                     <div class="flex gap-2">
-                        <flux:spacer />
+                        <flux:spacer/>
 
                         <flux:modal.close>
                             <flux:button variant="ghost">Close</flux:button>

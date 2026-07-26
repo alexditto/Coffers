@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('character_sheets', function (Blueprint $table) {
-            $table->integer('level')->default(1)->after('race');
+        Schema::create('character_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('effect')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('character_sheets', function (Blueprint $table) {
-            $table->dropColumn('level');
-        });
+        Schema::dropIfExists('character_statuses');
     }
 };

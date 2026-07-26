@@ -352,6 +352,11 @@ new class extends Component {
 
         <div class="mt-2 flex flex-col gap-2">
             @forelse ($this->partyMembers as $member)
+                @php
+                    $memberSheet = $member->character_sheet;
+                    $memberStatus = $this->statusLabel($memberSheet?->status);
+                @endphp
+
                 <div wire:key="party-member-{{ $member->id }}" class="flex items-center gap-3 rounded-xl border border-line p-3">
                     @if ($member->image)
                         <img src="{{ $member->image }}" alt="{{ $member->name }}" class="size-10 shrink-0 rounded-xl border border-line object-cover" />
@@ -362,10 +367,15 @@ new class extends Component {
                     <div class="min-w-0 flex-1">
                         <div class="truncate text-sm font-bold text-content">{{ $member->name }}</div>
                         <div class="text-xs text-content-muted">
-                            {{ $member->character_sheet?->race ? ucfirst($member->character_sheet->race) : 'Unknown race' }}
+                            {{ $memberSheet?->race ? ucfirst($memberSheet->race) : 'Unknown race' }}
                             ·
-                            {{ $member->character_sheet?->class ? ucfirst($member->character_sheet->class) : 'Unknown class' }}
+                            {{ $memberSheet?->class ? ucfirst($memberSheet->class) : 'Unknown class' }}
                         </div>
+                    </div>
+
+                    <div class="flex shrink-0 flex-col items-end gap-1">
+                        <span class="text-xs font-bold text-content">{{ $memberSheet?->health ?? 0 }}/{{ $memberSheet?->total_health ?? 0 }} HP</span>
+                        <flux:badge size="sm" :color="$memberStatus === 'Healthy' ? 'zinc' : 'amber'">{{ strtoupper($memberStatus) }}</flux:badge>
                     </div>
                 </div>
             @empty

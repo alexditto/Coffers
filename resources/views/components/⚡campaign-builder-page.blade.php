@@ -27,6 +27,14 @@ new class extends Component {
         <livewire:campaign-selector-banner/>
     </div>
 
+    <div class="flex justify-end">
+        <flux:modal.trigger name="create-campaign">
+            <flux:button variant="primary" size="sm" icon="plus">
+                New Campaign
+            </flux:button>
+        </flux:modal.trigger>
+    </div>
+
     <livewire:campaign-details/>
 
     <livewire:campaign-characters/>

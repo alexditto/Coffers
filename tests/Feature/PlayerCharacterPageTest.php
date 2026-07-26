@@ -51,7 +51,6 @@ test('shows the character name, race, level, and stats', function () {
         'health' => 38,
         'total_health' => 42,
         'ac' => 16,
-        'status' => 'poisoned',
     ]);
     $character->update(['character_sheet_id' => $sheet->id]);
     $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 240]);
@@ -68,21 +67,6 @@ test('shows the character name, race, level, and stats', function () {
         ->assertSee('16')
         ->assertSee('240')
         ->assertSee('POISONED');
-});
-
-test('shows healthy when the character has no active condition', function () {
-    $user = User::factory()->create();
-    $campaign = Campaign::factory()->create();
-    $user->campaigns()->attach($campaign->id);
-    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
-    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'status' => 'none']);
-    $character->update(['character_sheet_id' => $sheet->id]);
-
-    session(['selected_campaign_id' => $campaign->id]);
-
-    Livewire::actingAs($user)
-        ->test('player-character-page')
-        ->assertSee('HEALTHY');
 });
 
 test('the my party section lists other characters but excludes the users own', function () {
@@ -107,6 +91,31 @@ test('the my party section lists other characters but excludes the users own', f
         ->assertSee('Cleric');
 
     expect($component->get('partyMembers')->pluck('name')->all())->toBe(['Mirabel']);
+});
+
+test('the my party section shows each members current health and condition', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id, 'name' => 'Thornwick']);
+    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id]);
+    $character->update(['character_sheet_id' => $sheet->id]);
+
+    $healthyAlly = Character::factory()->create(['campaign_id' => $campaign->id, 'name' => 'Mirabel']);
+    CharacterSheet::factory()->create(['character_id' => $healthyAlly->id, 'health' => 18, 'total_health' => 24]);
+
+    $poisonedAlly = Character::factory()->create(['campaign_id' => $campaign->id, 'name' => 'Garrick']);
+    CharacterSheet::factory()->create(['character_id' => $poisonedAlly->id, 'health' => 6, 'total_health' => 30]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($user)
+        ->test('player-character-page')
+        ->assertSee('18/24 HP')
+        ->assertSee('HEALTHY')
+        ->assertSee('6/30 HP')
+        ->assertSee('POISONED');
 });
 
 test('shows an empty party message when there are no other characters', function () {
@@ -153,7 +162,7 @@ test('opening the quick edit modal prefills health and condition', function () {
     $campaign = Campaign::factory()->create();
     $user->campaigns()->attach($campaign->id);
     $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
-    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'health' => 20, 'total_health' => 40, 'status' => 'stunned']);
+    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'health' => 20, 'total_health' => 40]);
     $character->update(['character_sheet_id' => $sheet->id]);
 
     session(['selected_campaign_id' => $campaign->id]);
@@ -161,8 +170,7 @@ test('opening the quick edit modal prefills health and condition', function () {
     Livewire::actingAs($user)
         ->test('player-character-page')
         ->call('openQuickEdit')
-        ->assertSet('quickHealth', 20)
-        ->assertSet('quickStatus', 'stunned');
+        ->assertSet('quickHealth', 20);
 });
 
 test('the user can quick edit their health and condition', function () {
@@ -170,7 +178,7 @@ test('the user can quick edit their health and condition', function () {
     $campaign = Campaign::factory()->create();
     $user->campaigns()->attach($campaign->id);
     $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
-    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'health' => 20, 'total_health' => 40, 'status' => 'none']);
+    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'health' => 20, 'total_health' => 40]);
     $character->update(['character_sheet_id' => $sheet->id]);
 
     session(['selected_campaign_id' => $campaign->id]);
@@ -179,13 +187,11 @@ test('the user can quick edit their health and condition', function () {
         ->test('player-character-page')
         ->call('openQuickEdit')
         ->set('quickHealth', 35)
-        ->set('quickStatus', 'poisoned')
         ->call('saveQuickEdit')
         ->assertHasNoErrors();
 
     expect($sheet->fresh())
-        ->health->toBe(35)
-        ->status->toBe('poisoned');
+        ->health->toBe(35);
 });
 
 test('quick edit health cannot exceed max health', function () {
@@ -220,15 +226,13 @@ test('quick edit creates a character sheet if the character has none', function 
         ->test('player-character-page')
         ->call('openQuickEdit')
         ->set('quickHealth', 50)
-        ->set('quickStatus', 'blinded')
         ->call('saveQuickEdit')
         ->assertHasNoErrors();
 
     $character->refresh();
 
     expect($character->character_sheet)->not->toBeNull()
-        ->and($character->character_sheet->health)->toBe(50)
-        ->and($character->character_sheet->status)->toBe('blinded');
+        ->and($character->character_sheet->health)->toBe(50);
 });
 
 test('opening the sheet edit modal prefills every field', function () {

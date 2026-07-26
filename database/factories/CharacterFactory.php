@@ -21,7 +21,7 @@ class CharacterFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'name' => fake()->name(),
+            'name' => $this->faker->randomElement(['Gore the Barbarian', 'Mannasha', 'Tonks', "Bobblim the Goblin", "Big Steeve", "Quax", "Nimbles", "Scarlet"]),
             // Nullable by default: CharacterSheetFactory and InventoryFactory each default their
             // own `character_id` to Character::factory(), so eagerly creating them here would
             // recurse forever. Attach a sheet/inventory explicitly when a test needs one.

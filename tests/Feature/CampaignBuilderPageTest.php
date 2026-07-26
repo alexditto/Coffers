@@ -37,3 +37,17 @@ test('ignores a campaign query string id the user does not have access to', func
 
     expect(session('selected_campaign_id'))->toBe($ownCampaign->id);
 });
+
+test('the new campaign button triggers the create campaign modal', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('campaign-builder'))
+        ->assertOk()
+        ->assertSee('New Campaign')
+        ->assertSeeInOrder([
+            'data-flux-modal-trigger',
+            "name: 'create-campaign'",
+            'New Campaign',
+        ], false);
+});
