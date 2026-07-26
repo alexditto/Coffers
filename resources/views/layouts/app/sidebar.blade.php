@@ -43,7 +43,7 @@
             <livewire:campaign-selector-banner/>
         </flux:header>
 
-        <div class="pb-15 lg:pb-0 grow">
+        <div class="pb-15 lg:pb-0 grow w-full lg:max-w-[calc(100%-256px)]">
             {{ $slot }}
         </div>
 
