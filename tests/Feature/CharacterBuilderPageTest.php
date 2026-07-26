@@ -3,6 +3,7 @@
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\Friend;
 use App\Models\Inventory;
 use App\Models\User;
 use Livewire\Livewire;
@@ -280,4 +281,102 @@ test('cannot delete another users character by guessing its id', function () {
         ->call('deleteCharacter');
 
     expect(Character::find($strangerCharacter->id))->not->toBeNull();
+});
+
+test('only shows campaigns owned by approved friends when joining', function () {
+    $user = User::factory()->create();
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => null]);
+
+    $friend = User::factory()->create();
+    Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $friend->id, 'status' => 'approved']);
+    $friendCampaign = Campaign::factory()->create(['owner_id' => $friend->id, 'name' => 'Friend Campaign']);
+
+    $stranger = User::factory()->create();
+    Campaign::factory()->create(['owner_id' => $stranger->id, 'name' => 'Stranger Campaign']);
+
+    $pendingFriend = User::factory()->create();
+    Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $pendingFriend->id, 'status' => 'pending']);
+    Campaign::factory()->create(['owner_id' => $pendingFriend->id, 'name' => 'Pending Friend Campaign']);
+
+    $component = Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('joinCampaign', $character->id);
+
+    expect($component->get('friendCampaigns')->pluck('id')->all())->toBe([$friendCampaign->id]);
+
+    $component->assertSee('Friend Campaign')
+        ->assertDontSee('Stranger Campaign')
+        ->assertDontSee('Pending Friend Campaign');
+});
+
+test('the user can join a friends campaign with an unattached character', function () {
+    $user = User::factory()->create();
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => null]);
+
+    $friend = User::factory()->create();
+    Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $friend->id, 'status' => 'approved']);
+    $campaign = Campaign::factory()->create(['owner_id' => $friend->id]);
+
+    Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('joinCampaign', $character->id)
+        ->set('joinCampaignId', $campaign->id)
+        ->call('confirmJoinCampaign')
+        ->assertHasNoErrors();
+
+    expect($character->fresh()->campaign_id)->toBe($campaign->id)
+        ->and($user->campaigns()->where('campaign_id', $campaign->id)->exists())->toBeTrue();
+});
+
+test('cannot join a campaign that does not belong to a friend', function () {
+    $user = User::factory()->create();
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => null]);
+
+    $stranger = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $stranger->id]);
+
+    Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('joinCampaign', $character->id)
+        ->set('joinCampaignId', $campaign->id)
+        ->call('confirmJoinCampaign')
+        ->assertHasErrors(['joinCampaignId']);
+
+    expect($character->fresh()->campaign_id)->toBeNull();
+});
+
+test('cannot join a campaign with another users character by guessing its id', function () {
+    $user = User::factory()->create();
+    $stranger = User::factory()->create();
+    $strangerCharacter = Character::factory()->create(['user_id' => $stranger->id, 'campaign_id' => null]);
+
+    $friend = User::factory()->create();
+    Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $friend->id, 'status' => 'approved']);
+    $campaign = Campaign::factory()->create(['owner_id' => $friend->id]);
+
+    Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('joinCampaign', $strangerCharacter->id)
+        ->set('joinCampaignId', $campaign->id)
+        ->call('confirmJoinCampaign');
+
+    expect($strangerCharacter->fresh()->campaign_id)->toBeNull();
+});
+
+test('cannot join a campaign with an already attached character', function () {
+    $user = User::factory()->create();
+    $originalCampaign = Campaign::factory()->create();
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $originalCampaign->id]);
+
+    $friend = User::factory()->create();
+    Friend::factory()->create(['user_id' => $user->id, 'friend_id' => $friend->id, 'status' => 'approved']);
+    $campaign = Campaign::factory()->create(['owner_id' => $friend->id]);
+
+    Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('joinCampaign', $character->id)
+        ->set('joinCampaignId', $campaign->id)
+        ->call('confirmJoinCampaign');
+
+    expect($character->fresh()->campaign_id)->toBe($originalCampaign->id);
 });

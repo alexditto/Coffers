@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
 use Flux\Flux;
@@ -46,6 +47,10 @@ new class extends Component {
 
     public ?int $deletingCharacterId = null;
 
+    public ?int $joiningCharacterId = null;
+
+    public string $joinCampaignId = '';
+
     /**
      * @return Collection<int, Character>
      */
@@ -54,6 +59,47 @@ new class extends Component {
     {
         return auth()->user()->characters()
             ->with(['character_sheet', 'campaign'])
+            ->orderBy('name')
+            ->get();
+    }
+
+    #[Computed]
+    public function joiningCharacter(): ?Character
+    {
+        if (! $this->joiningCharacterId) {
+            return null;
+        }
+
+        return auth()->user()->characters()->whereNull('campaign_id')->where('id', $this->joiningCharacterId)->first();
+    }
+
+    /**
+     * The ids of users the current player has an approved friendship with, in either direction.
+     *
+     * @return Collection<int, int>
+     */
+    #[Computed]
+    public function friendIds(): Collection
+    {
+        $user = auth()->user();
+
+        $initiated = $user->friends()->where('status', 'approved')->pluck('friend_id');
+        $received = $user->friend_requests()->where('status', 'approved')->pluck('user_id');
+
+        return $initiated->merge($received)->unique()->values();
+    }
+
+    /**
+     * Campaigns owned by an approved friend, available to join with the character being attached.
+     *
+     * @return Collection<int, Campaign>
+     */
+    #[Computed]
+    public function friendCampaigns(): Collection
+    {
+        return Campaign::query()
+            ->whereIn('owner_id', $this->friendIds->all())
+            ->with('owner')
             ->orderBy('name')
             ->get();
     }
@@ -238,6 +284,49 @@ new class extends Component {
         Flux::toast($character->name.' duplicated.', variant: 'success');
     }
 
+    public function joinCampaign(int $characterId): void
+    {
+        $this->joiningCharacterId = $characterId;
+        $this->joinCampaignId = '';
+
+        unset($this->joiningCharacter, $this->friendIds, $this->friendCampaigns);
+
+        Flux::modal('join-campaign')->show();
+    }
+
+    public function confirmJoinCampaign(): void
+    {
+        $data = $this->validate([
+            'joinCampaignId' => ['required', 'integer'],
+        ]);
+
+        $character = $this->joiningCharacter;
+
+        if (! $character) {
+            return;
+        }
+
+        $campaign = $this->friendCampaigns->firstWhere('id', (int) $data['joinCampaignId']);
+
+        if (! $campaign) {
+            $this->addError('joinCampaignId', 'That campaign is no longer available to join.');
+
+            return;
+        }
+
+        $character->update(['campaign_id' => $campaign->id]);
+
+        auth()->user()->campaigns()->syncWithoutDetaching([$campaign->id]);
+
+        $this->joiningCharacterId = null;
+
+        unset($this->characters, $this->joiningCharacter, $this->friendCampaigns);
+
+        Flux::modal('join-campaign')->close();
+
+        Flux::toast($character->name.' joined '.$campaign->name.'.', variant: 'success');
+    }
+
     public function confirmDelete(): void
     {
         if (! $this->editingCharacterId) {
@@ -318,10 +407,16 @@ new class extends Component {
                     </div>
                 </div>
 
-                <div class="border-t border-line p-2">
-                    <flux:button size="sm" variant="ghost" class="w-full" wire:click="duplicate({{ $character->id }})">
+                <div class="flex border-t border-line p-2">
+                    <flux:button size="sm" variant="ghost" class="flex-1" wire:click="duplicate({{ $character->id }})">
                         Duplicate
                     </flux:button>
+
+                    @if (! $character->campaign)
+                        <flux:button size="sm" variant="ghost" class="flex-1" wire:click="joinCampaign({{ $character->id }})">
+                            Join campaign
+                        </flux:button>
+                    @endif
                 </div>
             </div>
         @empty
@@ -409,5 +504,41 @@ new class extends Component {
                 <flux:button variant="danger" wire:click="deleteCharacter">Delete</flux:button>
             </div>
         </div>
+    </flux:modal>
+
+    <flux:modal name="join-campaign" class="md:w-96">
+        <form wire:submit="confirmJoinCampaign" class="space-y-6">
+            <div>
+                <flux:heading size="lg">Join a campaign</flux:heading>
+                <flux:text class="mt-2">
+                    Attach {{ $this->joiningCharacter?->name }} to a campaign run by one of your friends.
+                </flux:text>
+            </div>
+
+            @if ($this->friendCampaigns->isEmpty())
+                <p class="text-sm text-content-muted">None of your friends have a campaign to join right now.</p>
+            @else
+                <div>
+                    <flux:select wire:model="joinCampaignId" placeholder="Choose a campaign…">
+                        @foreach ($this->friendCampaigns as $campaign)
+                            <flux:select.option value="{{ $campaign->id }}">{{ $campaign->name }} ({{ $campaign->owner->name }})</flux:select.option>
+                        @endforeach
+                    </flux:select>
+                    <flux:error name="joinCampaignId" />
+                </div>
+            @endif
+
+            <div class="flex items-center gap-2">
+                <flux:spacer />
+
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancel</flux:button>
+                </flux:modal.close>
+
+                @if ($this->friendCampaigns->isNotEmpty())
+                    <flux:button type="submit" variant="primary">Join</flux:button>
+                @endif
+            </div>
+        </form>
     </flux:modal>
 </div>
