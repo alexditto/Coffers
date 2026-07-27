@@ -31,7 +31,6 @@ class CharacterSheetFactory extends Factory
             'health' => $totalHealth - fake()->numberBetween(0, 10),
             'total_health' => $totalHealth,
             'ac' => fake()->numberBetween(10, 20),
-            'status' => fake()->randomElement(['none', 'poisoned', 'blinded', 'deafened', 'paralyzed', 'stunned']),
         ];
     }
 }

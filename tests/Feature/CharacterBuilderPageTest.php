@@ -3,6 +3,7 @@
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\CharacterStatus;
 use App\Models\Friend;
 use App\Models\Inventory;
 use App\Models\User;
@@ -190,8 +191,8 @@ test('the user can duplicate a character including its sheet, starting fresh', f
         'race' => 'elf',
         'health' => 10,
         'total_health' => 42,
-        'status' => 'poisoned',
     ]);
+    $sheet->statuses()->attach(CharacterStatus::factory()->create(['name' => 'Poisoned']));
     $character->update(['character_sheet_id' => $sheet->id]);
     $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 500]);
     $character->update(['inventory_id' => $inventory->id]);
@@ -210,7 +211,7 @@ test('the user can duplicate a character including its sheet, starting fresh', f
         ->and($copy->character_sheet->race)->toBe('elf')
         ->and($copy->character_sheet->total_health)->toBe(42)
         ->and($copy->character_sheet->health)->toBe(42)
-        ->and($copy->character_sheet->status)->toBe('none');
+        ->and($copy->character_sheet->statuses)->toBeEmpty();
 });
 
 test('duplicating a character with no sheet does not error and creates no sheet', function () {

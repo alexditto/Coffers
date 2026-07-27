@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\CharacterStatus;
 use App\Models\Inventory;
 use App\Models\ItemCount;
 use App\Models\Journal;
@@ -32,11 +33,48 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('sCQxTwWHYhFwfK9'),
             'email_verified_at' => now(),
         ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Dead',
+            'description' => 'The character is dead.',
+            'effect' => 'The character is dead.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Unconscious',
+            'description' => 'The character is unconscious.',
+            'effect' => 'The character is unconscious.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Blinded',
+            'description' => 'The character is blinded.',
+            'effect' => 'The character is blinded.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Deafened',
+            'description' => 'The character is deafened.',
+            'effect' => 'The character is deafened.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Paralyzed',
+            'description' => 'The character is paralyzed.',
+            'effect' => 'The character is paralyzed.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Stunned',
+            'description' => 'The character is stunned.',
+            'effect' => 'The character is stunned.',
+        ]);
+        CharacterStatus::factory()->create([
+            'name' => 'Poisoned',
+            'description' => 'The character is poisoned.',
+            'effect' => 'The character is poisoned.',
+        ]);
 
         User::factory()
             ->hasAttached(Campaign::factory(2)->create()->each(function ($campaign) {
                 Character::factory()->count(4)->create(['campaign_id' => $campaign->id, 'character_sheet_id' => null, 'inventory_id' => null])->each(function ($character) {
                     $characterSheet = CharacterSheet::factory()->create(['character_id' => $character->id]);
+                    $randomStatus = CharacterStatus::inRandomOrder()->first();
+                    $characterSheet->statuses()->attach($randomStatus->id);
                     $character->update(['character_sheet_id' => $characterSheet->id]);
                     $inventory = Inventory::factory()->create(['character_id' => $character->id]);
                     $inventory->item_counts()->createMany(ItemCount::factory(5)->make([
@@ -63,5 +101,6 @@ class DatabaseSeeder extends Seeder
                     })->pluck('id')->toArray());
                 });
             });
+
     }
 }
