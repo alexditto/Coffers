@@ -21,7 +21,7 @@ new class extends Component {
 };
 ?>
 
-<div class="flex h-full flex-col rounded-2xl border border-line bg-surface p-4 shadow-sm">
+<div class="flex h-full flex-col rounded-2xl border border-line bg-surface p-4 shadow-sm dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <span class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Upcoming Campaign</span>
         @if ($this->upcomingCampaign)
@@ -43,12 +43,12 @@ new class extends Component {
             <flux:avatar size="lg" name="{{ $this->upcomingCampaign->name }}" color="auto" />
 
             <div class="min-w-0 flex-1">
-                <div class="truncate text-lg font-bold text-content">{{ $this->upcomingCampaign->name }}</div>
-                <div class="mt-0.5 text-sm text-content-muted">{{ $date->format('D, M j') }} · {{ $relative }}</div>
+                <div class="truncate text-lg font-bold text-content dark:text-white">{{ $this->upcomingCampaign->name }}</div>
+                <div class="mt-0.5 text-sm text-content-muted dark:text-gray-400">{{ $date->format('D, M j') }} · {{ $relative }}</div>
             </div>
         </a>
     @else
-        <div class="mt-3 flex flex-1 items-center justify-center rounded-xl border-2 border-dashed border-line p-4 text-center text-sm text-content-muted">
+        <div class="mt-3 flex flex-1 items-center justify-center rounded-xl border-2 border-dashed border-line p-4 text-center text-sm text-content-muted dark:text-gray-400">
             No sessions on the calendar
         </div>
     @endif

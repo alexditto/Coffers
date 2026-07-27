@@ -16,7 +16,7 @@
         <span class="text-[10px] font-bold tracking-widest text-brand-700 uppercase">Hire me</span>
         <h1 class="mt-2 text-3xl font-bold text-black dark:text-white sm:text-4xl">Nerdy software developer, available
             for hire</h1>
-        <p class="mt-3 text-base text-neutral-700">
+        <p class="mt-3 text-base text-neutral-700 dark:text-neutral-400 sm:text-lg">
             I built Coffers, along with the projects below. Take a look around, then reach out on GitHub or LinkedIn, or
             grab my resume.
         </p>
@@ -41,7 +41,7 @@
 
     <div class="rounded-2xl border border-neutral-800 bg-neutral-400/60 p-6">
         <span class="text-[10px] font-bold tracking-widest text-brand-700 uppercase">Open to</span>
-        <h2 class="mt-2 text-lg font-bold text-brand-900">What I'm looking for</h2>
+        <h2 class="mt-2 text-lg font-bold text-brand-900 dark:text-white">What I'm looking for</h2>
 
         <div class="mt-4 flex flex-wrap gap-2">
             <flux:badge size="sm" color="zinc">Remote or onsite — St. Louis</flux:badge>
@@ -61,8 +61,8 @@
                      class="h-40 w-full object-cover"/>
 
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-brand-900">Operations Field Mobile App</h3>
-                    <p class="mt-3 text-sm text-neutral-700">
+                    <h3 class="text-lg font-bold text-brand-900 dark:text-brand-400">Operations Field Mobile App</h3>
+                    <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                         Created a React, Tailwind CSS, and Google Maps field application that surfaces nearby records,
                         captures activity, creates leads, and standardizes operational reporting.
                     </p>
@@ -74,8 +74,8 @@
                      class="h-40 w-full object-cover"/>
 
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-brand-900">Portals, Integrations, and more built with Laravel</h3>
-                    <p class="mt-3 text-sm text-neutral-700">
+                    <h3 class="text-lg font-bold text-brand-900 dark:text-brand-400">Portals, Integrations, and more built with Laravel</h3>
+                    <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                         Led the Customer, Franchise, and Infinite Pipeline portals using Laravel, Livewire, Filament,
                         MySQL, and versioned APIs. In Infinite Pipeline, appointment-created events trigger listeners
                         and observers that process payments and notify users without routine human intervention.
@@ -88,8 +88,8 @@
                      class="h-40 w-full object-cover"/>
 
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-brand-900">SuiteScript, SuiteQL, and Google Maps Platform</h3>
-                    <p class="mt-3 text-sm text-neutral-700">
+                    <h3 class="text-lg font-bold text-brand-900 dark:text-brand-400">SuiteScript, SuiteQL, and Google Maps Platform</h3>
+                    <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                         Built and re-architected a reusable SuiteScript, SuiteQL, and Google Maps platform for
                         marketing, site visits, franchise deployment, and outside-sales planning.
                     </p>

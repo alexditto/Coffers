@@ -395,20 +395,20 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <flux:heading size="lg">Shops</flux:heading>
         <flux:badge size="sm">DM</flux:badge>
     </div>
 
-    <div class="mt-4 flex rounded-lg bg-canvas p-1">
+    <div class="mt-4 flex rounded-lg bg-canvas p-1 dark:bg-gray-600">
         @foreach (['open' => 'Open', 'closed' => 'Closed', 'draft' => 'Draft', 'hidden' => 'Hidden', 'all' => 'All'] as $value => $label)
             <button
                 type="button"
                 wire:click="setStatusFilter('{{ $value }}')"
                 @class([
                     'flex-1 rounded-md py-1.5 text-center text-xs font-bold transition',
-                    'bg-surface text-content shadow-sm' => $statusFilter === $value,
+                    'bg-surface text-content shadow-sm dark:bg-gray-400' => $statusFilter === $value,
                     'text-content-muted' => $statusFilter !== $value,
                 ])
             >
@@ -419,7 +419,7 @@ new class extends Component {
 
     <div class="mt-4 flex flex-col gap-3">
         @forelse ($this->shops as $shop)
-            <div wire:key="shop-{{ $shop->id }}" class="rounded-xl border border-line p-3">
+            <div wire:key="shop-{{ $shop->id }}" class="rounded-xl border border-line p-3 dark:bg-gray-700">
                 <div class="flex items-center gap-3">
                     @if ($shop->image)
                         <img src="{{ $shop->image }}" alt="{{ $shop->name }}" class="size-10 shrink-0 rounded-lg border border-line object-cover" />
@@ -428,7 +428,7 @@ new class extends Component {
                     @endif
 
                     <div class="min-w-0 flex-1">
-                        <div class="truncate text-sm font-bold text-content">{{ $shop->name }}</div>
+                        <div class="truncate text-sm font-bold text-content dark:text-white">{{ $shop->name }}</div>
                         <div class="text-xs text-content-muted">{{ $shop->stock_count }} item{{ $shop->stock_count === 1 ? '' : 's' }}</div>
                     </div>
 
@@ -517,7 +517,7 @@ new class extends Component {
                 @forelse ($this->shopStock as $stock)
                     <div wire:key="stock-{{ $stock->id }}" class="flex items-center gap-3 rounded-xl border border-line p-3">
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $stock->item->name }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $stock->item->name }}</div>
                             <div class="text-xs text-content-muted">{{ $stock->price }} gp · Qty {{ $stock->quantity }}</div>
                         </div>
 

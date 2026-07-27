@@ -262,7 +262,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     @if (! $this->campaign)
         <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
             Select or create a campaign to see your character.
@@ -297,17 +297,17 @@ new class extends Component {
         <div class="mt-5 grid grid-cols-3 gap-3">
             <div class="rounded-xl border border-line py-3 text-center">
                 <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">HP</div>
-                <div class="mt-1 text-lg font-bold text-content">{{ $sheet?->health ?? 0 }}/{{ $sheet?->total_health ?? 0 }}</div>
+                <div class="mt-1 text-lg font-bold text-content dark:text-white">{{ $sheet?->health ?? 0 }}/{{ $sheet?->total_health ?? 0 }}</div>
             </div>
 
             <div class="rounded-xl border border-line py-3 text-center">
                 <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">AC</div>
-                <div class="mt-1 text-lg font-bold text-content">{{ $sheet?->ac ?? 10 }}</div>
+                <div class="mt-1 text-lg font-bold text-content dark:text-white">{{ $sheet?->ac ?? 10 }}</div>
             </div>
 
             <div class="rounded-xl border border-line py-3 text-center">
                 <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Gold</div>
-                <div class="mt-1 text-lg font-bold text-content">{{ $this->character->inventory?->gold ?? 0 }}</div>
+                <div class="mt-1 text-lg font-bold text-content dark:text-white">{{ $this->character->inventory?->gold ?? 0 }}</div>
             </div>
         </div>
 

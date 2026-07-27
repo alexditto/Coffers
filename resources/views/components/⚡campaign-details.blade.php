@@ -100,11 +100,11 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Campaign Details</div>
 
     @if (! $this->campaign)
-        <div class="mt-3 rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+        <div class="mt-3 rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted dark:text-content-muted-dark">
             Select or create a campaign to see its details.
         </div>
     @else
@@ -129,7 +129,7 @@ new class extends Component {
         </div>
 
         @if ($this->campaign->description)
-            <p class="mt-4 text-sm text-content">{{ $this->campaign->description }}</p>
+            <p class="mt-4 text-sm text-content dark:text-white">{{ $this->campaign->description }}</p>
         @endif
 
         <div class="mt-4 text-sm text-content-muted">

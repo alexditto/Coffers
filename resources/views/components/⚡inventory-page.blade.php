@@ -298,7 +298,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <flux:heading size="lg">Inventory</flux:heading>
         <span class="rounded-lg border border-line px-2.5 py-1 text-sm font-bold text-gold-600">{{ $this->gold }} gp</span>
@@ -321,7 +321,7 @@ new class extends Component {
                     type="button"
                     wire:key="item-{{ $itemCount->id }}"
                     wire:click="viewItem({{ $itemCount->id }})"
-                    class="flex w-full items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left transition hover:border-brand-300"
+                    class="flex w-full items-center gap-3 rounded-xl border border-line bg-surface p-3 text-left transition hover:border-brand-300 dark:bg-gray-700 dark:hover:border-brand-500"
                 >
                     @if ($itemCount->item->image)
                         <img src="{{ $itemCount->item->image }}" alt="{{ $itemCount->item->name }}" class="size-10 shrink-0 rounded-lg border border-line object-cover" />
@@ -330,7 +330,7 @@ new class extends Component {
                     @endif
 
                     <div class="min-w-0 flex-1">
-                        <div class="truncate text-sm font-bold text-content">{{ $itemCount->item->name }}</div>
+                        <div class="truncate text-sm font-bold text-content dark:text-white">{{ $itemCount->item->name }}</div>
 
                         @if ($itemCount->item->description)
                             <div class="truncate text-xs text-content-muted">{{ $itemCount->item->description }}</div>

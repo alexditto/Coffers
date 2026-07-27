@@ -113,7 +113,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <flux:heading size="lg">Shops</flux:heading>
 
     @if (! $this->campaign)
@@ -134,7 +134,7 @@ new class extends Component {
                         wire:key="shop-{{ $shop->id }}"
                         href="{{ route('shop-detail', ['shop' => $shop->id]) }}"
                         wire:navigate
-                        class="flex items-center gap-3 rounded-xl border border-line bg-surface p-3 shadow-sm transition hover:border-brand-300"
+                        class="flex items-center gap-3 rounded-xl border border-line bg-surface p-3 shadow-sm transition hover:border-brand-300 dark:bg-gray-700"
                     >
                         @if ($shop->image)
                             <img src="{{ $shop->image }}" alt="{{ $shop->name }}" class="size-10 shrink-0 rounded-lg border border-line object-cover" />
@@ -143,8 +143,8 @@ new class extends Component {
                         @endif
 
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $shop->name }}</div>
-                            <div class="text-xs text-content-muted">{{ $shop->stock_count }} item{{ $shop->stock_count === 1 ? '' : 's' }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $shop->name }}</div>
+                            <div class="text-xs text-content-muted dark:text-gray-400">{{ $shop->stock_count }} item{{ $shop->stock_count === 1 ? '' : 's' }}</div>
                         </div>
 
                         <flux:icon.chevron-right class="size-4 shrink-0 text-content-faint" />
@@ -166,8 +166,8 @@ new class extends Component {
                         @endif
 
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $shop->name }}</div>
-                            <div class="text-xs text-content-muted">{{ $shop->stock_count }} item{{ $shop->stock_count === 1 ? '' : 's' }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $shop->name }}</div>
+                            <div class="text-xs text-content-muted dark:text-gray-400">{{ $shop->stock_count }} item{{ $shop->stock_count === 1 ? '' : 's' }}</div>
                         </div>
 
                         <flux:badge size="sm" color="zinc">Closed</flux:badge>

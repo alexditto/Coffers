@@ -162,7 +162,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <flux:heading size="lg">Scenes</flux:heading>
         <flux:badge size="sm">DM</flux:badge>
@@ -185,7 +185,7 @@ new class extends Component {
         <div class="mt-4 text-[10px] font-bold tracking-widest text-content-faint uppercase">Active Scene</div>
 
         @if ($activeScene)
-            <div wire:key="active-scene-{{ $activeScene->id }}" class="mt-2 rounded-xl border-2 border-brand-600 bg-surface p-3 shadow-sm">
+            <div wire:key="active-scene-{{ $activeScene->id }}" class="mt-2 rounded-xl border-2 border-brand-600 bg-surface p-3 shadow-sm dark:bg-gray-700">
                 <div class="flex items-center gap-3">
                     @if ($activeScene->image)
                         <img src="{{ $activeScene->image }}" alt="{{ $activeScene->name }}" class="size-12 shrink-0 rounded-xl border border-line object-cover" />
@@ -195,7 +195,7 @@ new class extends Component {
 
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center gap-2">
-                            <span class="truncate text-sm font-bold text-content">{{ $activeScene->name }}</span>
+                            <span class="truncate text-sm font-bold text-content dark:text-white">{{ $activeScene->name }}</span>
                             <flux:badge size="sm" color="green">● Live</flux:badge>
                         </div>
 
@@ -225,7 +225,7 @@ new class extends Component {
                     @endif
 
                     <div class="min-w-0 flex-1">
-                        <div class="truncate text-sm font-bold text-content">{{ $scene->name }}</div>
+                        <div class="truncate text-sm font-bold text-content dark:text-white">{{ $scene->name }}</div>
                     </div>
 
                     <flux:button size="sm" variant="ghost" wire:click="editScene({{ $scene->id }})">Edit</flux:button>

@@ -26,9 +26,9 @@
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-200 text-brand-400">
                     <flux:icon.user-group class="size-5" />
                 </span>
-                <h2 class="text-lg font-bold text-brand-900">DM &amp; player setup</h2>
+                <h2 class="text-lg font-bold text-brand-900 dark:text-brand-300">DM &amp; player setup</h2>
             </div>
-            <p class="mt-3 text-sm text-neutral-700">
+            <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                 Add friends first, so you always know who's ready to sit down at the table. Whoever creates a campaign becomes its DM; anyone who joins that campaign plays as one of its players. You can be a DM in one campaign and a player in another — Coffers switches the whole app's view to match whichever campaign you have selected.
             </p>
         </div>
@@ -38,9 +38,9 @@
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-200 text-brand-400">
                     <flux:icon.identification class="size-5" />
                 </span>
-                <h2 class="text-lg font-bold text-brand-900">Character creation</h2>
+                <h2 class="text-lg font-bold text-brand-900 dark:text-brand-300">Character creation</h2>
             </div>
-            <p class="mt-3 text-sm text-neutral-700">
+            <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                 Roll up a character with a name, class, race, level, alignment, and background, plus HP and AC. During play, conditions like poisoned or stunned show up right on the character card so the whole party can see them at a glance. A DM can attach any of your unattached characters to one of their campaigns whenever you're ready to join.
             </p>
         </div>
@@ -50,9 +50,9 @@
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-200 text-brand-400">
                     <flux:icon.map class="size-5" />
                 </span>
-                <h2 class="text-lg font-bold text-brand-900">Campaign creation</h2>
+                <h2 class="text-lg font-bold text-brand-900 dark:text-brand-300">Campaign creation</h2>
             </div>
-            <p class="mt-3 text-sm text-neutral-700">
+            <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                 DMs spin up a campaign with a name, description, and image from the DM screen. It's the hub everything else hangs off of — the party roster, the shops, the journal, and the scenes all belong to a single active campaign at a time.
             </p>
         </div>
@@ -62,9 +62,9 @@
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-200 text-brand-400">
                     <flux:icon.building-storefront class="size-5" />
                 </span>
-                <h2 class="text-lg font-bold text-brand-900">Shop control</h2>
+                <h2 class="text-lg font-bold text-brand-900 dark:text-brand-300">Shop control</h2>
             </div>
-            <p class="mt-3 text-sm text-neutral-700">
+            <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                 DMs stock a shop with items, prices, and quantities, then flip it open, closed, hidden, or back to draft with one tap. The moment a shop opens or closes, every player's screen updates instantly — so a shop the DM just closed can't be mid-purchase a second later.
             </p>
         </div>
@@ -74,9 +74,9 @@
                 <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-brand-200 text-brand-400">
                     <flux:icon.shopping-bag class="size-5" />
                 </span>
-                <h2 class="text-lg font-bold text-brand-900">Inventory management</h2>
+                <h2 class="text-lg font-bold text-brand-900 dark:text-brand-300">Inventory management</h2>
             </div>
-            <p class="mt-3 text-sm text-neutral-700">
+            <p class="mt-3 text-sm text-neutral-700 dark:text-neutral-300">
                 Every character carries their own gold and item counts. Spend gold in an open shop and the items land straight in your inventory — no manual bookkeeping, and nothing to reconcile before next session.
             </p>
         </div>

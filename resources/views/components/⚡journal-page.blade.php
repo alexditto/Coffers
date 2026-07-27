@@ -323,7 +323,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <flux:heading size="lg">Journal</flux:heading>
 
     @if (! $this->campaign)
@@ -355,7 +355,7 @@ new class extends Component {
                 @php $canManage = $this->canManage($entry); @endphp
 
                 <div wire:key="entry-{{ $entry->id }}" @class([
-                    'flex items-center gap-3 rounded-xl border border-line p-3',
+                    'flex items-center gap-3 rounded-xl border border-line p-3 dark:bg-gray-700',
                     'bg-canvas' => $canManage && ! $entry->revealed,
                 ])>
                     <button type="button" wire:click="viewEntry({{ $entry->id }})"
@@ -368,10 +368,10 @@ new class extends Component {
                         @endif
 
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $entry->title }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $entry->title }}</div>
 
                             @if ($canManage)
-                                <div class="text-xs text-content-muted">
+                                <div class="text-xs text-content-muted dark:text-gray-400">
                                     @if ($this->isOwner)
                                         {{ $entry->revealed ? 'Revealed to party' : 'Hidden — tap to view' }}
                                     @else

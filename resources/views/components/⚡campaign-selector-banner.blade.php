@@ -85,7 +85,7 @@ new class extends Component {
 };
 ?>
 
-<div class="mx-auto w-full">
+<div class="mx-auto w-full dark:bg-gray-800">
     @if ($this->campaigns->isEmpty())
         <flux:modal.trigger name="create-campaign">
             <button type="button" class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line px-4 py-3.5 text-content-muted transition hover:border-brand-400 hover:text-brand-600">
@@ -94,13 +94,13 @@ new class extends Component {
             </button>
         </flux:modal.trigger>
     @else
-        <flux:dropdown position="bottom" align="start" class="block w-full">
-            <button type="button" class="flex w-full items-center justify-between gap-3 rounded-2xl lg:border lg:border-line lg:bg-surface-subtle px-4 py-3 text-left lg:shadow-sm transition hover:border-brand-300">
+        <flux:dropdown position="bottom" align="start" class="block w-full dark:bg-gray-800">
+            <button type="button" class="flex w-full items-center justify-between gap-3 rounded-2xl lg:border lg:border-line lg:bg-surface-subtle px-4 py-3 text-left lg:shadow-sm transition hover:border-brand-300 dark:bg-gray-800">
                 <div class="min-w-0">
-                    <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Current Campaign</div>
+                    <div class="text-[10px] font-bold tracking-widest text-content-faint dark:text-content-muted uppercase`">Current Campaign</div>
                     <div class="mt-0.5 flex items-center gap-1.5">
-                        <span class="truncate text-lg font-bold text-content">{{ $this->selectedCampaign?->name }}</span>
-                        <flux:icon.chevron-down class="size-3.5 shrink-0 text-content-muted" />
+                        <span class="truncate text-lg font-bold text-content dark:text-content-faint">{{ $this->selectedCampaign?->name }}</span>
+                        <flux:icon.chevron-down class="size-3.5 shrink-0 text-content-muted dark:text-white" />
                     </div>
                 </div>
 
@@ -116,7 +116,7 @@ new class extends Component {
                             <flux:avatar size="xs" name="{{ $campaign->name }}" color="auto" />
 
                             <div class="min-w-0 flex-1 text-left">
-                                <div class="truncate text-sm font-bold text-content">{{ $campaign->name }}</div>
+                                <div class="truncate text-sm font-bold text-content dark:text-white">{{ $campaign->name }}</div>
                                 <div class="text-xs text-content-muted">{{ $campaign->owner_id === auth()->id() ? 'Dungeon Master' : 'Player' }}</div>
                             </div>
 
@@ -136,7 +136,7 @@ new class extends Component {
         </flux:dropdown>
     @endif
 
-    <flux:modal name="create-campaign" class="md:w-96">
+    <flux:modal name="create-campaign" class="md:w-96 z-50">
         <form wire:submit="createCampaign" class="space-y-6">
             <div>
                 <flux:heading size="lg">New Campaign</flux:heading>

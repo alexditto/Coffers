@@ -170,7 +170,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     @if (! $this->campaign)
         <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
             Select or create a campaign to see its party.
@@ -190,8 +190,8 @@ new class extends Component {
                     wire:key="character-{{ $character->id }}"
                     @if ($this->isOwner) wire:click="editCharacter({{ $character->id }})" @endif
                     @class([
-                        'rounded-xl border border-line bg-surface p-3 transition',
-                        'cursor-pointer hover:border-brand-300 hover:shadow-sm' => $this->isOwner,
+                        'rounded-xl border border-line bg-surface p-3 transition dark:bg-gray-700',
+                        'cursor-pointer hover:border-brand-300 hover:shadow-sm dark:hover:border-brand-500' => $this->isOwner,
                     ])
                 >
                     <div class="flex items-center gap-3">
@@ -203,7 +203,7 @@ new class extends Component {
 
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center justify-between gap-2">
-                                <span class="truncate text-sm font-bold text-content">{{ $character->name }}</span>
+                                <span class="truncate text-sm font-bold text-content dark:text-white">{{ $character->name }}</span>
 
                                 <div class="flex flex-wrap justify-end gap-1">
                                     @forelse ($conditions as $condition)
@@ -214,22 +214,22 @@ new class extends Component {
                                 </div>
                             </div>
 
-                            <div class="mt-0.5 text-xs text-content-muted">
+                            <div class="mt-0.5 text-xs text-content-muted dark:text-white">
                                 {{ $sheet?->class ? ucfirst($sheet->class) : 'Unknown class' }} · Lvl {{ $sheet?->level ?? 1 }}
                             </div>
 
                             <div class="mt-2 flex items-center gap-2">
-                                <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-canvas">
+                                <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-canvas dark:bg-gray-700">
                                     <div class="h-full rounded-full bg-brand-600" style="width: {{ $percent }}%"></div>
                                 </div>
 
-                                <span class="shrink-0 text-[11px] font-semibold text-content-muted">{{ $sheet?->health ?? 0 }}/{{ $sheet?->total_health ?? 0 }}</span>
+                                <span class="shrink-0 text-[11px] font-semibold text-content-muted dark:text-white">{{ $sheet?->health ?? 0 }}/{{ $sheet?->total_health ?? 0 }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             @empty
-                <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+                <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted dark:text-white">
                     No characters in this campaign yet.
                 </div>
             @endforelse

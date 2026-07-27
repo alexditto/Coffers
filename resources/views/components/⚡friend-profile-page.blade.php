@@ -77,11 +77,11 @@ new class extends Component {
     </div>
 
     @if (! $this->friend)
-        <div class="rounded-2xl border-2 border-dashed border-line bg-surface p-6 text-center text-sm text-content-muted">
+        <div class="rounded-2xl border-2 border-dashed border-line bg-surface p-6 text-center text-sm text-content-muted dark:bg-gray-800">
             This profile isn't available.
         </div>
     @else
-        <div class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm">
+        <div class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
             <flux:avatar size="xl" name="{{ $this->friend->name }}" color="auto" />
 
             <div class="min-w-0 flex-1">
@@ -90,7 +90,7 @@ new class extends Component {
             </div>
         </div>
 
-        <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+        <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
             <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Active Campaigns · {{ $this->activeCampaigns->count() }}</div>
 
             <div class="mt-3 flex flex-col gap-2">
@@ -99,7 +99,7 @@ new class extends Component {
                         <flux:avatar size="sm" name="{{ $campaign->name }}" color="auto" />
 
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $campaign->name }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $campaign->name }}</div>
                             <div class="text-xs text-content-muted">
                                 {{ $campaign->owner_id === $this->friend->id ? 'Dungeon Master' : 'Player' }}
                             </div>
@@ -113,7 +113,7 @@ new class extends Component {
             </div>
         </div>
 
-        <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+        <div class="rounded-2xl border border-line bg-surface dark:bg-gray-800 p-5 shadow-sm">
             <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Characters · {{ $this->characters->count() }}</div>
 
             <div class="mt-3 flex flex-col gap-2">
@@ -133,7 +133,7 @@ new class extends Component {
 
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between gap-2">
-                                    <span class="truncate text-sm font-bold text-content">{{ $character->name }}</span>
+                                    <span class="truncate text-sm font-bold text-content dark:text-white">{{ $character->name }}</span>
 
                                     <div class="flex flex-wrap justify-end gap-1">
                                         @foreach ($conditions as $condition)
@@ -142,7 +142,7 @@ new class extends Component {
                                     </div>
                                 </div>
 
-                                <div class="mt-0.5 text-xs text-content-muted">
+                                <div class="mt-0.5 text-xs text-content-muted dark:text-content-faint">
                                     {{ $sheet?->class ? ucfirst($sheet->class) : 'Unknown class' }} · Lvl {{ $sheet?->level ?? 1 }}
                                     @if ($character->campaign)
                                         · {{ $character->campaign->name }}

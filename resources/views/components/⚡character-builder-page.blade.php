@@ -369,7 +369,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <flux:heading size="lg">Characters</flux:heading>
         <flux:button variant="primary" size="sm" wire:click="newCharacter">+ New character</flux:button>
@@ -379,7 +379,7 @@ new class extends Component {
         @forelse ($this->characters as $character)
             @php $sheet = $character->character_sheet; @endphp
 
-            <div wire:key="character-{{ $character->id }}" class="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+            <div wire:key="character-{{ $character->id }}" class="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm dark:border-gray-700 dark:bg-gray-700">
                 <div wire:click="edit({{ $character->id }})" class="cursor-pointer p-3 transition hover:bg-canvas">
                     <div class="flex items-center gap-3">
                         @if ($character->image)
@@ -389,7 +389,7 @@ new class extends Component {
                         @endif
 
                         <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $character->name }}</div>
+                            <div class="truncate text-sm font-bold text-content dark:text-white">{{ $character->name }}</div>
                             <div class="truncate text-xs text-content-muted">
                                 {{ $sheet?->race ? ucfirst($sheet->race) : 'Unknown race' }}
                                 · {{ $sheet?->class ? ucfirst($sheet->class) : 'Unknown class' }}

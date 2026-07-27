@@ -43,7 +43,7 @@ new class extends Component {
     {
         unset($this->shop, $this->stock);
 
-        if (! $this->shop) {
+        if (!$this->shop) {
             Flux::modal('cart-review')->close();
             Flux::modal('confirm-purchase')->close();
 
@@ -60,7 +60,7 @@ new class extends Component {
     {
         $campaignId = session('selected_campaign_id');
 
-        if (! $campaignId) {
+        if (!$campaignId) {
             return null;
         }
 
@@ -70,7 +70,7 @@ new class extends Component {
             ->unique('id')
             ->firstWhere('id', $campaignId);
 
-        if (! $campaign) {
+        if (!$campaign) {
             return null;
         }
 
@@ -88,7 +88,7 @@ new class extends Component {
     {
         $campaignId = session('selected_campaign_id');
 
-        if (! $campaignId) {
+        if (!$campaignId) {
             return null;
         }
 
@@ -104,7 +104,7 @@ new class extends Component {
     #[Computed]
     public function stock(): Collection
     {
-        if (! $this->shop) {
+        if (!$this->shop) {
             return collect();
         }
 
@@ -121,13 +121,13 @@ new class extends Component {
     #[Computed]
     public function cartItems(): Collection
     {
-        if (! $this->character?->inventory) {
+        if (!$this->character?->inventory) {
             return collect();
         }
 
         return $this->character->inventory->shopping_carts()
             ->where('is_purchased', false)
-            ->whereHas('shop_stock', fn ($query) => $query->where('shop_id', $this->shopId))
+            ->whereHas('shop_stock', fn($query) => $query->where('shop_id', $this->shopId))
             ->with('shop_stock.item')
             ->get();
     }
@@ -142,7 +142,7 @@ new class extends Component {
     {
         return $this->cartItems
             ->groupBy('shop_stock_id')
-            ->map(fn (Collection $carts) => [
+            ->map(fn(Collection $carts) => [
                 'stock' => $carts->first()->shop_stock,
                 'quantity' => $carts->count(),
                 'subtotal' => $carts->first()->shop_stock->price * $carts->count(),
@@ -153,7 +153,7 @@ new class extends Component {
     #[Computed]
     public function cartTotal(): int
     {
-        return $this->cartItems->sum(fn (ShoppingCart $cart) => $cart->shop_stock->price);
+        return $this->cartItems->sum(fn(ShoppingCart $cart) => $cart->shop_stock->price);
     }
 
     #[Computed]
@@ -182,19 +182,19 @@ new class extends Component {
 
     public function addToCart(int $shopStockId): void
     {
-        if (! $this->shop || ! $this->character) {
+        if (!$this->shop || !$this->character) {
             return;
         }
 
         $stock = $this->shop->stock()->where('id', $shopStockId)->first();
 
-        if (! $stock || $stock->quantity < 1) {
+        if (!$stock || $stock->quantity < 1) {
             return;
         }
 
         $inventory = $this->character->inventory;
 
-        if (! $inventory) {
+        if (!$inventory) {
             $inventory = Inventory::create(['character_id' => $this->character->id, 'gold' => 0]);
             $this->character->update(['inventory_id' => $inventory->id]);
         }
@@ -210,16 +210,16 @@ new class extends Component {
 
     public function removeFromCart(int $shopStockId): void
     {
-        if (! $this->character?->inventory) {
+        if (!$this->character?->inventory) {
             return;
         }
 
         $cart = $this->character->inventory->shopping_carts()
             ->where('is_purchased', false)
-            ->whereHas('shop_stock', fn ($query) => $query->where('id', $shopStockId)->where('shop_id', $this->shopId))
+            ->whereHas('shop_stock', fn($query) => $query->where('id', $shopStockId)->where('shop_id', $this->shopId))
             ->first();
 
-        if (! $cart) {
+        if (!$cart) {
             return;
         }
 
@@ -230,7 +230,7 @@ new class extends Component {
 
     public function checkout(): void
     {
-        if (! $this->shop || ! $this->character) {
+        if (!$this->shop || !$this->character) {
             return;
         }
 
@@ -239,7 +239,7 @@ new class extends Component {
 
     public function openConfirm(): void
     {
-        if (! $this->shop || ! $this->canAfford || $this->cartItems->isEmpty()) {
+        if (!$this->shop || !$this->canAfford || $this->cartItems->isEmpty()) {
             return;
         }
 
@@ -257,13 +257,13 @@ new class extends Component {
     {
         $inventory = $this->character?->inventory;
 
-        if (! $inventory || ! $this->canAfford || $this->cartItems->isEmpty()) {
+        if (!$inventory || !$this->canAfford || $this->cartItems->isEmpty()) {
             return;
         }
 
         // Re-check status here rather than trusting an earlier page load - a shop can
         // close while this confirmation modal is already open with items in the cart.
-        if (! $this->shop) {
+        if (!$this->shop) {
             unset($this->stock, $this->cartItems);
 
             Flux::modal('confirm-purchase')->close();
@@ -288,13 +288,13 @@ new class extends Component {
 
             $inventory->shopping_carts()
                 ->where('is_purchased', false)
-                ->whereHas('shop_stock', fn ($query) => $query->where('shop_id', $this->shopId))
+                ->whereHas('shop_stock', fn($query) => $query->where('shop_id', $this->shopId))
                 ->update(['is_purchased' => true]);
 
             $inventory->decrement('gold', $total);
         });
 
-        $this->receiptLines = $lines->map(fn (array $line) => [
+        $this->receiptLines = $lines->map(fn(array $line) => [
             'name' => $line['stock']->item->name,
             'quantity' => $line['quantity'],
         ])->all();
@@ -326,39 +326,45 @@ new class extends Component {
     </div>
 
     @if (! $this->shop)
-        <div class="rounded-2xl border-2 border-dashed border-line bg-surface p-6 text-center text-sm text-content-muted">
+        <div
+            class="rounded-2xl border-2 border-dashed border-line bg-surface p-6 text-center text-sm text-content-muted dark:bg-gray-800 dark:text-content-faint">
             This shop isn't available right now.
         </div>
     @else
-        <div class="relative overflow-hidden rounded-2xl border border-line shadow-sm">
+        <div class="relative overflow-hidden rounded-2xl border border-line shadow-sm dark:bg-gray-800">
             @if ($this->shop->image)
-                <img src="{{ $this->shop->image }}" alt="{{ $this->shop->name }}" class="h-28 w-full object-cover" />
+                <img src="{{ $this->shop->image }}" alt="{{ $this->shop->name }}" class="h-28 w-full object-cover dark:brightness-75"/>
             @else
                 <div class="h-28 w-full bg-gradient-to-br from-brand-300 to-brand-600"></div>
             @endif
 
             <div class="absolute inset-x-0 bottom-0 flex items-end p-3">
                 <div class="rounded-xl bg-surface/90 px-3 py-2 shadow-sm backdrop-blur-sm">
-                    <div class="text-base font-bold text-content">{{ $this->shop->name }}</div>
-                    <div class="text-xs text-content-muted">{{ $this->stock->count() }} item{{ $this->stock->count() === 1 ? '' : 's' }} · Open</div>
+                    <div class="text-base font-bold text-content ">{{ $this->shop->name }}</div>
+                    <div class="text-xs text-content-muted dark:text-gray-400">{{ $this->stock->count() }}
+                        item{{ $this->stock->count() === 1 ? '' : 's' }} · Open
+                    </div>
                 </div>
             </div>
         </div>
 
         @unless ($this->character)
-            <div class="rounded-xl border border-line bg-canvas p-3 text-center text-xs text-content-muted">
+            <div
+                class="rounded-xl border border-line bg-canvas p-3 text-center text-xs text-content-muted dark:bg-gray-700 dark:text-content-faint">
                 You need a character in this campaign to shop here.
             </div>
         @endunless
 
         <div class="grid grid-cols-2 gap-3">
             @forelse ($this->stock as $entry)
-                <div wire:key="stock-{{ $entry->id }}" class="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+                <div wire:key="stock-{{ $entry->id }}"
+                     class="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
                     @if ($entry->item->image)
-                        <img src="{{ $entry->item->image }}" alt="{{ $entry->item->name }}" class="h-20 w-full object-cover" />
+                        <img src="{{ $entry->item->image }}" alt="{{ $entry->item->name }}"
+                             class="h-20 w-full object-cover"/>
                     @else
                         <div class="flex h-20 w-full items-center justify-center bg-canvas">
-                            <flux:icon.cube class="size-6 text-content-faint" />
+                            <flux:icon.cube class="size-6 text-content-faint"/>
                         </div>
                     @endif
 
@@ -388,7 +394,8 @@ new class extends Component {
                     </div>
                 </div>
             @empty
-                <div class="col-span-2 rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+                <div
+                    class="col-span-2 rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
                     This shop has no items in stock yet.
                 </div>
             @endforelse
@@ -396,7 +403,8 @@ new class extends Component {
 
         @if ($this->character)
             <div class="fixed inset-x-0 bottom-19 z-30 px-6 lg:left-64 lg:right-0 lg:bottom-8 lg:px-8">
-                <div class="mx-auto flex max-w-2xl items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-3 shadow-lg">
+                <div
+                    class="mx-auto flex max-w-2xl items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-3 shadow-lg">
                     <span class="text-sm font-semibold text-content-muted">
                         Cart · {{ $this->cartItems->count() }} item{{ $this->cartItems->count() === 1 ? '' : 's' }}
                     </span>
@@ -419,29 +427,36 @@ new class extends Component {
                         @forelse ($this->cartLines as $line)
                             <div wire:key="cart-line-{{ $line['stock']->id }}" class="flex items-center gap-3">
                                 @if ($line['stock']->item->image)
-                                    <img src="{{ $line['stock']->item->image }}" alt="{{ $line['stock']->item->name }}" class="size-10 shrink-0 rounded-lg border border-line object-cover" />
+                                    <img src="{{ $line['stock']->item->image }}" alt="{{ $line['stock']->item->name }}"
+                                         class="size-10 shrink-0 rounded-lg border border-line object-cover"/>
                                 @else
-                                    <flux:avatar size="sm" name="{{ $line['stock']->item->name }}" color="auto" />
+                                    <flux:avatar size="sm" name="{{ $line['stock']->item->name }}" color="auto"/>
                                 @endif
 
                                 <div class="min-w-0 flex-1">
-                                    <div class="truncate text-sm font-bold text-content">{{ $line['stock']->item->name }}</div>
+                                    <div
+                                        class="truncate text-sm font-bold text-content dark:text-white">{{ $line['stock']->item->name }}</div>
                                     <div class="text-xs text-content-muted">{{ $line['stock']->price }} gp each</div>
                                 </div>
 
                                 <div class="flex shrink-0 items-center gap-2 rounded-lg border border-line px-2 py-1">
-                                    <button type="button" wire:click="removeFromCart({{ $line['stock']->id }})" class="px-1 font-bold text-content-muted hover:text-content">−</button>
-                                    <span class="w-4 text-center text-sm font-bold text-content">{{ $line['quantity'] }}</span>
+                                    <button type="button" wire:click="removeFromCart({{ $line['stock']->id }})"
+                                            class="px-1 font-bold text-content-muted hover:text-content">−
+                                    </button>
+                                    <span
+                                        class="w-4 text-center text-sm font-bold text-content dark:text-white">{{ $line['quantity'] }}</span>
                                     <button
                                         type="button"
                                         wire:click="addToCart({{ $line['stock']->id }})"
                                         @disabled($line['stock']->quantity < 1)
                                         class="px-1 font-bold text-content-muted hover:text-content disabled:cursor-not-allowed disabled:opacity-30"
-                                    >+</button>
+                                    >+
+                                    </button>
                                 </div>
                             </div>
                         @empty
-                            <div class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+                            <div
+                                class="rounded-xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
                                 Your cart is empty.
                             </div>
                         @endforelse
@@ -449,30 +464,35 @@ new class extends Component {
 
                     @if ($this->cartLines->isNotEmpty())
                         <div class="border-t border-dashed border-line pt-3">
-                            <div class="flex justify-between text-base font-bold text-content">
+                            <div class="flex justify-between text-base font-bold text-content dark:text-white">
                                 <span>Total</span>
                                 <span>{{ $this->cartTotal }} gp</span>
                             </div>
                         </div>
 
                         @unless ($this->canAfford)
-                            <div class="flex items-start gap-2 rounded-xl border border-line bg-canvas p-3 text-xs text-content-muted">
-                                <flux:icon.exclamation-triangle class="size-4 shrink-0" />
-                                <span>You're <strong class="text-content">{{ $this->shortBy }} gp</strong> short.</span>
+                            <div
+                                class="flex items-start gap-2 rounded-xl border border-line bg-canvas p-3 text-xs text-content-muted dark:text-content-faint">
+                                <flux:icon.exclamation-triangle class="size-4 shrink-0"/>
+                                <span>You're <strong
+                                        class="text-content dark:text-white">{{ $this->shortBy }} gp</strong> short.</span>
                             </div>
                         @endunless
 
-                        <div class="flex items-center justify-between text-xs text-content-muted">
+                        <div
+                            class="flex items-center justify-between text-xs text-content-muted dark:text-content-faint">
                             <span>Your gold</span>
                             <span>
                                 {{ $this->gold }} gp
-                                @if ($this->canAfford)
-                                    → <span class="font-bold text-content">{{ $this->goldAfter }} gp</span>
-                                @endif
+
+                                    → <span
+                                    class="font-bold text-content dark:text-white">{{ $this->goldAfter }} gp</span>
+
                             </span>
                         </div>
 
-                        <flux:button variant="primary" class="w-full" :disabled="! $this->canAfford" wire:click="openConfirm">
+                        <flux:button variant="primary" class="w-full" :disabled="! $this->canAfford"
+                                     wire:click="openConfirm">
                             Buy · {{ $this->cartTotal }} gp
                         </flux:button>
                     @endif
@@ -489,24 +509,26 @@ new class extends Component {
 
                     <div class="space-y-2 text-left">
                         @foreach ($this->cartLines as $line)
-                            <div class="flex justify-between text-sm text-content">
+                            <div class="flex justify-between text-sm text-content dark:text-white">
                                 <span>{{ $line['stock']->item->name }} ×{{ $line['quantity'] }}</span>
                                 <span>{{ $line['subtotal'] }} gp</span>
                             </div>
                         @endforeach
                     </div>
 
-                    <div class="flex justify-between border-t border-line pt-3 text-base font-bold text-content">
+                    <div
+                        class="flex justify-between border-t border-line pt-3 text-base font-bold text-content dark:text-white">
                         <span>Total</span>
                         <span>{{ $this->cartTotal }} gp</span>
                     </div>
 
-                    <div class="flex items-center justify-between rounded-xl bg-canvas p-3">
+                    <div class="flex items-center justify-between rounded-xl bg-canvas p-3 dark:bg-gray-700">
                         <div class="text-left">
-                            <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Gold After</div>
-                            <div class="text-lg font-bold text-content">{{ $this->goldAfter }} gp</div>
+                            <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Gold After
+                            </div>
+                            <div class="text-lg font-bold text-content dark:text-white">{{ $this->goldAfter }} gp</div>
                         </div>
-                        <div class="text-xs text-content-muted">was {{ $this->gold }}</div>
+                        <div class="text-xs text-content-muted dark:text-gray-400">was {{ $this->gold }}</div>
                     </div>
 
                     <div class="flex gap-2">
@@ -519,32 +541,39 @@ new class extends Component {
             {{-- D3: Success / receipt --}}
             <flux:modal name="purchase-success" class="md:w-96">
                 <div class="flex flex-col items-center space-y-4 text-center">
-                    <div class="flex size-16 items-center justify-center rounded-full border-2 border-brand-600 text-2xl font-bold text-brand-600">✓</div>
+                    <div
+                        class="flex size-16 items-center justify-center rounded-full border-2 border-brand-600 text-2xl font-bold text-brand-600">
+                        ✓
+                    </div>
 
                     <div>
                         <flux:heading size="lg">Purchase complete</flux:heading>
                         <flux:text class="mt-1">
-                            {{ collect($receiptLines)->sum('quantity') }} item{{ collect($receiptLines)->sum('quantity') === 1 ? '' : 's' }} added to your inventory
+                            {{ collect($receiptLines)->sum('quantity') }}
+                            item{{ collect($receiptLines)->sum('quantity') === 1 ? '' : 's' }} added to your inventory
                         </flux:text>
                     </div>
 
                     <div class="w-full space-y-2 rounded-xl border border-line p-3 text-left">
                         @foreach ($receiptLines as $line)
                             <div class="flex items-center justify-between text-sm">
-                                <span class="font-bold text-content">{{ $line['name'] }}</span>
-                                <span class="text-content-muted">×{{ $line['quantity'] }}</span>
+                                <span class="font-bold text-content dark:text-white">{{ $line['name'] }}</span>
+                                <span class="text-content-muted dark:text-content-faint">×{{ $line['quantity'] }}</span>
                             </div>
                         @endforeach
                     </div>
 
-                    <div class="flex w-full justify-between text-xs text-content-muted">
+                    <div class="flex w-full justify-between text-xs text-content-muted dark:text-content-faint">
                         <span>Paid</span>
-                        <span class="font-bold text-content">{{ $receiptTotal }} gp · Balance {{ $receiptBalanceAfter }} gp</span>
+                        <span class="font-bold text-content dark:text-white">{{ $receiptTotal }} gp · Balance {{ $receiptBalanceAfter }} gp</span>
                     </div>
 
                     <div class="flex w-full gap-2">
-                        <flux:button :href="route('inventory')" wire:navigate variant="ghost" class="flex-1">View inventory</flux:button>
-                        <flux:button variant="primary" class="flex-1" wire:click="keepShopping">Keep shopping</flux:button>
+                        <flux:button :href="route('inventory')" wire:navigate variant="ghost" class="flex-1">View
+                            inventory
+                        </flux:button>
+                        <flux:button variant="primary" class="flex-1" wire:click="keepShopping">Keep shopping
+                        </flux:button>
                     </div>
                 </div>
             </flux:modal>

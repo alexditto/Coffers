@@ -181,7 +181,7 @@ new class extends Component {
         <flux:text class="mt-1">Manage the people you adventure with.</flux:text>
     </div>
 
-    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+    <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm dark:bg-gray-800">
         <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Add a friend</div>
 
         <form wire:submit="sendRequest" class="mt-3 flex items-start gap-2">
@@ -246,27 +246,33 @@ new class extends Component {
         <div class="mb-3 text-[10px] font-bold tracking-widest text-content-faint uppercase">Your Friends · {{ $this->friends->count() }}</div>
 
         @if ($this->friends->isEmpty())
-            <div class="rounded-2xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted">
+            <div class="rounded-2xl border-2 border-dashed border-line p-6 text-center text-sm text-content-muted dark:border-gray-800">
                 No friends yet — send a request above to get started.
             </div>
         @else
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 dark:bg-gray-800">
                 @foreach ($this->friends as $friend)
-                    <a
-                        wire:key="friend-{{ $friend->id }}"
-                        href="{{ route('friend-profile', $friend) }}"
-                        wire:navigate
-                        class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 transition hover:border-brand-300 hover:shadow-sm"
-                    >
-                        <flux:avatar size="sm" name="{{ $friend->name }}" color="auto" />
+                    <div class="flex items-between justify-between gap-3 rounded-2xl border border-line bg-surface p-3 transition hover:border-brand-300 hover:shadow-sm dark:bg-gray-800">
+                        <a
+                            wire:key="friend-{{ $friend->id }}"
+                            href="{{ route('friend-profile', $friend) }}"
+                            wire:navigate
+                            class="flex items-center gap-3"
+                        >
+                            <flux:avatar size="sm" name="{{ $friend->name }}" color="auto"/>
 
-                        <div class="min-w-0 flex-1">
-                            <div class="truncate text-sm font-bold text-content">{{ $friend->name }}</div>
-                            <div class="truncate text-xs text-content-muted">{{ $friend->email }}</div>
-                        </div>
+                            <div class="min-w-0 flex-1">
+                                <div
+                                    class="truncate text-sm font-bold text-content dark:text-white">{{ $friend->name }}</div>
+                                <div class="truncate text-xs text-content-muted">{{ $friend->email }}</div>
+                            </div>
 
-                        <flux:button size="sm" variant="ghost" wire:click.stop.prevent="confirmRemoveFriend({{ $friend->id }})">Remove</flux:button>
-                    </a>
+                        </a>
+                        <flux:button size="sm" variant="ghost"
+                                     wire:click.stop.prevent="confirmRemoveFriend({{ $friend->id }})">Remove
+                        </flux:button>
+
+                    </div>
                 @endforeach
             </div>
         @endif

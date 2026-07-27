@@ -25,7 +25,7 @@ new class extends Component {
 };
 ?>
 
-<a href="{{ route('friends') }}" wire:navigate class="flex h-full flex-col rounded-2xl border border-line bg-surface p-4 shadow-sm transition hover:border-brand-300 hover:shadow-md">
+<a href="{{ route('friends') }}" wire:navigate class="flex h-full flex-col rounded-2xl border border-line bg-surface p-4 shadow-sm transition hover:border-brand-300 hover:shadow-md dark:bg-gray-800">
     <div class="flex items-center justify-between">
         <span class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Friends</span>
         <flux:icon.chevron-right class="size-4 text-content-faint" />
@@ -33,12 +33,12 @@ new class extends Component {
 
     <div class="mt-3 grid flex-1 grid-cols-3 gap-2">
         <div class="flex flex-col items-center justify-center rounded-xl border border-line py-2.5 text-center">
-            <div class="text-xl font-bold text-content">{{ $approvedFriends->count() }}</div>
+            <div class="text-xl font-bold text-content dark:text-white">{{ $approvedFriends->count() }}</div>
             <div class="mt-0.5 text-[10px] font-bold tracking-wide text-content-faint uppercase">Approved</div>
         </div>
 
         <div class="flex flex-col items-center justify-center rounded-xl border border-line py-2.5 text-center">
-            <div class="text-xl font-bold text-content">{{ $pendingFriends->count() }}</div>
+            <div class="text-xl font-bold text-content dark:text-white">{{ $pendingFriends->count() }}</div>
             <div class="mt-0.5 text-[10px] font-bold tracking-wide text-content-faint uppercase">Awaiting</div>
         </div>
 
@@ -48,7 +48,7 @@ new class extends Component {
             'border-line' => $pendingRequests->isEmpty(),
         ])>
             <div @class([
-                'text-xl font-bold',
+                'text-xl font-bold dark:text-white',
                 'text-brand-700' => $pendingRequests->isNotEmpty(),
                 'text-content' => $pendingRequests->isEmpty(),
             ])>{{ $pendingRequests->count() }}</div>

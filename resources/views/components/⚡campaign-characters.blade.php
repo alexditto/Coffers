@@ -141,7 +141,7 @@ new class extends Component {
 };
 ?>
 
-<div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+<div class="rounded-2xl border border-line bg-surface dark:bg-gray-800 p-5 shadow-sm">
     <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Characters · {{ $this->characters->count() }}</div>
 
     <div class="mt-3 flex flex-col gap-2">
