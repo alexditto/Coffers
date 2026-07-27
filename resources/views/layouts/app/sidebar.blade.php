@@ -19,10 +19,10 @@
                         {{ __('Friends') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="map" :href="route('campaign-builder')" :current="request()->routeIs('campaign-builder')" wire:navigate>
-                        {{ __('Manage Campaigns') }}
+                        {{ __('DM Screen') }}
                     </flux:sidebar.item>
                     <flux:sidebar.item icon="identification" :href="route('character-builder')" :current="request()->routeIs('character-builder')" wire:navigate>
-                        {{ __('Manage Characters') }}
+                        {{ __('Character Sheets') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
@@ -63,10 +63,10 @@
                         {{ __('Friends') }}
                     </flux:menu.item>
                     <flux:menu.item icon="map" :href="route('campaign-builder')" wire:navigate>
-                        {{ __('Manage Campaigns') }}
+                        {{ __('DM Screen') }}
                     </flux:menu.item>
                     <flux:menu.item icon="identification" :href="route('character-builder')" wire:navigate>
-                        {{ __('Manage Characters') }}
+                        {{ __('Character Sheets') }}
                     </flux:menu.item>
                 </flux:menu>
             </flux:dropdown>

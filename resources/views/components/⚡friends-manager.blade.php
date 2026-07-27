@@ -252,7 +252,12 @@ new class extends Component {
         @else
             <div class="flex flex-col gap-2">
                 @foreach ($this->friends as $friend)
-                    <div wire:key="friend-{{ $friend->id }}" class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3">
+                    <a
+                        wire:key="friend-{{ $friend->id }}"
+                        href="{{ route('friend-profile', $friend) }}"
+                        wire:navigate
+                        class="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 transition hover:border-brand-300 hover:shadow-sm"
+                    >
                         <flux:avatar size="sm" name="{{ $friend->name }}" color="auto" />
 
                         <div class="min-w-0 flex-1">
@@ -260,8 +265,8 @@ new class extends Component {
                             <div class="truncate text-xs text-content-muted">{{ $friend->email }}</div>
                         </div>
 
-                        <flux:button size="sm" variant="ghost" wire:click="confirmRemoveFriend({{ $friend->id }})">Remove</flux:button>
-                    </div>
+                        <flux:button size="sm" variant="ghost" wire:click.stop.prevent="confirmRemoveFriend({{ $friend->id }})">Remove</flux:button>
+                    </a>
                 @endforeach
             </div>
         @endif

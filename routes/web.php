@@ -7,6 +7,7 @@ Route::view('/', 'welcome')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('/friends', 'friends')->name('friends');
+    Route::view('/friends/{friend}', 'friend-profile')->name('friend-profile');
     Route::view('/campaign-builder', 'campaign-builder')->name('campaign-builder');
     Route::view('/character-builder', 'character-builder')->name('character-builder');
 

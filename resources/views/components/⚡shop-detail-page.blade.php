@@ -279,7 +279,11 @@ new class extends Component {
 };
 ?>
 
-<div class="flex flex-col gap-4 pb-4">
+<div @class([
+    'flex flex-col gap-4',
+    'pb-12 lg:pb-8' => $this->shop && $this->character,
+    'pb-4' => ! ($this->shop && $this->character),
+])>
     <div>
         <flux:button :href="route('shops')" wire:navigate variant="ghost" size="sm" icon="arrow-left">
             Back to Shops
@@ -356,14 +360,16 @@ new class extends Component {
         </div>
 
         @if ($this->character)
-            <div class="sticky bottom-4 z-10 flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-3 shadow-lg">
-                <span class="text-sm font-semibold text-content-muted">
-                    Cart · {{ $this->cartItems->count() }} item{{ $this->cartItems->count() === 1 ? '' : 's' }}
-                </span>
+            <div class="fixed inset-x-0 bottom-19 z-30 px-6 lg:left-64 lg:right-0 lg:bottom-8 lg:px-8">
+                <div class="mx-auto flex max-w-2xl items-center justify-between gap-3 rounded-2xl border border-line bg-surface p-3 shadow-lg">
+                    <span class="text-sm font-semibold text-content-muted">
+                        Cart · {{ $this->cartItems->count() }} item{{ $this->cartItems->count() === 1 ? '' : 's' }}
+                    </span>
 
-                <flux:button variant="primary" wire:click="checkout">
-                    Checkout · {{ $this->cartTotal }} gp
-                </flux:button>
+                    <flux:button variant="primary" wire:click="checkout">
+                        Checkout · {{ $this->cartTotal }} gp
+                    </flux:button>
+                </div>
             </div>
 
             {{-- D1: Cart review --}}

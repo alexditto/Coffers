@@ -175,7 +175,8 @@ test('opening the quick edit modal prefills health and condition', function () {
         ->test('player-character-page')
         ->call('openQuickEdit')
         ->assertSet('quickHealth', 20)
-        ->assertSet('quickConditionIds', [$poisoned->id]);
+        ->assertSet('quickConditionIds', [$poisoned->id])
+        ->assertSee('Poisoned');
 });
 
 test('the user can quick edit their health and condition', function () {

@@ -245,11 +245,11 @@ new class extends Component {
 
                     <flux:input wire:model="editHealth" type="number" min="0" label="Health" />
 
-                    <flux:checkbox.group wire:model="editConditionIds" label="Conditions">
-                        @foreach ($this->conditionOptions as $condition)
-                            <flux:checkbox value="{{ $condition->id }}" label="{{ $condition->name }}" />
-                        @endforeach
-                    </flux:checkbox.group>
+                    <x-condition-multi-select
+                        model="editConditionIds"
+                        :options="$this->conditionOptions"
+                        :selected="$editConditionIds"
+                    />
 
                     <flux:input wire:model="editGold" type="number" min="0" label="Gold" />
 

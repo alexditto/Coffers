@@ -392,11 +392,11 @@ new class extends Component {
 
                 <flux:input wire:model="quickHealth" type="number" min="0" label="Health" />
 
-                <flux:checkbox.group wire:model="quickConditionIds" label="Conditions">
-                    @foreach ($this->conditionOptions as $condition)
-                        <flux:checkbox value="{{ $condition->id }}" label="{{ $condition->name }}" />
-                    @endforeach
-                </flux:checkbox.group>
+                <x-condition-multi-select
+                    model="quickConditionIds"
+                    :options="$this->conditionOptions"
+                    :selected="$quickConditionIds"
+                />
 
                 <div class="flex gap-2">
                     <flux:spacer />

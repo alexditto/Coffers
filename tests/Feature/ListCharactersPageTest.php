@@ -165,7 +165,8 @@ test('the owner can open the edit modal and it is prefilled with the character\'
         ->call('editCharacter', $character->id)
         ->assertSet('editHealth', 45)
         ->assertSet('editConditionIds', [$poisoned->id])
-        ->assertSet('editGold', 120);
+        ->assertSet('editGold', 120)
+        ->assertSee('Poisoned');
 });
 
 test('a non owner does not see the clickable affordance or edit modal', function () {
