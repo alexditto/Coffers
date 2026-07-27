@@ -1,10 +1,13 @@
 <?php
 
+use App\Events\ShopClosed;
+use App\Events\ShopOpened;
 use App\Models\Campaign;
 use App\Models\Item;
 use App\Models\Shop;
 use App\Models\ShopStock;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 
 test('shows only open shops for the selected campaign by default', function () {
@@ -66,6 +69,100 @@ test('the owner can close and open a shop', function () {
         ->call('openShop', $shop->id);
 
     expect($shop->fresh()->status)->toBe('open');
+});
+
+test('closing an open shop broadcasts a ShopClosed event', function () {
+    Event::fake([ShopClosed::class, ShopOpened::class]);
+
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+    $shop = Shop::factory()->create(['owner_id' => $owner->id, 'status' => 'open']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('d-m-shop-page')
+        ->call('closeShop', $shop->id);
+
+    Event::assertDispatched(ShopClosed::class, fn (ShopClosed $event) => $event->shop->id === $shop->id);
+    Event::assertNotDispatched(ShopOpened::class);
+});
+
+test('opening a closed shop broadcasts a ShopOpened event', function () {
+    Event::fake([ShopClosed::class, ShopOpened::class]);
+
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+    $shop = Shop::factory()->create(['owner_id' => $owner->id, 'status' => 'closed']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('d-m-shop-page')
+        ->call('openShop', $shop->id);
+
+    Event::assertDispatched(ShopOpened::class, fn (ShopOpened $event) => $event->shop->id === $shop->id);
+    Event::assertNotDispatched(ShopClosed::class);
+});
+
+test('editing a shop to draft or hidden does not broadcast an open or closed event', function () {
+    Event::fake([ShopClosed::class, ShopOpened::class]);
+
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+    $shop = Shop::factory()->create(['owner_id' => $owner->id, 'status' => 'open']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('d-m-shop-page')
+        ->call('editShop', $shop->id)
+        ->set('shopStatus', 'hidden')
+        ->call('saveShop');
+
+    Event::assertNotDispatched(ShopOpened::class);
+    Event::assertNotDispatched(ShopClosed::class);
+});
+
+test('re-saving a shop with the same status does not broadcast again', function () {
+    Event::fake([ShopClosed::class, ShopOpened::class]);
+
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+    $shop = Shop::factory()->create(['owner_id' => $owner->id, 'status' => 'open', 'name' => 'Old Name']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('d-m-shop-page')
+        ->call('editShop', $shop->id)
+        ->set('shopName', 'New Name')
+        ->call('saveShop');
+
+    Event::assertNotDispatched(ShopOpened::class);
+    Event::assertNotDispatched(ShopClosed::class);
+});
+
+test('creating a new shop as open broadcasts a ShopOpened event', function () {
+    Event::fake([ShopClosed::class, ShopOpened::class]);
+
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('d-m-shop-page')
+        ->call('newShop')
+        ->set('shopName', 'The Iron Anvil')
+        ->set('shopStatus', 'open')
+        ->call('saveShop');
+
+    Event::assertDispatched(ShopOpened::class, fn (ShopOpened $event) => $event->shop->name === 'The Iron Anvil');
 });
 
 test('the owner can edit a shop', function () {

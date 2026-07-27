@@ -29,6 +29,29 @@ new class extends Component {
     }
 
     /**
+     * @return array<string, string>
+     */
+    public function getListeners(): array
+    {
+        return [
+            "echo-private:shop.{$this->shopId},ShopOpened" => 'onShopStatusChanged',
+            "echo-private:shop.{$this->shopId},ShopClosed" => 'onShopStatusChanged',
+        ];
+    }
+
+    public function onShopStatusChanged(): void
+    {
+        unset($this->shop, $this->stock);
+
+        if (! $this->shop) {
+            Flux::modal('cart-review')->close();
+            Flux::modal('confirm-purchase')->close();
+
+            Flux::toast('This shop just closed.', variant: 'warning');
+        }
+    }
+
+    /**
      * Only an open shop within the user's currently selected, accessible campaign
      * may be viewed - never trust the route id alone.
      */
@@ -207,7 +230,7 @@ new class extends Component {
 
     public function checkout(): void
     {
-        if (! $this->character) {
+        if (! $this->shop || ! $this->character) {
             return;
         }
 
@@ -216,7 +239,7 @@ new class extends Component {
 
     public function openConfirm(): void
     {
-        if (! $this->canAfford || $this->cartItems->isEmpty()) {
+        if (! $this->shop || ! $this->canAfford || $this->cartItems->isEmpty()) {
             return;
         }
 
@@ -235,6 +258,18 @@ new class extends Component {
         $inventory = $this->character?->inventory;
 
         if (! $inventory || ! $this->canAfford || $this->cartItems->isEmpty()) {
+            return;
+        }
+
+        // Re-check status here rather than trusting an earlier page load - a shop can
+        // close while this confirmation modal is already open with items in the cart.
+        if (! $this->shop) {
+            unset($this->stock, $this->cartItems);
+
+            Flux::modal('confirm-purchase')->close();
+
+            Flux::toast('This shop just closed - your purchase was not completed.', variant: 'danger');
+
             return;
         }
 

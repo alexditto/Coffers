@@ -128,3 +128,50 @@ test('refreshes the shop groups when the campaign-switched event fires', functio
         ->assertSee('Moonleaf Apothecary')
         ->assertDontSee('The Iron Anvil');
 });
+
+test('registers echo listeners scoped to the selected campaign for shop open and close broadcasts', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    $listeners = Livewire::actingAs($user)
+        ->test('player-shop-page')
+        ->instance()
+        ->getListeners();
+
+    expect($listeners)->toHaveKey("echo-private:campaign.{$campaign->id}.shops,ShopOpened")
+        ->and($listeners)->toHaveKey("echo-private:campaign.{$campaign->id}.shops,ShopClosed");
+});
+
+test('registers no echo listeners when no campaign is selected', function () {
+    $user = User::factory()->create();
+
+    $listeners = Livewire::actingAs($user)
+        ->test('player-shop-page')
+        ->instance()
+        ->getListeners();
+
+    expect($listeners)->toBe([]);
+});
+
+test('a shop opening elsewhere is reflected after a shop status changed broadcast is received', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $shop = Shop::factory()->create(['status' => 'draft', 'name' => 'The Iron Anvil']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    $component = Livewire::actingAs($user)
+        ->test('player-shop-page')
+        ->assertDontSee('The Iron Anvil');
+
+    // Drafts are never player-visible - open it up as the DM would.
+    $shop->update(['status' => 'open']);
+
+    $component->call('onShopStatusChanged')
+        ->assertSee('The Iron Anvil');
+});

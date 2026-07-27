@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\ShopClosed;
+use App\Events\ShopOpened;
 use App\Models\Campaign;
 use App\Models\Item;
 use App\Models\Shop;
@@ -135,9 +137,30 @@ new class extends Component {
             return;
         }
 
+        $previousStatus = $shop->status;
+
         $shop->update(['status' => $status]);
 
+        $this->broadcastShopStatusChange($shop, $previousStatus);
+
         unset($this->shops);
+    }
+
+    /**
+     * Notify players in real time whenever a shop transitions to or from "open".
+     * Other status changes (draft, hidden) aren't broadcast - only the DM sees those.
+     */
+    protected function broadcastShopStatusChange(Shop $shop, ?string $previousStatus): void
+    {
+        if ($shop->status === $previousStatus) {
+            return;
+        }
+
+        if ($shop->status === 'open') {
+            broadcast(new ShopOpened($shop));
+        } elseif ($shop->status === 'closed') {
+            broadcast(new ShopClosed($shop));
+        }
     }
 
     public function editShop(int $shopId): void
@@ -186,12 +209,16 @@ new class extends Component {
         if ($this->editingShopId) {
             $shop = $this->campaign->shops()->where('shops.id', $this->editingShopId)->firstOrFail();
 
+            $previousStatus = $shop->status;
+
             $shop->update([
                 'name' => $data['shopName'],
                 'description' => $data['shopDescription'] ?: null,
                 'image' => $data['shopImage'] ?: null,
                 'status' => $data['shopStatus'],
             ]);
+
+            $this->broadcastShopStatusChange($shop, $previousStatus);
 
             Flux::toast('Shop updated.', variant: 'success');
         } else {
@@ -204,6 +231,8 @@ new class extends Component {
             ]);
 
             $shop->campaigns()->attach($this->campaign->id);
+
+            $this->broadcastShopStatusChange($shop, null);
 
             $this->statusFilter = $data['shopStatus'];
 

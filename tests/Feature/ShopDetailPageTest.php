@@ -438,3 +438,67 @@ test('backToCart returns from the confirmation step to the cart review', functio
 
     expect(ShoppingCart::where('shop_stock_id', $stock->id)->where('is_purchased', true)->exists())->toBeTrue();
 });
+
+test('registers echo listeners scoped to this shop for open and close broadcasts', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $shop = Shop::factory()->create(['status' => 'open']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    $listeners = Livewire::actingAs($user)
+        ->test('shop-detail-page', ['shopId' => $shop->id])
+        ->instance()
+        ->getListeners();
+
+    expect($listeners)->toHaveKey("echo-private:shop.{$shop->id},ShopOpened")
+        ->and($listeners)->toHaveKey("echo-private:shop.{$shop->id},ShopClosed");
+});
+
+test('a shop closed while the confirmation modal is open cannot be purchased', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $character = Character::factory()->create(['user_id' => $user->id, 'campaign_id' => $campaign->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 100]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $shop = Shop::factory()->create(['status' => 'open']);
+    $shop->campaigns()->attach($campaign->id);
+    $stock = ShopStock::factory()->create(['shop_id' => $shop->id, 'price' => 10, 'quantity' => 5]);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    $component = Livewire::actingAs($user)
+        ->test('shop-detail-page', ['shopId' => $shop->id])
+        ->call('addToCart', $stock->id)
+        ->call('openConfirm');
+
+    // The DM closes the shop out from under the player after the cart is already reviewed.
+    $shop->update(['status' => 'closed']);
+
+    $component->call('confirmPurchase');
+
+    expect($inventory->fresh()->gold)->toBe(100)
+        ->and(ShoppingCart::where('shop_stock_id', $stock->id)->where('is_purchased', true)->exists())->toBeFalse();
+});
+
+test('receiving a shop closed broadcast refreshes the page to show the shop is unavailable', function () {
+    $user = User::factory()->create();
+    $campaign = Campaign::factory()->create();
+    $user->campaigns()->attach($campaign->id);
+    $shop = Shop::factory()->create(['status' => 'open', 'name' => 'The Iron Anvil']);
+    $shop->campaigns()->attach($campaign->id);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    $component = Livewire::actingAs($user)
+        ->test('shop-detail-page', ['shopId' => $shop->id])
+        ->assertSee('The Iron Anvil');
+
+    $shop->update(['status' => 'closed']);
+
+    $component->call('onShopStatusChanged')
+        ->assertSee("This shop isn't available right now.", false);
+});

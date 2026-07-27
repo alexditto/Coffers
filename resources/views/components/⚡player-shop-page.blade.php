@@ -26,6 +26,26 @@ new class extends Component {
     }
 
     /**
+     * @return array<string, string>
+     */
+    public function getListeners(): array
+    {
+        if (! $this->selectedCampaignId) {
+            return [];
+        }
+
+        return [
+            "echo-private:campaign.{$this->selectedCampaignId}.shops,ShopOpened" => 'onShopStatusChanged',
+            "echo-private:campaign.{$this->selectedCampaignId}.shops,ShopClosed" => 'onShopStatusChanged',
+        ];
+    }
+
+    public function onShopStatusChanged(): void
+    {
+        unset($this->shops, $this->openShops, $this->closedShops, $this->unknownShops);
+    }
+
+    /**
      * Only campaigns the user belongs to or owns are considered accessible.
      */
     #[Computed]
