@@ -1,18 +1,132 @@
-<x-layouts::auth.simple>
-    <div class="flex flex-col items-center gap-4 text-center">
-        <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-neutral-800 text-brand-300">
-            <flux:icon.code-bracket class="size-5" />
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<head>
+    @include('partials.head')
+</head>
+<body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
+<div class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-10 md:py-16">
+    <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2 self-start">
+        <span class="flex size-9 items-center justify-center rounded-md">
+            <x-app-logo-icon class="size-9 fill-current text-white"/>
         </span>
+        <span class="text-lg font-semibold dark:text-white">Coffer</span>
+    </a>
 
-        <div>
-            <flux:heading size="lg">Portfolio coming soon</flux:heading>
-            <flux:text class="mt-2">
-                This page is still being built. Check back soon to see what else I've been working on.
-            </flux:text>
+    <div class="mb-4">
+        <span class="text-[10px] font-bold tracking-widest text-brand-700 uppercase">Hire me</span>
+        <h1 class="mt-2 text-3xl font-bold text-black dark:text-white sm:text-4xl">Nerdy software developer, available
+            for hire</h1>
+        <p class="mt-3 text-base text-neutral-700">
+            I built Coffers, along with the projects below. Take a look around, then reach out on GitHub or LinkedIn, or
+            grab my resume.
+        </p>
+
+        <div class="mt-5 flex flex-wrap gap-3">
+            <flux:button href="https://github.com/alexditto" target="_blank" rel="noopener" variant="ghost"
+                         icon="code-bracket">
+                GitHub
+            </flux:button>
+
+            <flux:button href="https://www.linkedin.com/in/alexander-ditto-0a69aa141/" target="_blank" rel="noopener"
+                         variant="ghost" icon="link">
+                LinkedIn
+            </flux:button>
+
+            <flux:button href="https://github.com/alexditto/Resume" target="_blank" rel="noopener" variant="ghost"
+                         icon="document-text">
+                Resume
+            </flux:button>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-neutral-800 bg-neutral-400/60 p-6">
+        <span class="text-[10px] font-bold tracking-widest text-brand-700 uppercase">Open to</span>
+        <h2 class="mt-2 text-lg font-bold text-brand-900">What I'm looking for</h2>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+            <flux:badge size="sm" color="zinc">Remote or onsite — St. Louis</flux:badge>
+            <flux:badge size="sm" color="zinc">Laravel applications</flux:badge>
+            <flux:badge size="sm" color="zinc">NetSuite applications</flux:badge>
+            <flux:badge size="sm" color="zinc">Automations · Compliance · Integrations</flux:badge>
+        </div>
+    </div>
+
+    <div>
+        <span class="text-[10px] font-bold tracking-widest text-brand-700 uppercase">Projects</span>
+        <h2 class="mt-2 text-lg font-bold text-black dark:text-white">A few recent benchmarks</h2>
+
+        <div class="mt-4 flex flex-wrap gap-4 items-center justify-center">
+            <div class="max-w-xs overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-400/60">
+                <img src="{{ asset('img/benchmark-1.png') }}" alt="Project One screenshot"
+                     class="h-40 w-full object-cover"/>
+
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-brand-900">Operations Field Mobile App</h3>
+                    <p class="mt-3 text-sm text-neutral-700">
+                        Created a React, Tailwind CSS, and Google Maps field application that surfaces nearby records,
+                        captures activity, creates leads, and standardizes operational reporting.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-xs overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-400/60">
+                <img src="{{ asset('img/benchmark-2.png') }}" alt="Project Two screenshot"
+                     class="h-40 w-full object-cover"/>
+
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-brand-900">Portals, Integrations, and more built with Laravel</h3>
+                    <p class="mt-3 text-sm text-neutral-700">
+                        Led the Customer, Franchise, and Infinite Pipeline portals using Laravel, Livewire, Filament,
+                        MySQL, and versioned APIs. In Infinite Pipeline, appointment-created events trigger listeners
+                        and observers that process payments and notify users without routine human intervention.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-xs overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-400/60">
+                <img src="{{ asset('img/benchmark-3.png') }}" alt="Project Three screenshot"
+                     class="h-40 w-full object-cover"/>
+
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-brand-900">SuiteScript, SuiteQL, and Google Maps Platform</h3>
+                    <p class="mt-3 text-sm text-neutral-700">
+                        Built and re-architected a reusable SuiteScript, SuiteQL, and Google Maps platform for
+                        marketing, site visits, franchise deployment, and outside-sales planning.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="max-w-lg justify-center flex flex-col items-center gap-4 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-8 text-center mx-auto mt-4 mb-4">
+        <h2 class="text-xl font-bold text-white">Let's build something together</h2>
+
+        <div class="flex flex-wrap justify-center gap-3">
+            <flux:button href="https://github.com/alexditto" target="_blank" rel="noopener" variant="primary"
+                         class="bg-brand-primary hover:bg-brand-secondary hover:border-b-brand-primary">
+                GitHub
+            </flux:button>
+
+            <flux:button href="https://www.linkedin.com/in/alexander-ditto-0a69aa141/" target="_blank" rel="noopener"
+                         variant="primary"
+                         class="bg-white text-brand-secondary hover:bg-brand-secondary hover:text-white">
+                LinkedIn
+            </flux:button>
         </div>
 
-        <flux:button :href="route('home')" wire:navigate variant="ghost" icon="arrow-left">
+        <a href="{{ route('home') }}" wire:navigate class="text-sm text-neutral-400 hover:text-neutral-200">
             Back to home
-        </flux:button>
+        </a>
     </div>
-</x-layouts::auth.simple>
+</div>
+
+@persist('toast')
+<flux:toast.group>
+    <flux:toast/>
+</flux:toast.group>
+@endpersist
+
+@fluxScripts
+</body>
+</html>
