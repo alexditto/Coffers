@@ -64,3 +64,22 @@ test('requires a name to create a campaign', function () {
         ->call('createCampaign')
         ->assertHasErrors(['newCampaignName' => 'required']);
 });
+
+test('each rendered instance gets its own unique create-campaign modal name', function () {
+    $user = User::factory()->create();
+
+    // Every authenticated page embeds this component more than once (a compact
+    // copy in the mobile header, a full copy in page content for desktop),
+    // toggled with responsive CSS rather than conditional rendering - both exist
+    // in the DOM at once. A shared literal modal name would collide between them.
+    $first = Livewire::actingAs($user)->test('campaign-selector-banner');
+    $second = Livewire::actingAs($user)->test('campaign-selector-banner');
+
+    $firstName = $first->instance()->createCampaignModalName();
+    $secondName = $second->instance()->createCampaignModalName();
+
+    expect($firstName)->not->toBe($secondName);
+
+    $first->assertSeeHtml('data-modal="'.$firstName.'"');
+    $second->assertSeeHtml('data-modal="'.$secondName.'"');
+});

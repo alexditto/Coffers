@@ -41,13 +41,13 @@ test('the portfolio page describes what kind of work is wanted', function () {
 test('the portfolio page shows three benchmark project overviews', function () {
     $this->get(route('portfolio'))
         ->assertOk()
-        ->assertSee('Project One')
-        ->assertSee('Project Two')
-        ->assertSee('Project Three')
+        ->assertSee('Operations Field Mobile App')
+        ->assertSee('Portals, Integrations, and more built with Laravel')
+        ->assertSee('SuiteScript, SuiteQL, and Google Maps Platform')
         ->assertSeeInOrder([
             asset('img/benchmark-1.png'),
-            asset('img/benchmark-1.png'),
-            asset('img/benchmark-1.png'),
+            asset('img/benchmark-2.png'),
+            asset('img/benchmark-3.png'),
         ], false);
 });
 

@@ -49,6 +49,18 @@ new class extends Component {
         return $this->campaigns->firstWhere('id', $this->selectedCampaignId);
     }
 
+    /**
+     * This component is embedded more than once per page (a compact copy in the
+     * mobile header, a full copy in page content for desktop), toggled with
+     * responsive CSS rather than conditional rendering - both copies exist in the
+     * DOM at once. A shared literal modal name would collide between them, so each
+     * instance gets its own name derived from its Livewire id.
+     */
+    public function createCampaignModalName(): string
+    {
+        return 'create-campaign-'.$this->getId();
+    }
+
     public function selectCampaign(int $campaignId): void
     {
         $this->selectedCampaignId = $campaignId;
@@ -80,14 +92,14 @@ new class extends Component {
 
         $this->selectCampaign($campaign->id);
 
-        Flux::modal('create-campaign')->close();
+        Flux::modal($this->createCampaignModalName())->close();
     }
 };
 ?>
 
 <div class="mx-auto w-full dark:bg-gray-800">
     @if ($this->campaigns->isEmpty())
-        <flux:modal.trigger name="create-campaign">
+        <flux:modal.trigger name="{{ $this->createCampaignModalName() }}">
             <button type="button" class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-line px-4 py-3.5 text-content-muted transition hover:border-brand-400 hover:text-brand-600">
                 <flux:icon.plus class="size-4" />
                 <span class="text-sm font-bold">Create your first campaign</span>
@@ -129,14 +141,14 @@ new class extends Component {
 
                 <flux:menu.separator />
 
-                <flux:modal.trigger name="create-campaign">
+                <flux:modal.trigger name="{{ $this->createCampaignModalName() }}">
                     <flux:menu.item icon="plus">New campaign</flux:menu.item>
                 </flux:modal.trigger>
             </flux:menu>
         </flux:dropdown>
     @endif
 
-    <flux:modal name="create-campaign" class="md:w-96 z-50">
+    <flux:modal name="{{ $this->createCampaignModalName() }}" class="md:w-96">
         <form wire:submit="createCampaign" class="space-y-6">
             <div>
                 <flux:heading size="lg">New Campaign</flux:heading>
