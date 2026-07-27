@@ -3,7 +3,7 @@
         <span class="text-[10px] font-bold tracking-widest text-gold-600 uppercase">Roll for initiative</span>
         <h2 class="mt-2 text-2xl font-bold text-content sm:text-3xl">Every campaign needs its Coffers</h2>
         <p class="mt-3 text-sm text-content-muted sm:text-base">
-            Coffers is the companion app for your table — gather your party, spin up a campaign, roll up your characters, and let the DM stock the shops. Everything your adventurers earn lands right in their inventory, ready for the next session.
+            Coffer is the companion app for your table — gather your party, spin up a campaign, roll up your characters, and let the DM stock the shops. Everything your adventurers earn lands right in their inventory, ready for the next session.
         </p>
     </div>
 

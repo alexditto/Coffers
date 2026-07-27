@@ -17,10 +17,10 @@
             </a>
         </div>
         <div class="max-w-2xl mx-auto my-4 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
-            <span class="text-[10px] font-bold tracking-widest text-brand-300 uppercase">What is Coffers?</span>
+            <span class="text-[10px] font-bold tracking-widest text-brand-300 uppercase">What is Coffer?</span>
 
             <p class="mt-2 text-sm text-neutral-300">
-                Coffers is the companion app for your tabletop table. A DM stands up a campaign, players roll up characters and join in, the DM stocks and opens shops, and every purchase lands straight in a character's inventory — no more paper ledgers at the table.
+                Coffer is the companion app for your tabletop table. A DM stands up a campaign, players roll up characters and join in, the DM stocks and opens shops, and every purchase lands straight in a character's inventory — no more paper ledgers at the table.
             </p>
 
             <a href="{{ route('guide') }}" wire:navigate class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-brand-300 transition hover:text-brand-200">
