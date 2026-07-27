@@ -38,7 +38,6 @@ class CharacterForm
                             ->default(1),
                         TextInput::make('alignment'),
                         TextInput::make('background'),
-                        TextInput::make('status'),
                         TextInput::make('health')
                             ->numeric(),
                         TextInput::make('total_health')
@@ -47,6 +46,11 @@ class CharacterForm
                         TextInput::make('ac')
                             ->numeric()
                             ->default(10),
+                        Select::make('statuses')
+                            ->relationship('statuses', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->columnSpanFull(),
                     ]),

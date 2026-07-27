@@ -36,37 +36,37 @@ class DatabaseSeeder extends Seeder
         CharacterStatus::factory()->create([
             'name' => 'Dead',
             'description' => 'The character is dead.',
-            'effect' => 'The character is dead.'
+            'effect' => 'The character is dead.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Unconscious',
             'description' => 'The character is unconscious.',
-            'effect' => 'The character is unconscious.'
+            'effect' => 'The character is unconscious.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Blinded',
             'description' => 'The character is blinded.',
-            'effect' => 'The character is blinded.'
+            'effect' => 'The character is blinded.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Deafened',
             'description' => 'The character is deafened.',
-            'effect' => 'The character is deafened.'
+            'effect' => 'The character is deafened.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Paralyzed',
             'description' => 'The character is paralyzed.',
-            'effect' => 'The character is paralyzed.'
+            'effect' => 'The character is paralyzed.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Stunned',
             'description' => 'The character is stunned.',
-            'effect' => 'The character is stunned.'
+            'effect' => 'The character is stunned.',
         ]);
         CharacterStatus::factory()->create([
             'name' => 'Poisoned',
             'description' => 'The character is poisoned.',
-            'effect' => 'The character is poisoned.'
+            'effect' => 'The character is poisoned.',
         ]);
 
         User::factory()

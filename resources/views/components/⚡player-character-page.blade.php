@@ -3,6 +3,7 @@
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\CharacterStatus;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
@@ -11,15 +12,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
-    const STATUSES = [
-        'none' => 'Healthy',
-        'poisoned' => 'Poisoned',
-        'blinded' => 'Blinded',
-        'deafened' => 'Deafened',
-        'paralyzed' => 'Paralyzed',
-        'stunned' => 'Stunned',
-    ];
-
     const ALIGNMENTS = [
         'lawful good' => 'Lawful Good',
         'neutral good' => 'Neutral Good',
@@ -36,7 +28,7 @@ new class extends Component {
 
     public int $quickHealth = 0;
 
-    public string $quickStatus = 'none';
+    public array $quickConditionIds = [];
 
     public string $sheetDescription = '';
 
@@ -99,7 +91,7 @@ new class extends Component {
 
         return auth()->user()->characters()
             ->where('campaign_id', $this->campaign->id)
-            ->with(['character_sheet', 'inventory'])
+            ->with(['character_sheet.statuses', 'inventory'])
             ->first();
     }
 
@@ -117,22 +109,18 @@ new class extends Component {
 
         return $this->campaign->characters()
             ->when($this->character, fn ($query) => $query->where('id', '!=', $this->character->id))
-            ->with('character_sheet')
+            ->with('character_sheet.statuses')
             ->orderBy('name')
             ->get();
     }
 
-    public function statusLabel(?string $status): string
-    {
-        return self::STATUSES[$status] ?? self::STATUSES['none'];
-    }
-
     /**
-     * @return array<string, string>
+     * @return Collection<int, CharacterStatus>
      */
-    public function statusOptions(): array
+    #[Computed]
+    public function conditionOptions(): Collection
     {
-        return self::STATUSES;
+        return CharacterStatus::orderBy('name')->get();
     }
 
     /**
@@ -152,7 +140,7 @@ new class extends Component {
         $sheet = $this->character->character_sheet;
 
         $this->quickHealth = $sheet?->health ?? 0;
-        $this->quickStatus = $sheet?->status ?? 'none';
+        $this->quickConditionIds = $sheet?->statuses->pluck('id')->all() ?? [];
 
         Flux::modal('quick-edit')->show();
     }
@@ -167,24 +155,25 @@ new class extends Component {
 
         $data = $this->validate([
             'quickHealth' => ['required', 'integer', 'min:0', 'max:'.$maxHealth],
-            'quickStatus' => ['required', Rule::in(array_keys(self::STATUSES))],
+            'quickConditionIds' => ['array'],
+            'quickConditionIds.*' => ['integer', 'exists:character_statuses,id'],
         ]);
 
-        if ($this->character->character_sheet) {
-            $this->character->character_sheet->update([
-                'health' => $data['quickHealth'],
-                'status' => $data['quickStatus'],
-            ]);
+        $sheet = $this->character->character_sheet;
+
+        if ($sheet) {
+            $sheet->update(['health' => $data['quickHealth']]);
         } else {
             $sheet = CharacterSheet::create([
                 'character_id' => $this->character->id,
                 'total_health' => $maxHealth,
                 'health' => $data['quickHealth'],
-                'status' => $data['quickStatus'],
             ]);
 
             $this->character->update(['character_sheet_id' => $sheet->id]);
         }
+
+        $sheet->statuses()->sync($data['quickConditionIds'] ?? []);
 
         unset($this->character);
 
@@ -259,7 +248,6 @@ new class extends Component {
                 'total_health' => $data['sheetTotalHealth'],
                 'health' => $health,
                 'ac' => $data['sheetAc'],
-                'status' => 'none',
             ]);
 
             $this->character->update(['character_sheet_id' => $sheet->id]);
@@ -286,7 +274,7 @@ new class extends Component {
     @else
         @php
             $sheet = $this->character->character_sheet;
-            $status = $this->statusLabel($sheet?->status);
+            $conditions = $sheet?->statuses ?? collect();
         @endphp
 
         <div class="flex items-center gap-4">
@@ -338,7 +326,11 @@ new class extends Component {
             <div class="text-[10px] font-bold tracking-widest text-content-faint uppercase">Conditions</div>
 
             <div class="mt-2 flex flex-wrap gap-2">
-                <flux:badge size="sm" :color="$status === 'Healthy' ? 'zinc' : 'amber'">{{ strtoupper($status) }}</flux:badge>
+                @forelse ($conditions as $condition)
+                    <flux:badge size="sm" color="amber">{{ strtoupper($condition->name) }}</flux:badge>
+                @empty
+                    <flux:badge size="sm" color="zinc">HEALTHY</flux:badge>
+                @endforelse
             </div>
         </div>
 
@@ -354,7 +346,7 @@ new class extends Component {
             @forelse ($this->partyMembers as $member)
                 @php
                     $memberSheet = $member->character_sheet;
-                    $memberStatus = $this->statusLabel($memberSheet?->status);
+                    $memberConditions = $memberSheet?->statuses ?? collect();
                 @endphp
 
                 <div wire:key="party-member-{{ $member->id }}" class="flex items-center gap-3 rounded-xl border border-line p-3">
@@ -375,7 +367,13 @@ new class extends Component {
 
                     <div class="flex shrink-0 flex-col items-end gap-1">
                         <span class="text-xs font-bold text-content">{{ $memberSheet?->health ?? 0 }}/{{ $memberSheet?->total_health ?? 0 }} HP</span>
-                        <flux:badge size="sm" :color="$memberStatus === 'Healthy' ? 'zinc' : 'amber'">{{ strtoupper($memberStatus) }}</flux:badge>
+                        <div class="flex flex-wrap justify-end gap-1">
+                            @forelse ($memberConditions as $condition)
+                                <flux:badge size="sm" color="amber">{{ strtoupper($condition->name) }}</flux:badge>
+                            @empty
+                                <flux:badge size="sm" color="zinc">HEALTHY</flux:badge>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
             @empty
@@ -394,11 +392,11 @@ new class extends Component {
 
                 <flux:input wire:model="quickHealth" type="number" min="0" label="Health" />
 
-                <flux:select wire:model="quickStatus" label="Condition">
-                    @foreach ($this->statusOptions() as $value => $label)
-                        <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                <flux:checkbox.group wire:model="quickConditionIds" label="Conditions">
+                    @foreach ($this->conditionOptions as $condition)
+                        <flux:checkbox value="{{ $condition->id }}" label="{{ $condition->name }}" />
                     @endforeach
-                </flux:select>
+                </flux:checkbox.group>
 
                 <div class="flex gap-2">
                     <flux:spacer />

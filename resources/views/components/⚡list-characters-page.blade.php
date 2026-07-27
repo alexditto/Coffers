@@ -3,24 +3,15 @@
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\CharacterStatus;
 use App\Models\Inventory;
 use Flux\Flux;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
-    const STATUSES = [
-        'none' => 'Healthy',
-        'poisoned' => 'Poisoned',
-        'blinded' => 'Blinded',
-        'deafened' => 'Deafened',
-        'paralyzed' => 'Paralyzed',
-        'stunned' => 'Stunned',
-    ];
-
     const DEFAULT_MAX_HEALTH = 100;
 
     public ?int $selectedCampaignId = null;
@@ -29,7 +20,7 @@ new class extends Component {
 
     public int $editHealth = 0;
 
-    public string $editStatus = 'none';
+    public array $editConditionIds = [];
 
     public int $editGold = 0;
 
@@ -83,20 +74,16 @@ new class extends Component {
             return collect();
         }
 
-        return $this->campaign->characters()->with(['character_sheet', 'inventory'])->orderBy('name')->get();
-    }
-
-    public function statusLabel(?string $status): string
-    {
-        return self::STATUSES[$status] ?? self::STATUSES['none'];
+        return $this->campaign->characters()->with(['character_sheet.statuses', 'inventory'])->orderBy('name')->get();
     }
 
     /**
-     * @return array<string, string>
+     * @return Collection<int, CharacterStatus>
      */
-    public function statusOptions(): array
+    #[Computed]
+    public function conditionOptions(): Collection
     {
-        return self::STATUSES;
+        return CharacterStatus::orderBy('name')->get();
     }
 
     public function healthPercent(Character $character): int
@@ -122,7 +109,7 @@ new class extends Component {
 
         $this->editingCharacterId = $character->id;
         $this->editHealth = $character->character_sheet?->health ?? 0;
-        $this->editStatus = $character->character_sheet?->status ?? 'none';
+        $this->editConditionIds = $character->character_sheet?->statuses->pluck('id')->all() ?? [];
         $this->editGold = $character->inventory?->gold ?? 0;
 
         Flux::modal('edit-character')->show();
@@ -142,25 +129,26 @@ new class extends Component {
 
         $data = $this->validate([
             'editHealth' => ['required', 'integer', 'min:0', 'max:'.$maxHealth],
-            'editStatus' => ['required', Rule::in(array_keys(self::STATUSES))],
+            'editConditionIds' => ['array'],
+            'editConditionIds.*' => ['integer', 'exists:character_statuses,id'],
             'editGold' => ['required', 'integer', 'min:0'],
         ]);
 
-        if ($character->character_sheet) {
-            $character->character_sheet->update([
-                'health' => $data['editHealth'],
-                'status' => $data['editStatus'],
-            ]);
+        $sheet = $character->character_sheet;
+
+        if ($sheet) {
+            $sheet->update(['health' => $data['editHealth']]);
         } else {
             $sheet = CharacterSheet::create([
                 'character_id' => $character->id,
                 'total_health' => $maxHealth,
                 'health' => $data['editHealth'],
-                'status' => $data['editStatus'],
             ]);
 
             $character->update(['character_sheet_id' => $sheet->id]);
         }
+
+        $sheet->statuses()->sync($data['editConditionIds'] ?? []);
 
         if ($character->inventory) {
             $character->inventory->update(['gold' => $data['editGold']]);
@@ -194,7 +182,7 @@ new class extends Component {
             @forelse ($this->characters as $character)
                 @php
                     $sheet = $character->character_sheet;
-                    $status = $this->statusLabel($sheet?->status);
+                    $conditions = $sheet?->statuses ?? collect();
                     $percent = $this->healthPercent($character);
                 @endphp
 
@@ -217,9 +205,13 @@ new class extends Component {
                             <div class="flex items-center justify-between gap-2">
                                 <span class="truncate text-sm font-bold text-content">{{ $character->name }}</span>
 
-                                <flux:badge size="sm" :color="$status === 'Healthy' ? 'zinc' : 'amber'">
-                                    {{ strtoupper($status) }}
-                                </flux:badge>
+                                <div class="flex flex-wrap justify-end gap-1">
+                                    @forelse ($conditions as $condition)
+                                        <flux:badge size="sm" color="amber">{{ strtoupper($condition->name) }}</flux:badge>
+                                    @empty
+                                        <flux:badge size="sm" color="zinc">HEALTHY</flux:badge>
+                                    @endforelse
+                                </div>
                             </div>
 
                             <div class="mt-0.5 text-xs text-content-muted">
@@ -253,11 +245,11 @@ new class extends Component {
 
                     <flux:input wire:model="editHealth" type="number" min="0" label="Health" />
 
-                    <flux:select wire:model="editStatus" label="Status">
-                        @foreach ($this->statusOptions() as $value => $label)
-                            <flux:select.option value="{{ $value }}">{{ $label }}</flux:select.option>
+                    <flux:checkbox.group wire:model="editConditionIds" label="Conditions">
+                        @foreach ($this->conditionOptions as $condition)
+                            <flux:checkbox value="{{ $condition->id }}" label="{{ $condition->name }}" />
                         @endforeach
-                    </flux:select>
+                    </flux:checkbox.group>
 
                     <flux:input wire:model="editGold" type="number" min="0" label="Gold" />
 

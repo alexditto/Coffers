@@ -49,8 +49,9 @@ class CharacterInfolist
                         TextEntry::make('character_sheet.background')
                             ->label('Background')
                             ->placeholder('-'),
-                        TextEntry::make('character_sheet.status')
-                            ->label('Status')
+                        TextEntry::make('character_sheet.statuses.name')
+                            ->label('Conditions')
+                            ->badge()
                             ->placeholder('-'),
                         TextEntry::make('character_sheet.health')
                             ->label('Health')

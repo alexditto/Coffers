@@ -3,6 +3,7 @@
 use App\Models\Campaign;
 use App\Models\Character;
 use App\Models\CharacterSheet;
+use App\Models\CharacterStatus;
 use App\Models\Inventory;
 use App\Models\User;
 use Livewire\Livewire;
@@ -67,8 +68,8 @@ test('shows class, level, health, and status from the character sheet', function
         'level' => 5,
         'health' => 45,
         'total_health' => 90,
-        'status' => 'poisoned',
     ]);
+    $sheet->statuses()->attach(CharacterStatus::factory()->create(['name' => 'Poisoned']));
     $character->update(['character_sheet_id' => $sheet->id]);
 
     session(['selected_campaign_id' => $campaign->id]);
@@ -93,7 +94,6 @@ test('displays healthy for a character sheet with no active condition', function
         'character_id' => $character->id,
         'health' => 40,
         'total_health' => 40,
-        'status' => 'none',
     ]);
     $character->update(['character_sheet_id' => $sheet->id]);
 
@@ -151,8 +151,9 @@ test('the owner can open the edit modal and it is prefilled with the character\'
         'character_id' => $character->id,
         'health' => 45,
         'total_health' => 90,
-        'status' => 'poisoned',
     ]);
+    $poisoned = CharacterStatus::factory()->create(['name' => 'Poisoned']);
+    $sheet->statuses()->attach($poisoned);
     $character->update(['character_sheet_id' => $sheet->id]);
     $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 120]);
     $character->update(['inventory_id' => $inventory->id]);
@@ -163,7 +164,7 @@ test('the owner can open the edit modal and it is prefilled with the character\'
         ->test('list-characters-page')
         ->call('editCharacter', $character->id)
         ->assertSet('editHealth', 45)
-        ->assertSet('editStatus', 'poisoned')
+        ->assertSet('editConditionIds', [$poisoned->id])
         ->assertSet('editGold', 120);
 });
 
@@ -182,7 +183,7 @@ test('a non owner does not see the clickable affordance or edit modal', function
         ->assertDontSeeHtml('name="edit-character"');
 });
 
-test('the owner can update health, status, and gold for an existing sheet and inventory', function () {
+test('the owner can update health, conditions, and gold for an existing sheet and inventory', function () {
     $owner = User::factory()->create();
     $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
     $character = Character::factory()->create(['campaign_id' => $campaign->id]);
@@ -190,8 +191,35 @@ test('the owner can update health, status, and gold for an existing sheet and in
         'character_id' => $character->id,
         'health' => 10,
         'total_health' => 50,
-        'status' => 'none',
     ]);
+    $character->update(['character_sheet_id' => $sheet->id]);
+    $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 5]);
+    $character->update(['inventory_id' => $inventory->id]);
+    $stunned = CharacterStatus::factory()->create(['name' => 'Stunned']);
+
+    session(['selected_campaign_id' => $campaign->id]);
+
+    Livewire::actingAs($owner)
+        ->test('list-characters-page')
+        ->call('editCharacter', $character->id)
+        ->set('editHealth', 35)
+        ->set('editConditionIds', [$stunned->id])
+        ->set('editGold', 250)
+        ->call('saveCharacter')
+        ->assertHasNoErrors();
+
+    expect($sheet->fresh()->health)->toBe(35)
+        ->and($sheet->fresh()->statuses->pluck('id')->all())->toBe([$stunned->id]);
+
+    expect($inventory->fresh()->gold)->toBe(250);
+});
+
+test('the owner can remove a condition from a character', function () {
+    $owner = User::factory()->create();
+    $campaign = Campaign::factory()->create(['owner_id' => $owner->id]);
+    $character = Character::factory()->create(['campaign_id' => $campaign->id]);
+    $sheet = CharacterSheet::factory()->create(['character_id' => $character->id, 'health' => 10, 'total_health' => 50]);
+    $sheet->statuses()->attach(CharacterStatus::factory()->create(['name' => 'Stunned']));
     $character->update(['character_sheet_id' => $sheet->id]);
     $inventory = Inventory::factory()->create(['character_id' => $character->id, 'gold' => 5]);
     $character->update(['inventory_id' => $inventory->id]);
@@ -201,17 +229,12 @@ test('the owner can update health, status, and gold for an existing sheet and in
     Livewire::actingAs($owner)
         ->test('list-characters-page')
         ->call('editCharacter', $character->id)
-        ->set('editHealth', 35)
-        ->set('editStatus', 'stunned')
-        ->set('editGold', 250)
+        ->set('editConditionIds', [])
+        ->set('editGold', 5)
         ->call('saveCharacter')
         ->assertHasNoErrors();
 
-    expect($sheet->fresh())
-        ->health->toBe(35)
-        ->status->toBe('stunned');
-
-    expect($inventory->fresh()->gold)->toBe(250);
+    expect($sheet->fresh()->statuses)->toBeEmpty();
 });
 
 test('health cannot exceed the character\'s max health', function () {
@@ -245,6 +268,7 @@ test('saving creates a character sheet and inventory when the character has none
         'character_sheet_id' => null,
         'inventory_id' => null,
     ]);
+    $poisoned = CharacterStatus::factory()->create(['name' => 'Poisoned']);
 
     session(['selected_campaign_id' => $campaign->id]);
 
@@ -252,7 +276,7 @@ test('saving creates a character sheet and inventory when the character has none
         ->test('list-characters-page')
         ->call('editCharacter', $character->id)
         ->set('editHealth', 80)
-        ->set('editStatus', 'poisoned')
+        ->set('editConditionIds', [$poisoned->id])
         ->set('editGold', 40)
         ->call('saveCharacter')
         ->assertHasNoErrors();
@@ -261,7 +285,7 @@ test('saving creates a character sheet and inventory when the character has none
 
     expect($character->character_sheet)->not->toBeNull()
         ->and($character->character_sheet->health)->toBe(80)
-        ->and($character->character_sheet->status)->toBe('poisoned')
+        ->and($character->character_sheet->statuses->pluck('id')->all())->toBe([$poisoned->id])
         ->and($character->inventory)->not->toBeNull()
         ->and($character->inventory->gold)->toBe(40);
 });
