@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Items;
 
+use App\Filament\Imports\ItemsImporter;
 use App\Filament\Resources\Items\Pages\CreateItem;
 use App\Filament\Resources\Items\Pages\EditItem;
 use App\Filament\Resources\Items\Pages\ListItems;
@@ -11,6 +12,7 @@ use App\Filament\Resources\Items\Schemas\ItemInfolist;
 use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
 use BackedEnum;
+use Filament\Actions\ImportAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -36,7 +38,11 @@ class ItemResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return ItemsTable::configure($table);
+        return ItemsTable::configure($table)
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(ItemsImporter::class),
+            ]);
     }
 
     public static function getRelations(): array
