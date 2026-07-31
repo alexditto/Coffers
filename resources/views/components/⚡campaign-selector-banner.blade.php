@@ -20,7 +20,9 @@ new class extends Component {
             $campaign = $this->campaigns->first();
             $campaignId = $campaign?->id;
             session(['selected_campaign_role' => $campaign?->userIsDm() ? 'dm' : 'player']);
-            $this->dispatch('campaign-switched', campaignId: $campaignId);
+            if($campaignId){
+                $this->dispatch('campaign-switched', campaignId: $campaignId);
+            }
         }
         $sessionCampaignId = session('selected_campaign_id');
 
