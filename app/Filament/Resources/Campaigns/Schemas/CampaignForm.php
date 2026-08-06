@@ -18,7 +18,10 @@ class CampaignForm
                     ->required(),
                 TextInput::make('description'),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('s3')
+                    ->directory('campaigns')
+                    ->visibility('public'),
                 TextInput::make('status')
                     ->required()
                     ->default('active'),

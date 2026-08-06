@@ -4,12 +4,16 @@ use App\Models\Campaign;
 use App\Models\Journal;
 use Flux\Flux;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
     const FILTERS = [
         'all' => 'All',
         'npc' => 'NPCs',
@@ -43,7 +47,9 @@ new class extends Component {
 
     public string $entryContent = '';
 
-    public string $entryImage = '';
+    public $entryImage = null;
+
+    public ?string $currentEntryImageUrl = null;
 
     public function mount(): void
     {
@@ -213,7 +219,8 @@ new class extends Component {
         $this->entryTitle = $entry->title;
         $this->entryType = $entry->type;
         $this->entryContent = $entry->content;
-        $this->entryImage = $entry->image ?? '';
+        $this->entryImage = null;
+        $this->currentEntryImageUrl = $entry->image;
 
         Flux::modal('edit-entry')->show();
     }
@@ -226,7 +233,8 @@ new class extends Component {
         $this->entryTitle = '';
         $this->entryType = $this->typeFilter === 'all' ? 'lore' : $this->typeFilter;
         $this->entryContent = '';
-        $this->entryImage = '';
+        $this->entryImage = null;
+        $this->currentEntryImageUrl = null;
 
         Flux::modal('edit-entry')->show();
     }
@@ -245,25 +253,33 @@ new class extends Component {
             'entryTitle' => ['required', 'string', 'max:255'],
             'entryType' => ['required', Rule::in(array_keys(self::ENTRY_TYPES))],
             'entryContent' => ['required', 'string', 'max:5000'],
-            'entryImage' => ['nullable', 'string', 'max:2048'],
+            'entryImage' => ['nullable', 'image', 'max:5120'],
         ]);
 
         if ($this->editingEntryId) {
+            $imageUrl = $this->entryImage
+                ? Storage::disk('s3')->url($this->entryImage->store('journals', 's3'))
+                : $entry->image;
+
             $entry->update([
                 'title' => $data['entryTitle'],
                 'type' => $data['entryType'],
                 'content' => $data['entryContent'],
-                'image' => $data['entryImage'] ?: null,
+                'image' => $imageUrl,
             ]);
 
             Flux::toast('Entry updated.', variant: 'success');
         } else {
+            $imageUrl = $this->entryImage
+                ? Storage::disk('s3')->url($this->entryImage->store('journals', 's3'))
+                : null;
+
             $this->campaign->journals()->create([
                 'user_id' => auth()->id(),
                 'title' => $data['entryTitle'],
                 'type' => $data['entryType'],
                 'content' => $data['entryContent'],
-                'image' => $data['entryImage'] ?: null,
+                'image' => $imageUrl,
                 'revealed' => false,
             ]);
 
@@ -433,7 +449,33 @@ new class extends Component {
 
                 <flux:textarea wire:model="entryContent" label="Details" rows="4"/>
 
-                <flux:input wire:model="entryImage" label="Image URL" placeholder="https://..."/>
+                <flux:field>
+                    <flux:label>Image</flux:label>
+
+                    <div class="flex items-center gap-3">
+                        @if ($entryImage)
+                            <img src="{{ $entryImage->temporaryUrl() }}" alt="Preview" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @elseif ($currentEntryImageUrl)
+                            <img src="{{ $currentEntryImageUrl }}" alt="Current image" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @else
+                            <div class="flex size-14 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line text-content-faint">
+                                <flux:icon.photo class="size-5" />
+                            </div>
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <input
+                                type="file"
+                                wire:model="entryImage"
+                                accept="image/*"
+                                class="block w-full text-sm text-content-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-bold file:text-white hover:file:bg-brand-700"
+                            />
+                            <div wire:loading wire:target="entryImage" class="mt-1 text-xs text-content-muted">Uploading…</div>
+                        </div>
+                    </div>
+
+                    <flux:error name="entryImage" />
+                </flux:field>
 
                 @if ($editingEntryId)
                     <flux:button type="button" variant="danger" class="w-full" wire:click="confirmDeleteEntry">

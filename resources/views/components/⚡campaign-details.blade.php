@@ -2,18 +2,22 @@
 
 use App\Models\Campaign;
 use Flux\Flux;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
     public ?int $campaignId = null;
 
     public string $name = '';
 
     public string $description = '';
 
-    public string $image = '';
+    public $image = null;
 
     public string $status = 'active';
 
@@ -45,7 +49,7 @@ new class extends Component {
 
         $this->name = $campaign->name;
         $this->description = $campaign->description ?? '';
-        $this->image = $campaign->image ?? '';
+        $this->image = null;
         $this->status = $campaign->status;
         $this->nextSessionDate = $campaign->next_session_date?->format('Y-m-d');
     }
@@ -80,15 +84,19 @@ new class extends Component {
         $data = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'image' => ['nullable', 'string', 'max:2048'],
+            'image' => ['nullable', 'image', 'max:5120'],
             'status' => ['required', 'in:active,inactive'],
             'nextSessionDate' => ['nullable', 'date'],
         ]);
 
+        $imageUrl = $this->image
+            ? Storage::disk('s3')->url($this->image->store('campaigns', 's3'))
+            : $this->campaign->image;
+
         $this->campaign->update([
             'name' => $data['name'],
             'description' => $data['description'] ?: null,
-            'image' => $data['image'] ?: null,
+            'image' => $imageUrl,
             'status' => $data['status'],
             'next_session_date' => $data['nextSessionDate'] ?: null,
         ]);
@@ -144,7 +152,33 @@ new class extends Component {
 
                 <flux:textarea wire:model="description" label="Description" rows="3" />
 
-                <flux:input wire:model="image" label="Image URL" placeholder="https://..." />
+                <flux:field>
+                    <flux:label>Image</flux:label>
+
+                    <div class="flex items-center gap-3">
+                        @if ($image)
+                            <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @elseif ($this->campaign->image)
+                            <img src="{{ $this->campaign->image }}" alt="Current image" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @else
+                            <div class="flex size-14 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line text-content-faint">
+                                <flux:icon.photo class="size-5" />
+                            </div>
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <input
+                                type="file"
+                                wire:model="image"
+                                accept="image/*"
+                                class="block w-full text-sm text-content-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-bold file:text-white hover:file:bg-brand-700"
+                            />
+                            <div wire:loading wire:target="image" class="mt-1 text-xs text-content-muted">Uploading…</div>
+                        </div>
+                    </div>
+
+                    <flux:error name="image" />
+                </flux:field>
 
                 <div class="grid grid-cols-2 gap-4">
                     <flux:select wire:model="status" label="Status">

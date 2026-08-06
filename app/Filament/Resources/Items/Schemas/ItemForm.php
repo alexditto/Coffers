@@ -16,7 +16,10 @@ class ItemForm
                     ->required(),
                 TextInput::make('description'),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('s3')
+                    ->directory('items')
+                    ->visibility('public'),
                 TextInput::make('default_price')
                     ->numeric()
                     ->prefix('$'),

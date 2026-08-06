@@ -21,7 +21,10 @@ class CharacterForm
                 TextInput::make('name')
                     ->required(),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('s3')
+                    ->directory('characters')
+                    ->visibility('public'),
                 Select::make('campaign_id')
                     ->relationship('campaign', 'name'),
                 Select::make('inventory_id')

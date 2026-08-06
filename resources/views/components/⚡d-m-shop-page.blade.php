@@ -7,12 +7,16 @@ use App\Models\Item;
 use App\Models\Shop;
 use Flux\Flux;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
     const STATUSES = [
         'open' => 'Open',
         'closed' => 'Closed',
@@ -30,7 +34,9 @@ new class extends Component {
 
     public string $shopDescription = '';
 
-    public string $shopImage = '';
+    public $shopImage = null;
+
+    public ?string $currentShopImageUrl = null;
 
     public string $shopStatus = 'draft';
 
@@ -176,7 +182,8 @@ new class extends Component {
         $this->editingShopId = $shop->id;
         $this->shopName = $shop->name;
         $this->shopDescription = $shop->description ?? '';
-        $this->shopImage = $shop->image ?? '';
+        $this->shopImage = null;
+        $this->currentShopImageUrl = $shop->image;
         $this->shopStatus = $shop->status;
 
         Flux::modal('edit-shop')->show();
@@ -189,7 +196,8 @@ new class extends Component {
         $this->editingShopId = null;
         $this->shopName = '';
         $this->shopDescription = '';
-        $this->shopImage = '';
+        $this->shopImage = null;
+        $this->currentShopImageUrl = null;
         $this->shopStatus = 'draft';
 
         Flux::modal('edit-shop')->show();
@@ -202,7 +210,7 @@ new class extends Component {
         $data = $this->validate([
             'shopName' => ['required', 'string', 'max:255'],
             'shopDescription' => ['nullable', 'string', 'max:1000'],
-            'shopImage' => ['nullable', 'string', 'max:2048'],
+            'shopImage' => ['nullable', 'image', 'max:5120'],
             'shopStatus' => ['required', Rule::in(array_keys(self::STATUSES))],
         ]);
 
@@ -211,10 +219,14 @@ new class extends Component {
 
             $previousStatus = $shop->status;
 
+            $imageUrl = $this->shopImage
+                ? Storage::disk('s3')->url($this->shopImage->store('shops', 's3'))
+                : $shop->image;
+
             $shop->update([
                 'name' => $data['shopName'],
                 'description' => $data['shopDescription'] ?: null,
-                'image' => $data['shopImage'] ?: null,
+                'image' => $imageUrl,
                 'status' => $data['shopStatus'],
             ]);
 
@@ -222,10 +234,14 @@ new class extends Component {
 
             Flux::toast('Shop updated.', variant: 'success');
         } else {
+            $imageUrl = $this->shopImage
+                ? Storage::disk('s3')->url($this->shopImage->store('shops', 's3'))
+                : null;
+
             $shop = Shop::create([
                 'name' => $data['shopName'],
                 'description' => $data['shopDescription'] ?: null,
-                'image' => $data['shopImage'] ?: null,
+                'image' => $imageUrl,
                 'status' => $data['shopStatus'],
                 'owner_id' => auth()->id(),
             ]);
@@ -486,7 +502,33 @@ new class extends Component {
 
             <flux:textarea wire:model="shopDescription" label="Description" rows="3" />
 
-            <flux:input wire:model="shopImage" label="Image URL" placeholder="https://..." />
+            <flux:field>
+                <flux:label>Image</flux:label>
+
+                <div class="flex items-center gap-3">
+                    @if ($shopImage)
+                        <img src="{{ $shopImage->temporaryUrl() }}" alt="Preview" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                    @elseif ($currentShopImageUrl)
+                        <img src="{{ $currentShopImageUrl }}" alt="Current image" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                    @else
+                        <div class="flex size-14 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line text-content-faint">
+                            <flux:icon.photo class="size-5" />
+                        </div>
+                    @endif
+
+                    <div class="min-w-0 flex-1">
+                        <input
+                            type="file"
+                            wire:model="shopImage"
+                            accept="image/*"
+                            class="block w-full text-sm text-content-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-bold file:text-white hover:file:bg-brand-700"
+                        />
+                        <div wire:loading wire:target="shopImage" class="mt-1 text-xs text-content-muted">Uploading…</div>
+                    </div>
+                </div>
+
+                <flux:error name="shopImage" />
+            </flux:field>
 
             <flux:select wire:model="shopStatus" label="Status">
                 @foreach ($this->statusOptions() as $value => $label)

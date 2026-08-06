@@ -20,7 +20,10 @@ class ShopForm
                     ->default('active'),
                 TextInput::make('description'),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('s3')
+                    ->directory('shops')
+                    ->visibility('public'),
                 Select::make('owner_id')
                     ->relationship('owner', 'name')
                     ->required(),

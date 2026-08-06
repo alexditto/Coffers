@@ -5,11 +5,15 @@ use App\Models\Scene;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
     public ?int $selectedCampaignId = null;
 
     public ?int $editingSceneId = null;
@@ -18,7 +22,9 @@ new class extends Component {
 
     public string $sceneContent = '';
 
-    public string $sceneImage = '';
+    public $sceneImage = null;
+
+    public ?string $currentSceneImageUrl = null;
 
     public function mount(): void
     {
@@ -105,7 +111,8 @@ new class extends Component {
         $this->editingSceneId = $scene->id;
         $this->sceneName = $scene->name;
         $this->sceneContent = $scene->content ?? '';
-        $this->sceneImage = $scene->image ?? '';
+        $this->sceneImage = null;
+        $this->currentSceneImageUrl = $scene->image;
 
         Flux::modal('edit-scene')->show();
     }
@@ -117,7 +124,8 @@ new class extends Component {
         $this->editingSceneId = null;
         $this->sceneName = '';
         $this->sceneContent = '';
-        $this->sceneImage = '';
+        $this->sceneImage = null;
+        $this->currentSceneImageUrl = null;
 
         Flux::modal('edit-scene')->show();
     }
@@ -129,26 +137,34 @@ new class extends Component {
         $data = $this->validate([
             'sceneName' => ['required', 'string', 'max:255'],
             'sceneContent' => ['nullable', 'string', 'max:5000'],
-            'sceneImage' => ['nullable', 'string', 'max:2048'],
+            'sceneImage' => ['nullable', 'image', 'max:5120'],
         ]);
 
         if ($this->editingSceneId) {
             $scene = $this->campaign->scenes()->where('id', $this->editingSceneId)->firstOrFail();
 
+            $imageUrl = $this->sceneImage
+                ? Storage::disk('s3')->url($this->sceneImage->store('scenes', 's3'))
+                : $scene->image;
+
             $scene->update([
                 'name' => $data['sceneName'],
                 'content' => $data['sceneContent'] ?: null,
-                'image' => $data['sceneImage'] ?: null,
+                'image' => $imageUrl,
             ]);
 
             Flux::toast('Scene updated.', variant: 'success');
         } else {
             $hasActiveScene = $this->campaign->scenes()->where('status', 'active')->exists();
 
+            $imageUrl = $this->sceneImage
+                ? Storage::disk('s3')->url($this->sceneImage->store('scenes', 's3'))
+                : null;
+
             $this->campaign->scenes()->create([
                 'name' => $data['sceneName'],
                 'content' => $data['sceneContent'] ?: null,
-                'image' => $data['sceneImage'] ?: null,
+                'image' => $imageUrl,
                 'status' => $hasActiveScene ? 'inactive' : 'active',
             ]);
 
@@ -255,7 +271,33 @@ new class extends Component {
 
                 <flux:textarea wire:model="sceneContent" label="Notes" rows="4" />
 
-                <flux:input wire:model="sceneImage" label="Image URL" placeholder="https://..." />
+                <flux:field>
+                    <flux:label>Image</flux:label>
+
+                    <div class="flex items-center gap-3">
+                        @if ($sceneImage)
+                            <img src="{{ $sceneImage->temporaryUrl() }}" alt="Preview" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @elseif ($currentSceneImageUrl)
+                            <img src="{{ $currentSceneImageUrl }}" alt="Current image" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                        @else
+                            <div class="flex size-14 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line text-content-faint">
+                                <flux:icon.photo class="size-5" />
+                            </div>
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <input
+                                type="file"
+                                wire:model="sceneImage"
+                                accept="image/*"
+                                class="block w-full text-sm text-content-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-bold file:text-white hover:file:bg-brand-700"
+                            />
+                            <div wire:loading wire:target="sceneImage" class="mt-1 text-xs text-content-muted">Uploading…</div>
+                        </div>
+                    </div>
+
+                    <flux:error name="sceneImage" />
+                </flux:field>
 
                 <div class="flex gap-2">
                     <flux:spacer />

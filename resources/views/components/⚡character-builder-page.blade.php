@@ -6,11 +6,15 @@ use App\Models\CharacterSheet;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
     const ALIGNMENTS = [
         'lawful good' => 'Lawful Good',
         'neutral good' => 'Neutral Good',
@@ -27,7 +31,9 @@ new class extends Component {
 
     public string $characterName = '';
 
-    public string $characterImage = '';
+    public $characterImage = null;
+
+    public ?string $currentCharacterImageUrl = null;
 
     public string $characterClass = '';
 
@@ -126,7 +132,8 @@ new class extends Component {
     {
         $this->editingCharacterId = null;
         $this->characterName = '';
-        $this->characterImage = '';
+        $this->characterImage = null;
+        $this->currentCharacterImageUrl = null;
         $this->characterClass = '';
         $this->characterRace = '';
         $this->characterLevel = 1;
@@ -151,7 +158,8 @@ new class extends Component {
 
         $this->editingCharacterId = $character->id;
         $this->characterName = $character->name;
-        $this->characterImage = $character->image ?? '';
+        $this->characterImage = null;
+        $this->currentCharacterImageUrl = $character->image;
         $this->characterClass = $sheet?->class ?? '';
         $this->characterRace = $sheet?->race ?? '';
         $this->characterLevel = $sheet?->level ?? 1;
@@ -168,7 +176,7 @@ new class extends Component {
     {
         $data = $this->validate([
             'characterName' => ['required', 'string', 'max:255'],
-            'characterImage' => ['nullable', 'string', 'max:2048'],
+            'characterImage' => ['nullable', 'image', 'max:5120'],
             'characterClass' => ['nullable', 'string', 'max:255'],
             'characterRace' => ['nullable', 'string', 'max:255'],
             'characterLevel' => ['required', 'integer', 'min:1', 'max:20'],
@@ -179,6 +187,10 @@ new class extends Component {
             'characterAc' => ['required', 'integer', 'min:0'],
         ]);
 
+        $imageUrl = $this->characterImage
+            ? Storage::disk('s3')->url($this->characterImage->store('characters', 's3'))
+            : null;
+
         if ($this->editingCharacterId) {
             $character = auth()->user()->characters()->where('id', $this->editingCharacterId)->with('character_sheet')->first();
 
@@ -188,7 +200,7 @@ new class extends Component {
 
             $character->update([
                 'name' => $data['characterName'],
-                'image' => $data['characterImage'] ?: null,
+                'image' => $imageUrl ?? $character->image,
             ]);
 
             $this->saveSheet($character, $data);
@@ -197,7 +209,7 @@ new class extends Component {
         } else {
             $character = auth()->user()->characters()->create([
                 'name' => $data['characterName'],
-                'image' => $data['characterImage'] ?: null,
+                'image' => $imageUrl,
             ]);
 
             $this->saveSheet($character, $data);
@@ -437,7 +449,33 @@ new class extends Component {
 
             <flux:input wire:model="characterName" label="Name" placeholder="e.g. Thornwick" />
 
-            <flux:input wire:model="characterImage" label="Image URL" placeholder="https://..." />
+            <flux:field>
+                <flux:label>Image</flux:label>
+
+                <div class="flex items-center gap-3">
+                    @if ($characterImage)
+                        <img src="{{ $characterImage->temporaryUrl() }}" alt="Preview" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                    @elseif ($currentCharacterImageUrl)
+                        <img src="{{ $currentCharacterImageUrl }}" alt="Current image" class="size-14 shrink-0 rounded-xl border border-line object-cover" />
+                    @else
+                        <div class="flex size-14 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-line text-content-faint">
+                            <flux:icon.photo class="size-5" />
+                        </div>
+                    @endif
+
+                    <div class="min-w-0 flex-1">
+                        <input
+                            type="file"
+                            wire:model="characterImage"
+                            accept="image/*"
+                            class="block w-full text-sm text-content-muted file:mr-3 file:rounded-lg file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-bold file:text-white hover:file:bg-brand-700"
+                        />
+                        <div wire:loading wire:target="characterImage" class="mt-1 text-xs text-content-muted">Uploading…</div>
+                    </div>
+                </div>
+
+                <flux:error name="characterImage" />
+            </flux:field>
 
             <div class="grid grid-cols-2 gap-4">
                 <flux:input wire:model="characterClass" label="Class" placeholder="e.g. Rogue" />
