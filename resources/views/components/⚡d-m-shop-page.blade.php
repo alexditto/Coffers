@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Shop;
 use Flux\Flux;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
@@ -220,7 +221,7 @@ new class extends Component {
             $previousStatus = $shop->status;
 
             $imageUrl = $this->shopImage
-                ? Storage::disk('s3')->url($this->shopImage->store('shops', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->shopImage)->scale(800, 800)->store('shops', 's3'))
                 : $shop->image;
 
             $shop->update([
@@ -235,7 +236,7 @@ new class extends Component {
             Flux::toast('Shop updated.', variant: 'success');
         } else {
             $imageUrl = $this->shopImage
-                ? Storage::disk('s3')->url($this->shopImage->store('shops', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->shopImage)->scale(800, 800)->store('shops', 's3'))
                 : null;
 
             $shop = Shop::create([

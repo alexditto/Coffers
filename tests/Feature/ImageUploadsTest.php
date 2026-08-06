@@ -30,6 +30,30 @@ test('uploading an image for a new character stores it on s3 and saves the url',
         ->and(Storage::disk('s3')->allFiles('characters'))->toHaveCount(1);
 });
 
+test('an oversized character image is scaled down to fit within 800x800 on upload', function () {
+    Storage::fake('s3');
+
+    $user = User::factory()->create();
+    $file = UploadedFile::fake()->image('huge.jpg', 3000, 2000);
+
+    Livewire::actingAs($user)
+        ->test('character-builder-page')
+        ->call('newCharacter')
+        ->set('characterName', 'Thornwick')
+        ->set('characterImage', $file)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $path = Storage::disk('s3')->allFiles('characters')[0];
+    $contents = Storage::disk('s3')->get($path);
+    $size = getimagesizefromstring($contents);
+
+    expect($size[0])->toBeLessThanOrEqual(800)
+        ->and($size[1])->toBeLessThanOrEqual(800)
+        // Aspect ratio (3:2) is preserved, not distorted into a square.
+        ->and($size[0] / $size[1])->toEqualWithDelta(3000 / 2000, 0.01);
+});
+
 test('editing a character without selecting a new image keeps the existing image', function () {
     Storage::fake('s3');
 

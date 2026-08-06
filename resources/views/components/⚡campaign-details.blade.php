@@ -2,6 +2,7 @@
 
 use App\Models\Campaign;
 use Flux\Flux;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -90,7 +91,7 @@ new class extends Component {
         ]);
 
         $imageUrl = $this->image
-            ? Storage::disk('s3')->url($this->image->store('campaigns', 's3'))
+            ? Storage::disk('s3')->url(Image::fromUpload($this->image)->scale(800, 800)->store('campaigns', 's3'))
             : $this->campaign->image;
 
         $this->campaign->update([

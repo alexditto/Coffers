@@ -5,6 +5,7 @@ use App\Models\Scene;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -144,7 +145,7 @@ new class extends Component {
             $scene = $this->campaign->scenes()->where('id', $this->editingSceneId)->firstOrFail();
 
             $imageUrl = $this->sceneImage
-                ? Storage::disk('s3')->url($this->sceneImage->store('scenes', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->sceneImage)->scale(800, 800)->store('scenes', 's3'))
                 : $scene->image;
 
             $scene->update([
@@ -158,7 +159,7 @@ new class extends Component {
             $hasActiveScene = $this->campaign->scenes()->where('status', 'active')->exists();
 
             $imageUrl = $this->sceneImage
-                ? Storage::disk('s3')->url($this->sceneImage->store('scenes', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->sceneImage)->scale(800, 800)->store('scenes', 's3'))
                 : null;
 
             $this->campaign->scenes()->create([

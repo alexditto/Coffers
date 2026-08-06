@@ -6,6 +6,7 @@ use App\Models\CharacterSheet;
 use Flux\Flux;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
@@ -188,7 +189,7 @@ new class extends Component {
         ]);
 
         $imageUrl = $this->characterImage
-            ? Storage::disk('s3')->url($this->characterImage->store('characters', 's3'))
+            ? Storage::disk('s3')->url(Image::fromUpload($this->characterImage)->scale(800, 800)->store('characters', 's3'))
             : null;
 
         if ($this->editingCharacterId) {

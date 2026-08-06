@@ -4,6 +4,7 @@ use App\Models\Campaign;
 use App\Models\Journal;
 use Flux\Flux;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
@@ -258,7 +259,7 @@ new class extends Component {
 
         if ($this->editingEntryId) {
             $imageUrl = $this->entryImage
-                ? Storage::disk('s3')->url($this->entryImage->store('journals', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->entryImage)->scale(800, 800)->store('journals', 's3'))
                 : $entry->image;
 
             $entry->update([
@@ -271,7 +272,7 @@ new class extends Component {
             Flux::toast('Entry updated.', variant: 'success');
         } else {
             $imageUrl = $this->entryImage
-                ? Storage::disk('s3')->url($this->entryImage->store('journals', 's3'))
+                ? Storage::disk('s3')->url(Image::fromUpload($this->entryImage)->scale(800, 800)->store('journals', 's3'))
                 : null;
 
             $this->campaign->journals()->create([
