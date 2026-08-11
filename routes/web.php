@@ -6,6 +6,13 @@ Route::view('/', 'welcome')->name('home');
 Route::view('/guide', 'guide')->name('guide');
 Route::view('/portfolio', 'portfolio')->name('portfolio');
 
+Route::view('/blog', 'blog.index')->name('blog.index');
+Route::get('/blog/{slug}', function (string $slug) {
+    abort_unless(view()->exists("blog.posts.{$slug}"), 404);
+
+    return view("blog.posts.{$slug}");
+})->name('blog.show');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('/friends', 'friends')->name('friends');

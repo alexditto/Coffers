@@ -27,6 +27,11 @@
                 See how it all fits together
                 <flux:icon.arrow-right class="size-4" />
             </a>
+
+            <a href="{{ route('blog.index') }}" wire:navigate class="mt-2 inline-flex items-center gap-1 text-sm font-bold text-brand-300 transition hover:text-brand-200">
+                Read the blog
+                <flux:icon.arrow-right class="size-4" />
+            </a>
         </div>
     </div>
     <div class="flex flex-col grow w-full md:w-3/4 max-w-lg bg-white dark:bg-neutral-950">
