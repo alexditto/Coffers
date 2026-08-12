@@ -3,10 +3,18 @@
     // then add an entry here so it shows up in the list.
     $posts = [
         [
+            'slug' => 'make-dev-cry',
+            'title' => 'Hey Claude, How Do I Make a Developer Cry?',
+            'excerpt' => 'So, our solution cannot be hoping for a good guy in the crowd of bad guys.',
+            'date' => '2026-08-12',
+            'image' => 'make-dev-cry.png',
+        ],
+        [
             'slug' => 'models-migrations-mimicry',
             'title' => 'How Are You Using AI?',
             'excerpt' => 'Everyone is hype, but no one is strategy. Introducing the Models, Migrations, Mimicry method.',
             'date' => '2026-08-11',
+            'image' => 'models-migrations-mimicry.png',
         ],
     ];
 @endphp
@@ -37,13 +45,20 @@
             <a
                 href="{{ route('blog.show', $post['slug']) }}"
                 wire:navigate
-                class="rounded-2xl border border-neutral-800 bg-neutral-400/60 p-6 transition hover:border-brand-400"
+                class="flex justify-between gap-4 rounded-2xl border border-neutral-800 bg-neutral-400/60 p-6 transition hover:border-brand-400"
             >
-                <span class="text-xs text-neutral-500 dark:text-neutral-400">
-                    {{ \Illuminate\Support\Carbon::parse($post['date'])->format('F j, Y') }}
-                </span>
-                <h2 class="mt-1 text-lg font-bold text-brand-900 dark:text-brand-400">{{ $post['title'] }}</h2>
-                <p class="mt-2 text-sm text-neutral-700 dark:text-neutral-300">{{ $post['excerpt'] }}</p>
+                <div>
+                    <span class="text-xs text-neutral-500 dark:text-neutral-400">
+                        {{ \Illuminate\Support\Carbon::parse($post['date'])->format('F j, Y') }}
+                    </span>
+                    <h2 class="mt-1 text-lg font-bold text-brand-900 dark:text-brand-400">{{ $post['title'] }}</h2>
+                    <p class="mt-2 text-sm text-neutral-700 dark:text-neutral-300">{{ $post['excerpt'] }}</p>
+                </div>
+                <img
+                    src="{{ asset('img/'.$post['image']) }}"
+                    alt="{{ $post['title'] }}"
+                    class="h-20 w-28 shrink-0 rounded-xl border border-neutral-800 object-cover sm:h-24 sm:w-36"
+                />
             </a>
         @endforeach
     </div>
