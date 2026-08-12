@@ -13,6 +13,18 @@ Route::get('/blog/{slug}', function (string $slug) {
     return view("blog.posts.{$slug}");
 })->name('blog.show');
 
+Route::get('/sitemap.xml', function () {
+    $pages = collect([route('home'), route('guide'), route('portfolio'), route('blog.index')])
+        ->map(fn (string $url) => ['url' => $url, 'lastmod' => null]);
+
+    $posts = collect(config('blog.posts'))
+        ->map(fn (array $post) => ['url' => route('blog.show', $post['slug']), 'lastmod' => $post['date']]);
+
+    return response()
+        ->view('sitemap', ['urls' => $pages->concat($posts)])
+        ->header('Content-Type', 'text/xml');
+})->name('sitemap');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('/friends', 'friends')->name('friends');

@@ -1,2 +1,32 @@
 User-agent: *
-Disallow:
+Disallow: /dashboard
+Disallow: /friends
+Disallow: /campaign-builder
+Disallow: /character-builder
+Disallow: /characters
+Disallow: /character
+Disallow: /scenes
+Disallow: /inventory
+Disallow: /shops
+Disallow: /journal
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /email
+Disallow: /two-factor-challenge
+Disallow: /user
+Disallow: /passkeys
+Disallow: /broadcasting
+Disallow: /filament
+Disallow: /_boost
+Disallow: /.well-known
+
+Allow: /
+Allow: /guide
+Allow: /portfolio
+Allow: /blog
+
+# TODO: swap this for your production domain before going live.
+Sitemap: http://coffers.test/sitemap.xml

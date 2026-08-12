@@ -1,22 +1,5 @@
 @php
-    // To add a new post: create resources/views/blog/posts/{slug}.blade.php,
-    // then add an entry here so it shows up in the list.
-    $posts = [
-        [
-            'slug' => 'make-dev-cry',
-            'title' => 'Hey Claude, How Do I Make a Developer Cry?',
-            'excerpt' => 'So, our solution cannot be hoping for a good guy in the crowd of bad guys.',
-            'date' => '2026-08-12',
-            'image' => 'make-dev-cry.png',
-        ],
-        [
-            'slug' => 'models-migrations-mimicry',
-            'title' => 'How Are You Using AI?',
-            'excerpt' => 'Everyone is hype, but no one is strategy. Introducing the Models, Migrations, Mimicry method.',
-            'date' => '2026-08-11',
-            'image' => 'models-migrations-mimicry.png',
-        ],
-    ];
+    $posts = config('blog.posts');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
