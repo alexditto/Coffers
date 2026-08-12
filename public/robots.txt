@@ -28,5 +28,4 @@ Allow: /guide
 Allow: /portfolio
 Allow: /blog
 
-# TODO: swap this for your production domain before going live.
-Sitemap: http://coffers.test/sitemap.xml
+Sitemap: https://coffer-dnd.com/sitemap.xml
