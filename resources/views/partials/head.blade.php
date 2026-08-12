@@ -1,5 +1,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="n3me8GW7SsyPPaeGuwgtJV1zxrCv2lPpBEW_IsEFV7c" />
 
 <title>
     {{ filled($title ?? null) ? $title.' - '.config('app.name', 'Laravel') : config('app.name', 'Laravel') }}
