@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
-    @include('partials.head')
+    @include('partials.head', [
+        'title' => 'Hey Claude, How Do I Make a Developer Cry?',
+        'description' => 'So, our solution cannot be hoping for a good guy in the crowd of bad guys.',
+        'image' => asset('img/make-dev-cry.png'),
+        'ogType' => 'article',
+    ])
 </head>
 <body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
 <div class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 py-10 md:py-16">

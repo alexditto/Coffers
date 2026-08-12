@@ -5,6 +5,17 @@
     {{ filled($title ?? null) ? $title.' - '.config('app.name', 'Laravel') : config('app.name', 'Laravel') }}
 </title>
 
+<meta property="og:title" content="{{ $title ?? config('app.name', 'Laravel') }}" />
+<meta property="og:type" content="{{ $ogType ?? 'website' }}" />
+<meta property="og:url" content="{{ url()->current() }}" />
+@if (filled($description ?? null))
+    <meta name="description" content="{{ $description }}" />
+    <meta property="og:description" content="{{ $description }}" />
+@endif
+@if (filled($image ?? null))
+    <meta property="og:image" content="{{ $image }}" />
+@endif
+
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

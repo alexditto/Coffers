@@ -21,7 +21,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
-    @include('partials.head')
+    @include('partials.head', [
+        'title' => 'Blog',
+        'description' => 'Updates, design notes, and behind-the-scenes posts about building Coffers.',
+        'image' => asset('img/'.$posts[0]['image']),
+    ])
 </head>
 <body class="min-h-screen bg-white antialiased dark:bg-linear-to-b dark:from-neutral-950 dark:to-neutral-900">
 <div class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 py-10 md:py-16">
