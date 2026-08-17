@@ -2,8 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
     @include('partials.head', [
-        'title' => 'Let&rsquo;s Get Dirty with Some Epistemological Mapping',
-        'description' => 'A simple four-domain method for mapping what you know&mdash;demoed on Eloquent&rsquo;s often-overlooked isDirty() method.',
+        'title' => 'Let’s Get Dirty with Some Epistemological Mapping',
+        'description' => 'A simple four-domain method for mapping what you know—demoed on Eloquent’s often-overlooked isDirty() method.',
         'image' => asset('img/epistemological-mapping.png'),
         'ogType' => 'article',
     ])

@@ -16,8 +16,8 @@ return [
     'posts' => [
         [
             'slug' => 'epistemological-mapping',
-            'title' => 'Let&rsquo;s Get Dirty with Some Epistemological Mapping',
-            'excerpt' => 'A simple four-domain method for mapping what you know&mdash;demoed on Eloquent&rsquo;s often-overlooked isDirty() method.',
+            'title' => 'Let’s Get Dirty with Some Epistemological Mapping',
+            'excerpt' => 'A simple four-domain method for mapping what you know—demoed on Eloquent’s often-overlooked isDirty() method.',
             'date' => '2026-08-17',
             'image' => 'epistemological-mapping.png',
         ],
