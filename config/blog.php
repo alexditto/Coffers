@@ -15,6 +15,13 @@ return [
 
     'posts' => [
         [
+            'slug' => 'epistemological-mapping',
+            'title' => 'Let&rsquo;s Get Dirty with Some Epistemological Mapping',
+            'excerpt' => 'A simple four-domain method for mapping what you know&mdash;demoed on Eloquent&rsquo;s often-overlooked isDirty() method.',
+            'date' => '2026-08-17',
+            'image' => 'epistemological-mapping.png',
+        ],
+        [
             'slug' => 'make-dev-cry',
             'title' => 'Hey Claude, How Do I Make a Developer Cry?',
             'excerpt' => 'So, our solution cannot be hoping for a good guy in the crowd of bad guys.',
