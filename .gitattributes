@@ -9,3 +9,11 @@
 CHANGELOG.md export-ignore
 README.md export-ignore
 .github/workflows/browser-tests.yml export-ignore
+
+# Design/wireframe exports are not application source — exclude from GitHub's
+# language stats so the repo is detected as PHP, not HTML/JS.
+export/** linguist-vendored
+
+# Lockfiles are not hand-written source.
+composer.lock linguist-generated=true
+package-lock.json linguist-generated=true
