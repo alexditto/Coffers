@@ -10,10 +10,10 @@
             <a
                 href="{{ route('portfolio') }}"
                 wire:navigate
-                class="flex items-center gap-3 rounded-2xl border border-dashed border-neutral-700 p-4 text-sm text-neutral-400 transition hover:border-brand-400 hover:text-neutral-200"
+                class="flex items-center gap-3 rounded-2xl border border-dashed border-neutral-700 p-4 text-sm text-brand-900 dark:text-neutral-100 transition hover:border-brand-700 dark:hover:border-brand-700 hover:text-neutral-500 dark:hover:text-neutral-400"
             >
-                <flux:icon.code-bracket class="size-5 shrink-0 text-brand-400"/>
-                <span>Hey, did you want to hire a nerdy software developer who builds things like this?</span>
+                <flux:icon.code-bracket class="size-5 shrink-0 text-brand-800"/>
+                <span>Lead full-stack engineer — payments, integrations, and platform work</span>
             </a>
         </div>
         <div class="max-w-2xl mx-auto my-4 rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6">
