@@ -134,7 +134,10 @@ new class extends Component {
 
         $this->campaign->characters()
             ->where('id', $characterId)
-            ->update(['campaign_id' => null]);
+            ->get()
+            ->each(function (Character $character) {
+                $character->update(['campaign_id' => null]);
+            });
 
         unset($this->characters, $this->availableFriendCharacters);
     }

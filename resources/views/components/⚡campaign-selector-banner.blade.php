@@ -37,6 +37,7 @@ new class extends Component {
     public function campaigns(): Collection
     {
         $user = auth()->user();
+//        dd($user->campaigns, $user->owned_campaigns);
 
         return $user->campaigns
             ->merge($user->owned_campaigns)
